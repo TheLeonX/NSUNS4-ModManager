@@ -1,0 +1,82 @@
+﻿<Window x:Class="NSUNS4_ModManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NSUNS4_ModManager"
+        xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
+        mc:Ignorable="d"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        MinWidth="850" MinHeight="520" Foreground="White">
+    <Window.Background>
+        <ImageBrush ImageSource="trial_clear_i1out.png" Stretch="UniformToFill"/>
+    </Window.Background>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.7">
+                <GradientStop Color="#00000000" Offset="0"/>
+                <GradientStop Color="#FFFF782A" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="5"/>
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3">
+            <Menu.Background>
+                <SolidColorBrush Color="Black" Opacity="0.3"/>
+            </Menu.Background>
+            <MenuItem Header="Settings" Foreground="White">
+                <MenuItem Header="Set path to game" Click="MenuItem_Click"/>
+                <MenuItem Header="Set path to mod folder" Click="MenuItem_Click_1"/>
+            </MenuItem>
+        </Menu>
+        <Label Content="Naruto Storm 4 Character Mod Manager" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" FontFamily="Yu Gothic UI Light" FontSize="24" Foreground="White" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <ListView Grid.Row="2" Grid.Column="1" x:Name="ModsList" SelectionChanged="ModsList_Selected">
+            <ListView.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#7FFFFFFF" Offset="0"/>
+                    <GradientStop Offset="1"/>
+                </LinearGradientBrush>
+            </ListView.Background>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding ModName}" Header="Mod Name" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <WrapPanel Grid.ColumnSpan="3" Orientation="Horizontal" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Content="Update mod list" Click="Button_Click" MinHeight="40" MinWidth="160"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
+            <Button Content="Compile mods" MinHeight="40" MinWidth="150"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
+            <Button Content="Clear game" MinHeight="40" MinWidth="150"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
+            <Button Content="Start game" MinHeight="40" MinWidth="160"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
+        </WrapPanel>
+        <Grid Grid.Column="3" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="ModDescription" TextWrapping="Wrap" Grid.Row="0" Grid.Column="2" FontFamily="Yu Gothic UI Light" FontSize="18" Foreground="White" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Image x:Name="ModIcon" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <Label x:Name="ModAuthor" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" FontFamily="Yu Gothic UI Light" FontSize="16" Foreground="White" ClipToBounds="True" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+        </Grid>
+    </Grid>
+</Window>
