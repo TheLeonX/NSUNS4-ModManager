@@ -145,4 +145,6 @@ E:\Desktop\MS Projects\NSUNS4_ModManager\obj\Debug\NSUNS4_ModManager.exe
 E:\Desktop\MS Projects\NSUNS4_ModManager\obj\Debug\NSUNS4_ModManager.pdb
 E:\Desktop\MS Projects\NSUNS4_ModManager\bin\Debug\Microsoft.WindowsAPICodePack.dll
 E:\Desktop\MS Projects\NSUNS4_ModManager\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll
-E:\Desktop\MS Projects\NSUNS4_ModManager\obj\Debug\GeneratedInternalTypeHelper.g.cs
+E:\Desktop\MS Projects\NSUNS4_ModManager\obj\Debug\NSUNS4_ModManager.csproj.AssemblyReference.cache
+E:\Desktop\MS Projects\NSUNS4_ModManager\obj\Debug\Interop.IWshRuntimeLibrary.dll
+E:\Desktop\MS Projects\NSUNS4_ModManager\obj\Debug\NSUNS4_ModManager.csproj.ResolveComReference.cache

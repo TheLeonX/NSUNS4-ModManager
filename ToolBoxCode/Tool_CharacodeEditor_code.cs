@@ -117,7 +117,10 @@ namespace NSUNS4_ModManager.ToolBoxCode {
 			if (basepath == "")
 				MessageBox.Show("File saved to " + FilePath + ".");
 		}
-
+		public void AddID(string ID) {
+			CharacterList.Add(ID);
+			CharacterCount++;
+		}
 		public void CloseFile() {
 			CharacterList.Clear();
 			CharacterCount = 0;

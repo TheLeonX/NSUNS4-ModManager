@@ -24,30 +24,29 @@ namespace NSUNS4_ModManager.ToolBoxCode {
 		public List<string> AccessoryList = new List<string>();
 		public List<string> NewIdList = new List<string>();
 		public List<byte[]> GibberishBytes = new List<byte[]>();
-		public static int SearchSlotIndex(List<int> PageList, List<int> PositionList, List<int> CostumeList, int Page, int Pos, int Costume, int Count) {
-			int value = 0;
-			for (int x = 0; x < Count; x++) {
-				if (PageList[x] == Page) {
-					for (int y = x; y < Count; y++) {
-						if (PageList[y] == Page && PositionList[y] == Pos) {
-							for (int z = y; z < Count; z++) {
-								if (PageList[z] == Page && PositionList[z] == Pos && CostumeList[z] == Costume) {
-									return z;
-								} else {
-									value = -1;
-								}
-							}
-							return value;
-						} else {
-							value = -1;
-						}
-					}
-					return value;
-				} else {
-					value = -1;
+
+		public List<int> SearchMaxPositionAndPageIndex() {
+			int maxPage = PageList.Max();
+			int Pos = 1;
+			List<int> NewPositionList = new List<int>();
+			List<int> PagePosList = new List<int>();
+			for (int x = 0; x < EntryCount; x++) {
+				if (PageList[x] == maxPage) {
+					NewPositionList.Add(PositionList[x]);
 				}
 			}
-			return value;
+			if (NewPositionList.Contains(27)) {
+				maxPage++;
+				Pos = 1;
+
+            }
+			else {
+
+				Pos = NewPositionList.Max()+1;
+			}
+			PagePosList.Add(maxPage);
+			PagePosList.Add(Pos);
+			return PagePosList;
 		}
 		public void OpenFile(string basepath = "") {
 			NewFile();

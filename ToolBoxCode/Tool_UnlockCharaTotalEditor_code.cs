@@ -17,6 +17,26 @@ namespace NSUNS4_ModManager.ToolBoxCode {
 		public List<List<byte>> EntryList = new List<List<byte>>();
 
 		public int EntryCount = 0;
+		public void AddID_Importer(int PresetID, int type) {
+			byte[] presetID = BitConverter.GetBytes(PresetID);
+			byte[] sectionBytes = new byte[12]
+			{
+				presetID[0],
+				presetID[1],
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				(byte)type,
+				0,
+				0,
+				0
+			};
+			EntryList.Add(sectionBytes.ToList());
+			EntryCount++;
+		}
 		public void OpenFile(string basepath = "") {
 			if (FileOpen) {
 				CloseFile();
