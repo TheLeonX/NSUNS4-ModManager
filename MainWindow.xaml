@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True"
-        MinWidth="850" MinHeight="520" Foreground="White">
+        MinWidth="850" MinHeight="520" Width="850" Height="520" Foreground="White">
     <Window.Background>
         <ImageBrush ImageSource="trial_clear_i1out.png" Stretch="UniformToFill"/>
     </Window.Background>
@@ -58,7 +58,7 @@
         </ListView>
         <WrapPanel Grid.ColumnSpan="3" Orientation="Horizontal" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Button Content="Update mod list" Click="Button_Click" MinHeight="40" MinWidth="160"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
-            <Button Content="Compile mods" MinHeight="40" MinWidth="150"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
+            <Button Content="Compile mods" Click="Button_Click_1" MinHeight="40" MinWidth="150"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
             <Button Content="Clear game" MinHeight="40" MinWidth="150"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
             <Button Content="Start game" MinHeight="40" MinWidth="160"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
         </WrapPanel>

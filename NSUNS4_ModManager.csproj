@@ -59,6 +59,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ToolBoxCode\MainFunctions.cs" />
+    <Compile Include="ToolBoxCode\Program.cs" />
+    <Compile Include="ToolBoxCode\Tool_afterAttachObject_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_appearenceAnmEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_AwakeAuraEditor.cs" />
+    <Compile Include="ToolBoxCode\Tool_CharacodeEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_cmnparamEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_conditionprmEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_damageeffEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_damageprmEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_DuelPlayerParamEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_effectprmEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_IconEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_MessageInfoEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_MovesetCoder_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_nus3bankEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_PlayerSettingParamEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_RosterEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_SkillCustomizeParamEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_SpcloadEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_SpSkillCustomizeParamEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_spTypeSupportParamEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_UnlockCharaTotalEditor_code.cs" />
+    <Compile Include="ToolBoxCode\XfbinParser.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

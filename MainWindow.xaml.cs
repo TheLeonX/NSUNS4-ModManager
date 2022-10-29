@@ -42,6 +42,9 @@ namespace NSUNS4_ModManager {
         public List<string> AuthorPaths = new List<string>();
         public List<string> DescriptionPaths = new List<string>();
         public List<ModList_class> ModInfoList = new List<ModList_class>();
+
+
+
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
             Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog c = new Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog();
             c.IsFolderPicker = true;
@@ -117,7 +120,6 @@ namespace NSUNS4_ModManager {
 
         private void ModsList_Selected(object sender, RoutedEventArgs e) {
             int x = ModsList.SelectedIndex;
-            MessageBox.Show(x.ToString());
             if (x != -1) {
                 ModDescription.Text = File.ReadAllText(DescriptionPaths[x]);
                 if (ModDescription.Text == "")
@@ -128,6 +130,10 @@ namespace NSUNS4_ModManager {
                 ModAuthor.Content = "Author: " + File.ReadAllText(AuthorPaths[x]);
 
             }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e) {
+
         }
     }
 }
