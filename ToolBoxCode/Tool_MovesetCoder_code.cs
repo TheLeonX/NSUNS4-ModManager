@@ -138,6 +138,122 @@ namespace NSUNS4_ModManager.ToolBoxCode {
                 };
                 EffectPos = XfbinParser.FindBytes(fileBytes, EffectEntry, 0);
             }
+            if (EffectPos != -1) {
+                EffectPos = EffectPos + 12;
+                effectSecFound = true;
+                effectSecLength = MainFunctions.b_ReadIntRev(fileBytes, EffectPos - 4);
+                int begin = EffectPos;
+                int end = effectSecLength;
+                effectSecCount = effectSecLength / 0x81;
+                for (int z = 0; z < effectSecCount; z++) {
+                    int SkillIndex = (z * 0x81) + EffectPos;
+                    int SkillNameIndex = (z * 0x81) + 0x40 + EffectPos;
+                    int SkillEntryIndex = (z * 0x81) + 0x60 + EffectPos;
+                    int SkillValueIndex = (z * 0x81) + 0x80 + EffectPos;
+                    string Skill = MainFunctions.b_ReadString2(fileBytes, SkillIndex, 0x20);
+                    string SkillName = MainFunctions.b_ReadString2(fileBytes, SkillNameIndex, 0x20);
+                    string SkillEntry = MainFunctions.b_ReadString2(fileBytes, SkillEntryIndex, 0x20);
+                    int SkillValue = fileBytes[SkillValueIndex];
+                    effectSecName.Add(Skill);
+                    effectSecSkillName.Add(SkillName);
+                    effectSecSkillEntry.Add(SkillEntry);
+                    effectSecSkillValue.Add(SkillValue);
+                }
+
+                //Hit Collision data
+                int HitIndex = 0;
+                int HitIndexCounter = -1;
+                do {
+                    HitIndex++;
+                    HitIndexCounter = NamesList[HitIndex - 1].IndexOf("prm_hit");
+                }
+                while (HitIndexCounter == -1);
+                byte[] CollisionEntry = new byte[8]
+                {
+                    0x00,
+                    0x00,
+                    0x00,
+                    (byte)HitIndex,
+                    0x00,
+                    0x63,
+                    0x00,
+                    0x00
+                };
+                int CollisionPos = XfbinParser.FindBytes(fileBytes, CollisionEntry, 0);
+                if (CollisionPos == -1) {
+                    CollisionEntry = new byte[6]
+                    {
+                        0x00,
+                        0x00,
+                        0x00,
+                        (byte)HitIndex,
+                        0x00,
+                        0x63
+                    };
+                    CollisionPos = XfbinParser.FindBytes(fileBytes, CollisionEntry, 0);
+                }
+                if (CollisionPos == -1) {
+                    CollisionEntry = new byte[6]
+                    {
+                        0x00,
+                        0x00,
+                        0x00,
+                        (byte)HitIndex,
+                        0x00,
+                        0x79
+                    };
+                    CollisionPos = XfbinParser.FindBytes(fileBytes, CollisionEntry, 0);
+                }
+                if (CollisionPos == -1) {
+                    CollisionEntry = new byte[6]
+                    {
+                        0x00,
+                        0x00,
+                        0x00,
+                        (byte)HitIndex,
+                        0x00,
+                        0x7A
+                    };
+                    CollisionPos = XfbinParser.FindBytes(fileBytes, CollisionEntry, 0);
+                }
+                if (CollisionPos != -1) {
+
+                    CollisionPos = CollisionPos + 16;
+                    collisionSecLength = MainFunctions.b_ReadIntRev(fileBytes, CollisionPos - 8);
+                    collisionSecCount = collisionSecLength / 0x5C;
+                    for (int z = 0; z < collisionSecCount; z++) {
+                        int CollisionTypeIndex = (z * 0x5C) + CollisionPos;
+                        int CollisionStateIndex = (z * 0x5C) + 0x4 + CollisionPos;
+                        int CollisionLoadBoneIndex = (z * 0x5C) + 0x8 + CollisionPos;
+                        int CollisionHitboxIndex = (z * 0x5C) + 0x10 + CollisionPos;
+                        int CollisionRadiusValueIndex = (z * 0x5C) + 0x50 + CollisionPos;
+                        int CollisionYPosValueIndex = (z * 0x5C) + 0x54 + CollisionPos;
+                        int CollisionZPosValueIndex = (z * 0x5C) + 0x58 + CollisionPos;
+
+
+                        int CollisionType = fileBytes[CollisionTypeIndex];
+                        int CollisionState = fileBytes[CollisionStateIndex];
+                        int CollisionLoadBone = fileBytes[CollisionLoadBoneIndex];
+                        long CollisionRadiusValue = fileBytes[CollisionRadiusValueIndex] + fileBytes[CollisionRadiusValueIndex + 1] * 0x100 + fileBytes[CollisionRadiusValueIndex + 2] * 0x10000 + fileBytes[CollisionRadiusValueIndex + 3] * 0x1000000;
+                        long CollisionYPosValue = fileBytes[CollisionYPosValueIndex] + fileBytes[CollisionYPosValueIndex + 1] * 0x100 + fileBytes[CollisionYPosValueIndex + 2] * 0x10000 + fileBytes[CollisionYPosValueIndex + 3] * 0x1000000;
+                        long CollisionZPosValue = fileBytes[CollisionZPosValueIndex] + fileBytes[CollisionZPosValueIndex + 1] * 0x100 + fileBytes[CollisionZPosValueIndex + 2] * 0x10000 + fileBytes[CollisionZPosValueIndex + 3] * 0x1000000;
+                        string CollisionHitbox = MainFunctions.b_ReadString2(fileBytes, CollisionHitboxIndex, 0x20);
+
+                        collisionSecTypeValue.Add(CollisionType);
+                        collisionSecStateValue.Add(CollisionState);
+                        collisionSecEnablerBoneValue.Add(CollisionLoadBone);
+                        collisionSecRadiusValue.Add(CollisionRadiusValue);
+                        collisionSecYPosValue.Add(CollisionYPosValue);
+                        collisionSecZPosValue.Add(CollisionZPosValue);
+                        collisionSecBoneName.Add(CollisionHitbox);
+                    }
+                }
+
+            } else {
+                MessageBox.Show("Effect section couldn't be found. If you used character prm, send this file in modding group and make sure it's original file from game.\nEffects will not be affected!");
+
+            }
+            //MessageBox.Show(EffectPos.ToString("X2"));
             // List all anm sections
             int motDMG = XfbinParser.FindString(fileBytes, "prm_motcmn", 0);
             int awaSec = XfbinParser.FindString(fileBytes, "prm_awa", 0);
@@ -154,7 +270,94 @@ namespace NSUNS4_ModManager.ToolBoxCode {
             }
 
 
-
+            if (motDMG == -1 && awaSec != -1 && (BossIndex > 8 || bossSec == -1)) {
+                string[] sectionnames_loc =
+                {
+                    "Awakening",
+                    "Base",
+                    "Jutsu",
+                    "Ultimate Jutsu",
+                    "Expansion A",
+                    "Expansion B",
+                    "Expansion C",
+                    "Expansion D",
+                    "Expansion E",
+                    "Expansion F",
+                    "Expansion G",
+                    "Expansion H",
+                    "Expansion I"
+                };
+                sectionnames = sectionnames_loc;
+            } else if (motDMG != -1 && awaSec != -1 && (BossIndex > 8 || bossSec == -1)) {
+                string[] sectionnames_loc =
+                {
+                    "Awakening",
+                    "Base",
+                    "Damage animations",
+                    "Jutsu",
+                    "Ultimate Jutsu",
+                    "Expansion A",
+                    "Expansion B",
+                    "Expansion C",
+                    "Expansion D",
+                    "Expansion E",
+                    "Expansion F",
+                    "Expansion G",
+                    "Expansion H",
+                    "Expansion I"
+                };
+                sectionnames = sectionnames_loc;
+            } else if (motDMG != -1 && awaSec == -1 && (BossIndex > 8 || bossSec == -1)) {
+                string[] sectionnames_loc =
+                {
+                    "Base",
+                    "Damage animations",
+                    "Jutsu",
+                    "Ultimate Jutsu",
+                    "Expansion A",
+                    "Expansion B",
+                    "Expansion C",
+                    "Expansion D",
+                    "Expansion E",
+                    "Expansion F",
+                    "Expansion G",
+                    "Expansion H",
+                    "Expansion I"
+                };
+                sectionnames = sectionnames_loc;
+            } else if (motDMG == -1 && awaSec == -1 && (BossIndex > 8 || bossSec == -1)) {
+                string[] sectionnames_loc =
+                {
+                    "Base",
+                    "Jutsu",
+                    "Ultimate Jutsu",
+                    "Expansion A",
+                    "Expansion B",
+                    "Expansion C",
+                    "Expansion D",
+                    "Expansion E",
+                    "Expansion G",
+                    "Expansion H",
+                    "Expansion I"
+                };
+                sectionnames = sectionnames_loc;
+            } else {
+                string[] sectionnames_loc =
+                {
+                    "Expansion A",
+                    "Expansion B",
+                    "Expansion C",
+                    "Expansion D",
+                    "Expansion E",
+                    "Expansion G",
+                    "Expansion H",
+                    "Expansion I",
+                    "Expansion J",
+                    "Expansion K",
+                    "Expansion L"
+                };
+                sectionnames = sectionnames_loc;
+            }
             for (int a = 0; a < verList.Count; a++) {
 
                 byte[] actualSection = verSection[a];
@@ -233,23 +436,38 @@ namespace NSUNS4_ModManager.ToolBoxCode {
                             string str = MainFunctions.b_ReadString(actualSection, index + 0x40);
                             if (str.Length > 3 && (str.Substring(0, 3) == "DMG" || str.Substring(0, 3) == "DAM")) {
                                 sectionLength = 0xA0;
-
                             }
 
+                            /*char act1 = (char)actualSection[index + 0x40];
+                            if (!Char.IsDigit(act1) && Char.IsUpper(act1))
+                            {
+                                byte byte1 = actualSection[index + 0x40 + 0x2A]; // 20 
+                                byte byte2 = actualSection[index + 0x40 + 0x2C]; // 22
 
-                            for (int z = 0; z < sectionLength; z++) movementsection.Add(actualSection[z + index]);
-                            index = index + sectionLength;
+                                if(byte1 == 0x0 && byte2 == 0x0)
+                                {
 
-                            // Add to master list
-                            movementList[a][x].Add(movementsection.ToArray());
+                                }
+                            }*/
                         }
 
-                        start = index;
-                    }
-                }
+                        // If the first letter of the hitbox is caps, then it's a special 0x60 section
+                        // char act = (char)actualSection[index];
+                        // if (actualSection[index] != 0x0 && Char.IsUpper(act) && !Char.IsDigit(act)) sectionLength = 0x40;
 
-                fileOpen = true;
+                        //MessageBox.Show("Movement " + y.ToString() + " of ANM " + x.ToString() + " is " + sectionLength.ToString("X2") + " bytes long");
+                        for (int z = 0; z < sectionLength; z++) movementsection.Add(actualSection[z + index]);
+                        index = index + sectionLength;
+
+                        // Add to master list
+                        movementList[a][x].Add(movementsection.ToArray());
+                    }
+
+                    start = index;
+                }
             }
+
+            fileOpen = true;
         }
         public byte[] GenerateFile() {
             byte[] newBytes = new byte[0];
@@ -559,6 +777,155 @@ namespace NSUNS4_ModManager.ToolBoxCode {
                 test = MainFunctions.b_ReplaceBytes(test, sizeBytes4, newLastEffectPos - 16, 1);
 
                 newBytes = test;
+
+                // COLLISION
+
+                if (collisionChanged) {
+                    test = new byte[0];
+                    FirstSize = 0;
+                    byte[] CollisionSections = new byte[0];
+                    for (int z = 0; z < collisionSecCount; z++) {
+                        byte[] NewCollisionSection = new byte[0x5C];
+
+                        byte[] CollisionType = new byte[1]
+                        {
+                            (byte)collisionSecTypeValue[z]
+                        };
+                        NewCollisionSection = MainFunctions.b_ReplaceBytes(NewCollisionSection, CollisionType, 0x00);
+
+                        byte[] CollisionState = new byte[1]
+                        {
+                            (byte)collisionSecStateValue[z]
+                        };
+                        NewCollisionSection = MainFunctions.b_ReplaceBytes(NewCollisionSection, CollisionState, 0x04);
+
+                        byte[] CollisionBoneEnabler = new byte[1]
+                        {
+                            (byte)collisionSecEnablerBoneValue[z]
+                        };
+                        NewCollisionSection = MainFunctions.b_ReplaceBytes(NewCollisionSection, CollisionBoneEnabler, 0x08);
+
+                        byte[] CollisionOrder = new byte[1]
+                        {
+                            (byte)(z+1)
+                        };
+                        NewCollisionSection = MainFunctions.b_ReplaceBytes(NewCollisionSection, CollisionOrder, 0x0C);
+
+                        if (collisionSecEnablerBoneValue[z] == 0) {
+                            byte[] CollisionSectionHitbox = new byte[0];
+                            CollisionSectionHitbox = MainFunctions.b_AddBytes(CollisionSectionHitbox, Encoding.ASCII.GetBytes(collisionSecBoneName[z]));
+                            NewCollisionSection = MainFunctions.b_ReplaceBytes(NewCollisionSection, CollisionSectionHitbox, 0x10);
+                        }
+                        byte[] CollisionRadius = BitConverter.GetBytes(collisionSecRadiusValue[z]);
+                        for (int k = 0; k < 4; k++) {
+                            byte[] CollisionRadiusByte = new byte[1]
+                            {
+                                (byte)CollisionRadius[k]
+                            };
+                            NewCollisionSection = MainFunctions.b_ReplaceBytes(NewCollisionSection, CollisionRadiusByte, 0x50 + k);
+                        }
+                        byte[] CollisionYPos = BitConverter.GetBytes(collisionSecYPosValue[z]);
+                        for (int k = 0; k < 4; k++) {
+                            byte[] CollisionYPosByte = new byte[1]
+                            {
+                                (byte)CollisionYPos[k]
+                            };
+                            NewCollisionSection = MainFunctions.b_ReplaceBytes(NewCollisionSection, CollisionYPosByte, 0x54 + k);
+                        }
+                        byte[] CollisionZPos = BitConverter.GetBytes(collisionSecZPosValue[z]);
+                        for (int k = 0; k < 4; k++) {
+                            byte[] CollisionYPosByte = new byte[1]
+                            {
+                                (byte)CollisionZPos[k]
+                            };
+                            NewCollisionSection = MainFunctions.b_ReplaceBytes(NewCollisionSection, CollisionYPosByte, 0x58 + k);
+                        }
+
+
+                        CollisionSections = MainFunctions.b_AddBytes(CollisionSections, NewCollisionSection);
+                        FirstSize = FirstSize + 0x5C;
+                    }
+                    //Collision data
+                    byte[] CollisionEntry = new byte[8]
+                    {
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x03,
+                        0x00,
+                        0x63,
+                        0x00,
+                        0x00
+                    };
+                    int newCollisionPos = XfbinParser.FindBytes(newBytes, CollisionEntry, 0);
+                    if (newCollisionPos == -1) {
+                        CollisionEntry = new byte[6]
+                        {
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x03,
+                        0x00,
+                        0x63
+                        };
+                        newCollisionPos = XfbinParser.FindBytes(newBytes, CollisionEntry, 0);
+                    }
+                    if (newCollisionPos == -1) {
+                        CollisionEntry = new byte[6]
+                        {
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x03,
+                        0x00,
+                        0x79
+                        };
+                        newCollisionPos = XfbinParser.FindBytes(newBytes, CollisionEntry, 0);
+                    }
+                    if (newCollisionPos == -1) {
+                        CollisionEntry = new byte[6]
+                        {
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x03,
+                        0x00,
+                        0x7A
+                        };
+                        newCollisionPos = XfbinParser.FindBytes(newBytes, CollisionEntry, 0);
+                    }
+                    int newLastCollisionPos = newCollisionPos + 16;
+                    int newCollisionSecLength = MainFunctions.b_ReadIntRev(newBytes, newLastCollisionPos - 8) - 4;
+                    List<byte> ChangedCollisionSection = new List<byte>();
+                    for (int j = 0; j < newBytes.Length; j++) {
+                        ChangedCollisionSection.Add(newBytes[j]);
+                    }
+                    for (int j = newLastCollisionPos; j < newLastCollisionPos + newCollisionSecLength; j++) {
+                        ChangedCollisionSection.RemoveAt(newLastCollisionPos);
+                    }
+                    for (int j = 0; j < CollisionSections.Length; j++) {
+                        ChangedCollisionSection.Insert(newLastCollisionPos + j, CollisionSections[j]);
+                    }
+                    test = new byte[ChangedCollisionSection.Count];
+                    for (int j = 0; j < ChangedCollisionSection.Count; j++) {
+                        test[j] = ChangedCollisionSection[j];
+                    }
+                    sizeBytes3 = BitConverter.GetBytes(FirstSize + 4);
+                    sizeBytes4 = BitConverter.GetBytes(FirstSize + 8);
+                    byte[] sizeBytes5 = BitConverter.GetBytes(collisionSecCount);
+                    byte[] reversedCount = new byte[4]
+                    {
+                        sizeBytes5[3],
+                        sizeBytes5[2],
+                        sizeBytes5[1],
+                        sizeBytes5[0]
+                    };
+                    test = MainFunctions.b_ReplaceBytes(test, reversedCount, newLastCollisionPos - 4, 1);
+                    test = MainFunctions.b_ReplaceBytes(test, sizeBytes3, newLastCollisionPos - 8, 1);
+                    test = MainFunctions.b_ReplaceBytes(test, sizeBytes4, newLastCollisionPos - 20, 1);
+
+                    newBytes = test;
+                }
             }
             return newBytes;
         }
