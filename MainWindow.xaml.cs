@@ -112,8 +112,8 @@ namespace NSUNS4_ModManager {
 
             if (c.ShowDialog() == Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialogResult.Ok) {
                 GameRootPath = c.FileName;
+                SaveConfig();
             }
-            SaveConfig();
         }
 
         private void MenuItem_Click_1(object sender, RoutedEventArgs e) {
@@ -122,8 +122,8 @@ namespace NSUNS4_ModManager {
 
             if (c.ShowDialog() == Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialogResult.Ok) {
                 GameModsPath = c.FileName;
+                SaveConfig();
             }
-            SaveConfig();
         }
 
         void CreateConfig() {
@@ -282,7 +282,6 @@ namespace NSUNS4_ModManager {
                     bool replace = false;
                     for (int x = 0; x < CharacodeFile.CharacterCount; x++) {
                         if (CharacodeFile.CharacterList[x].Contains(CharacodesList[c])) {
-                            MessageBox.Show("This character will replace exist character");
                             replace = true;
                         }
 
@@ -1682,37 +1681,41 @@ namespace NSUNS4_ModManager {
 
         private void Button_Click_2(object sender, RoutedEventArgs e) {
             if (Directory.Exists(GameRootPath)) {
-                if (Directory.Exists(GameRootPath + "\\data_win32")) {
-                    Directory.Delete(GameRootPath + "\\data_win32", true);
-                }
-                for (int c = 0; c < ImportedCharacodesList.Count; c++) {
-                    if (Directory.Exists(GameRootPath + "\\moddingapi\\mods\\" + ImportedCharacodesList[c])) {
-                        Directory.Delete(GameRootPath + "\\moddingapi\\mods\\" + ImportedCharacodesList[c], true);
+                WinForms.DialogResult msg = (WinForms.DialogResult)MessageBox.Show("Are you sure you want to clean your game from mods?", "", MessageBoxButton.OKCancel);
+                if (msg == WinForms.DialogResult.OK) {
+                    if (Directory.Exists(GameRootPath + "\\data_win32")) {
+                        Directory.Delete(GameRootPath + "\\data_win32", true);
+                    }
+                    for (int c = 0; c < ImportedCharacodesList.Count; c++) {
+                        if (Directory.Exists(GameRootPath + "\\moddingapi\\mods\\" + ImportedCharacodesList[c])) {
+                            Directory.Delete(GameRootPath + "\\moddingapi\\mods\\" + ImportedCharacodesList[c], true);
+                        }
+                    }
+
+                    string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER";
+                    DirectoryInfo d_gfx = new DirectoryInfo(gfx_path);
+                    bool gfx_charselExist = false;
+                    string Modgfx_charselPath = "";
+                    FileInfo[] gfx_Files = d_gfx.GetFiles("*.gfx", SearchOption.AllDirectories);
+
+                    foreach (FileInfo file in gfx_Files) {
+                        if (file.FullName.Contains("charsel\\charsel.gfx")) {
+                            gfx_charselExist = true;
+                            Modgfx_charselPath = file.FullName;
+                            break;
+                        } else {
+                            gfx_charselExist = false;
+                            Modgfx_charselPath = "";
+                        }
+                    }
+                    if (gfx_charselExist) {
+                        byte[] charsel = File.ReadAllBytes(Modgfx_charselPath);
+                        int pos = MainFunctions.b_FindBytes(charsel, new byte[16] { 0x02, 0x68, 0xF7, 0x06, 0x5E, 0xF8, 0x06, 0x24, 0x03, 0x68, 0xF8, 0x06, 0x5E, 0xF9, 0x06, 0x24 }) + 0x10;
+                        charsel[pos] = (byte)5;
+                        File.WriteAllBytes(Modgfx_charselPath, charsel);
                     }
                 }
-
-                string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER";
-                DirectoryInfo d_gfx = new DirectoryInfo(gfx_path);
-                bool gfx_charselExist = false;
-                string Modgfx_charselPath = "";
-                FileInfo[] gfx_Files = d_gfx.GetFiles("*.gfx", SearchOption.AllDirectories);
-
-                foreach (FileInfo file in gfx_Files) {
-                    if (file.FullName.Contains("charsel\\charsel.gfx")) {
-                        gfx_charselExist = true;
-                        Modgfx_charselPath = file.FullName;
-                        break;
-                    } else {
-                        gfx_charselExist = false;
-                        Modgfx_charselPath = "";
-                    }
-                }
-                if (gfx_charselExist) {
-                    byte[] charsel = File.ReadAllBytes(Modgfx_charselPath);
-                    int pos = MainFunctions.b_FindBytes(charsel, new byte[16] { 0x02, 0x68, 0xF7, 0x06, 0x5E, 0xF8, 0x06, 0x24, 0x03, 0x68, 0xF8, 0x06, 0x5E, 0xF9, 0x06, 0x24 }) + 0x10;
-                    charsel[pos] = (byte)5;
-                    File.WriteAllBytes(Modgfx_charselPath, charsel);
-                }
+                
             } else {
                 MessageBox.Show("Select root folder of game");
             }

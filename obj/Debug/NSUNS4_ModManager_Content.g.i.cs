@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("modmanager_icon1.ico")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("tempdel13.ico")]
 
 

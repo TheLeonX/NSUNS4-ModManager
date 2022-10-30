@@ -40,7 +40,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ModManager_icon1.ico</ApplicationIcon>
+    <ApplicationIcon>tempdel13.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="netstandard" />
@@ -160,7 +160,10 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ModManager_icon1.ico" />
+    <Resource Include="ModManager_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="tempdel13.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
