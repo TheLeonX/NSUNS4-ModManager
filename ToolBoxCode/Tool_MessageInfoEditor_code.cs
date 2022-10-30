@@ -40,7 +40,6 @@ namespace NSUNS4_ModManager.ToolBoxCode {
                 }
             }
             if (!exist) {
-                MessageBox.Show("No files were found.");
                 OpenedFile.Clear();
                 FilePaths.Clear();
                 return;

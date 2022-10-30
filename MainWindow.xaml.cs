@@ -67,6 +67,7 @@ namespace NSUNS4_ModManager {
         string originalBtlcmnPath = Directory.GetCurrentDirectory() + "\\systemFiles\\btlcmn.xfbin";
         string originalseparamPath = Directory.GetCurrentDirectory() + "\\systemFiles\\separam.xfbin";
         string originalspTypeSupportParamPath = Directory.GetCurrentDirectory() + "\\systemFiles\\spTypeSupport.xfbin";
+        string originalnuccMaterialDx11Path = Directory.GetCurrentDirectory() + "\\systemFiles\\nuccMaterial_dx11.nsh";
 
 
         public static string datawin32Path = "[null]";
@@ -93,6 +94,7 @@ namespace NSUNS4_ModManager {
         public static string conditionprmPath = "[null]";
         public static string damageprmPath = "[null]";
         public static string spTypeSupportParamPath = "[null]";
+        public static string nuccMaterialDx11Path = "[null]";
 
         public static string ConfigPath = AppDomain.CurrentDomain.BaseDirectory + "\\config.txt";
         public static string GameRootPath = "[null]";
@@ -227,6 +229,8 @@ namespace NSUNS4_ModManager {
         }
         private void Button_Click_1(object sender, RoutedEventArgs e) {
             if (Directory.Exists(GameRootPath) && Directory.Exists(GameModsPath)) {
+
+                List<string> UsedShaders = new List<string>();
                 List<bool> ModdingAPIRequirement_list = new List<bool>();
                 for (int c = 0; c< ModdingAPI_requirement_Paths.Count; c++) {
                     ModdingAPIRequirement_list.Add(Convert.ToBoolean(File.ReadAllText(ModdingAPI_requirement_Paths[c])));
@@ -273,6 +277,7 @@ namespace NSUNS4_ModManager {
                     conditionprmPath = GameRootPath + "\\data_win32\\spc\\conditionprm.bin.xfbin";
                     damageprmPath = GameRootPath + "\\data_win32\\spc\\damageprm.bin.xfbin";
                     spTypeSupportParamPath = GameRootPath + "\\data_win32\\spc\\WIN64\\spTypeSupportParam.xfbin";
+                    nuccMaterialDx11Path = GameRootPath + "\\data\\system\\nuccMaterial_dx11.nsh";
 
                     if (!File.Exists(chaPath)) {
                         chaPath = originalChaPath;
@@ -299,6 +304,7 @@ namespace NSUNS4_ModManager {
                         FileInfo[] cha_Files = d.GetFiles("*.txt", SearchOption.AllDirectories);
                         FileInfo[] Files = d.GetFiles("*.xfbin", SearchOption.AllDirectories);
                         FileInfo[] cpk_Files = d.GetFiles("*.cpk", SearchOption.AllDirectories);
+                        FileInfo[] Shader_Files = d.GetFiles("*.hlsl", SearchOption.AllDirectories);
 
                         string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER";
                         DirectoryInfo d_gfx = new DirectoryInfo(gfx_path);
@@ -308,6 +314,7 @@ namespace NSUNS4_ModManager {
                         DirectoryInfo d_or = new DirectoryInfo(datawin32Path);
                         List<string> cpk_paths = new List<string>();
                         List<string> cpk_names = new List<string>();
+                        List<string> shader_paths = new List<string>();
                         string dataWinFolder = d_or.Name + "\\";
                         int dataWinFolderLength = dataWinFolder.Length;
                         bool originalChaExist = false;
@@ -352,6 +359,7 @@ namespace NSUNS4_ModManager {
                         bool damageprmExist = false;
                         bool btlcmnExist = false;
                         bool spTypeSupportParamExist = false;
+                        bool shaderExist = true;
                         List<bool> messageExistList = new List<bool>();
                         foreach (FileInfo file in Files) {
                             if (file.FullName.Contains(d.Name + "prm.bin.xfbin")) {
@@ -520,6 +528,9 @@ namespace NSUNS4_ModManager {
                                 break;
                             }
                         }
+                        foreach (FileInfo file in Shader_Files) {
+                            shader_paths.Add(file.FullName);
+                        }
                         foreach (FileInfo file in cha_Files) {
                             if (file.FullName.Contains("characode.txt")) {
                                 originalChaExist = true;
@@ -600,6 +611,21 @@ namespace NSUNS4_ModManager {
                                 CharacodeID = OldCharacode;
                             }
                             string root_path = datawin32Path.Replace(d_or.Name, "");
+                            if (shader_paths.Count > 0) {
+
+                                byte[] nuccMaterialFile = File.ReadAllBytes(nuccMaterialDx11Path);
+                                int EntryCount = MainFunctions.b_ReadIntFromTwoBytes(nuccMaterialFile,0x0E);
+                                for (int sh = 0; sh<shader_paths.Count; sh++) {
+                                    if (!UsedShaders.Contains(System.IO.Path.GetFileName(shader_paths[sh]))) {
+                                        nuccMaterialFile = MainFunctions.b_AddBytes(nuccMaterialFile, File.ReadAllBytes(shader_paths[sh]));
+                                        EntryCount++;
+                                        UsedShaders.Add(System.IO.Path.GetFileName(shader_paths[sh]));
+                                    }
+                                }
+                                nuccMaterialFile = MainFunctions.b_ReplaceBytes(nuccMaterialFile, BitConverter.GetBytes(EntryCount), 0x0E, 0, 2);
+                                nuccMaterialFile = MainFunctions.b_ReplaceBytes(nuccMaterialFile, BitConverter.GetBytes(nuccMaterialFile.Length), 0x04, 0);
+                                File.WriteAllBytes(nuccMaterialDx11Path, nuccMaterialFile);
+                            }
                             if (specialCondParamExist) {
                                 CopyFiles(root_path + "\\moddingapi\\mods\\" + d.Name, ModspecialCondParamPath, root_path + "\\moddingapi\\mods\\" + d.Name + "\\specialCondParam.xfbin");
                                 byte[] specialCondParamFile = File.ReadAllBytes(root_path + "\\moddingapi\\mods\\" + d.Name + "\\specialCondParam.xfbin");
@@ -1588,7 +1614,7 @@ namespace NSUNS4_ModManager {
                                 Tool_MessageInfoEditor_code MessageModFile = new Tool_MessageInfoEditor_code();
                                 Tool_MessageInfoEditor_code MessageOriginalFile = new Tool_MessageInfoEditor_code();
                                 MessageModFile.OpenFilesStart(ModmessagePathList.Remove(ModmessagePathList.IndexOf("\\WIN64"), ModmessagePathList.Length - ModmessagePathList.IndexOf("\\WIN64")));
-                                if (File.Exists(messageInfoPath))
+                                if (Directory.Exists(messageInfoPath))
                                     MessageOriginalFile.OpenFilesStart(messageInfoPath);
                                 else {
                                     MessageOriginalFile.OpenFilesStart(originalMessagePath);
@@ -1619,28 +1645,31 @@ namespace NSUNS4_ModManager {
                                     BtlcmnOriginalFile.OpenFile(originalBtlcmnPath);
                                 }
                                 for (int z = 0; z < BtlcmnModFile.TONE_SoundName_List.Count; z++) {
-                                    BtlcmnOriginalFile.TONE_SectionType_List.Add(BtlcmnModFile.TONE_SectionType_List[z]);
-                                    BtlcmnOriginalFile.TONE_SectionTypeValues_List.Add(BtlcmnModFile.TONE_SectionTypeValues_List[z]);
-                                    BtlcmnOriginalFile.TONE_SoundName_List.Add(BtlcmnModFile.TONE_SoundName_List[z]);
-                                    BtlcmnOriginalFile.TONE_SoundPos_List.Add(BtlcmnModFile.TONE_SoundPos_List[z]);
-                                    BtlcmnOriginalFile.TONE_SoundSize_List.Add(BtlcmnModFile.TONE_SoundSize_List[z]);
-                                    BtlcmnOriginalFile.TONE_MainVolume_List.Add(BtlcmnModFile.TONE_MainVolume_List[z]);
-                                    BtlcmnOriginalFile.TONE_SoundSettings_List.Add(BtlcmnModFile.TONE_SoundSettings_List[z]);
-                                    BtlcmnOriginalFile.TONE_SoundData_List.Add(BtlcmnModFile.TONE_SoundData_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerType_List.Add(BtlcmnModFile.TONE_RandomizerType_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerLength_List.Add(BtlcmnModFile.TONE_RandomizerLength_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerUnk1_List.Add(BtlcmnModFile.TONE_RandomizerUnk1_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerSectionCount_List.Add(BtlcmnModFile.TONE_RandomizerSectionCount_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerOneSection_ID_List.Add(BtlcmnModFile.TONE_RandomizerOneSection_ID_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerOneSection_unk_List.Add(BtlcmnModFile.TONE_RandomizerOneSection_unk_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerOneSection_PlayChance_List.Add(BtlcmnModFile.TONE_RandomizerOneSection_PlayChance_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerOneSection_SoundID_List.Add(BtlcmnModFile.TONE_RandomizerOneSection_SoundID_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerUnk2_List.Add(BtlcmnModFile.TONE_RandomizerUnk2_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerUnk3_List.Add(BtlcmnModFile.TONE_RandomizerUnk3_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerUnk4_List.Add(BtlcmnModFile.TONE_RandomizerUnk4_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerUnk5_List.Add(BtlcmnModFile.TONE_RandomizerUnk5_List[z]);
-                                    BtlcmnOriginalFile.TONE_RandomizerUnk6_List.Add(BtlcmnModFile.TONE_RandomizerUnk6_List[z]);
-                                    BtlcmnOriginalFile.TONE_OverlaySound_List.Add(BtlcmnModFile.TONE_OverlaySound_List[z]);
+                                    if (!BtlcmnOriginalFile.TONE_SoundName_List.Contains(BtlcmnModFile.TONE_SoundName_List[z])) {
+                                        BtlcmnOriginalFile.TONE_SectionType_List.Add(BtlcmnModFile.TONE_SectionType_List[z]);
+                                        BtlcmnOriginalFile.TONE_SectionTypeValues_List.Add(BtlcmnModFile.TONE_SectionTypeValues_List[z]);
+                                        BtlcmnOriginalFile.TONE_SoundName_List.Add(BtlcmnModFile.TONE_SoundName_List[z]);
+                                        BtlcmnOriginalFile.TONE_SoundPos_List.Add(BtlcmnModFile.TONE_SoundPos_List[z]);
+                                        BtlcmnOriginalFile.TONE_SoundSize_List.Add(BtlcmnModFile.TONE_SoundSize_List[z]);
+                                        BtlcmnOriginalFile.TONE_MainVolume_List.Add(BtlcmnModFile.TONE_MainVolume_List[z]);
+                                        BtlcmnOriginalFile.TONE_SoundSettings_List.Add(BtlcmnModFile.TONE_SoundSettings_List[z]);
+                                        BtlcmnOriginalFile.TONE_SoundData_List.Add(BtlcmnModFile.TONE_SoundData_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerType_List.Add(BtlcmnModFile.TONE_RandomizerType_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerLength_List.Add(BtlcmnModFile.TONE_RandomizerLength_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerUnk1_List.Add(BtlcmnModFile.TONE_RandomizerUnk1_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerSectionCount_List.Add(BtlcmnModFile.TONE_RandomizerSectionCount_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerOneSection_ID_List.Add(BtlcmnModFile.TONE_RandomizerOneSection_ID_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerOneSection_unk_List.Add(BtlcmnModFile.TONE_RandomizerOneSection_unk_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerOneSection_PlayChance_List.Add(BtlcmnModFile.TONE_RandomizerOneSection_PlayChance_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerOneSection_SoundID_List.Add(BtlcmnModFile.TONE_RandomizerOneSection_SoundID_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerUnk2_List.Add(BtlcmnModFile.TONE_RandomizerUnk2_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerUnk3_List.Add(BtlcmnModFile.TONE_RandomizerUnk3_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerUnk4_List.Add(BtlcmnModFile.TONE_RandomizerUnk4_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerUnk5_List.Add(BtlcmnModFile.TONE_RandomizerUnk5_List[z]);
+                                        BtlcmnOriginalFile.TONE_RandomizerUnk6_List.Add(BtlcmnModFile.TONE_RandomizerUnk6_List[z]);
+                                        BtlcmnOriginalFile.TONE_OverlaySound_List.Add(BtlcmnModFile.TONE_OverlaySound_List[z]);
+                                    }
+                                    
                                 }
 
                                 if (!Directory.Exists(datawin32Path + "\\sound\\PC\\")) {
@@ -1697,26 +1726,26 @@ namespace NSUNS4_ModManager {
 
                     string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER";
                     DirectoryInfo d_gfx = new DirectoryInfo(gfx_path);
-                    bool gfx_charselExist = false;
                     string Modgfx_charselPath = "";
                     FileInfo[] gfx_Files = d_gfx.GetFiles("*.gfx", SearchOption.AllDirectories);
 
                     foreach (FileInfo file in gfx_Files) {
                         if (file.FullName.Contains("charsel\\charsel.gfx")) {
-                            gfx_charselExist = true;
                             Modgfx_charselPath = file.FullName;
                             break;
                         } else {
-                            gfx_charselExist = false;
                             Modgfx_charselPath = "";
                         }
                     }
-                    if (gfx_charselExist) {
-                        byte[] charsel = File.ReadAllBytes(Modgfx_charselPath);
-                        int pos = MainFunctions.b_FindBytes(charsel, new byte[16] { 0x02, 0x68, 0xF7, 0x06, 0x5E, 0xF8, 0x06, 0x24, 0x03, 0x68, 0xF8, 0x06, 0x5E, 0xF9, 0x06, 0x24 }) + 0x10;
-                        charsel[pos] = (byte)5;
+                    if (File.Exists(Modgfx_charselPath)) {
+                        byte[] charsel = File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\systemFiles\\charsel.gfx");
                         File.WriteAllBytes(Modgfx_charselPath, charsel);
                     }
+                    if (File.Exists(GameRootPath + "\\data\\system\\nuccMaterial_dx11.nsh")) {
+                        byte[] nuccMat = File.ReadAllBytes(originalnuccMaterialDx11Path);
+                        File.WriteAllBytes(GameRootPath + "\\data\\system\\nuccMaterial_dx11.nsh", nuccMat);
+                    }
+
                 }
                 
             } else {

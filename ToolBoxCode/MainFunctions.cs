@@ -99,13 +99,19 @@ namespace NSUNS4_ModManager.ToolBoxCode {
             }
             return a;
         }
-        public static byte[] b_ReplaceBytes(byte[] actual, byte[] bytesToReplace, int Index, int Invert = 0) {
+        public static byte[] b_ReplaceBytes(byte[] actual, byte[] bytesToReplace, int Index, int Invert = 0, int Count = -1) {
+            int length = 0;
+            if (Count == -1)
+                length = bytesToReplace.Length;
+            else
+                length = Count;
             if (Invert == 0) {
-                for (int x2 = 0; x2 < bytesToReplace.Length; x2++) {
+                
+                for (int x2 = 0; x2 < length; x2++) {
                     actual[Index + x2] = bytesToReplace[x2];
                 }
             } else {
-                for (int x = 0; x < bytesToReplace.Length; x++) {
+                for (int x = 0; x < length; x++) {
                     actual[Index + x] = bytesToReplace[bytesToReplace.Length - 1 - x];
                 }
             }
