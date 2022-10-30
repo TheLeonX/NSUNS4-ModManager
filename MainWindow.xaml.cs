@@ -844,8 +844,8 @@ namespace NSUNS4_ModManager {
                                         }
                                         if (!found) {
                                             CspOriginalFile.CharacterList.Add(CspModFile.CharacterList[v]);
-                                            CspOriginalFile.PageList.Add(CspModFile.PageList[v]);
-                                            CspOriginalFile.PositionList.Add(CspModFile.PositionList[v]);
+                                            CspOriginalFile.PageList.Add(maxPage);
+                                            CspOriginalFile.PositionList.Add(maxSlot);
                                             CspOriginalFile.CostumeList.Add(CspModFile.CostumeList[v]);
                                             CspOriginalFile.ChaList.Add(CspModFile.ChaList[v]);
                                             CspOriginalFile.AccessoryList.Add(CspModFile.AccessoryList[v]);
@@ -1463,98 +1463,101 @@ namespace NSUNS4_ModManager {
                                 Tool_damageeffEditor_code damageeffOriginalFile = new Tool_damageeffEditor_code();
                                 Tool_damageeffEditor_code damageeffModFile = new Tool_damageeffEditor_code();
                                 damageeffModFile.OpenFile(ModdamageeffPath);
-                                if (File.Exists(damageeffPath))
-                                    damageeffOriginalFile.OpenFile(damageeffPath);
-                                else {
-                                    damageeffOriginalFile.OpenFile(originaldamageeffPath);
-                                }
-                                List<int> OldEffectIds = new List<int>();
-                                List<int> NewEffectIds = new List<int>();
-
-                                if (effectprmExist) {
-                                    Tool_effectprmEditor_code effectprmOriginalFile = new Tool_effectprmEditor_code();
-                                    Tool_effectprmEditor_code effectprmModFile = new Tool_effectprmEditor_code();
-                                    effectprmModFile.OpenFile(ModeffectprmPath);
-                                    if (File.Exists(effectprmPath))
-                                        effectprmOriginalFile.OpenFile(effectprmPath);
+                                if (damageeffModFile.EntryCount > 0) {
+                                    if (File.Exists(damageeffPath))
+                                        damageeffOriginalFile.OpenFile(damageeffPath);
                                     else {
-                                        effectprmOriginalFile.OpenFile(originaleffectprmPath);
+                                        damageeffOriginalFile.OpenFile(originaldamageeffPath);
+                                    }
+                                    List<int> OldEffectIds = new List<int>();
+                                    List<int> NewEffectIds = new List<int>();
+
+                                    if (effectprmExist) {
+                                        Tool_effectprmEditor_code effectprmOriginalFile = new Tool_effectprmEditor_code();
+                                        Tool_effectprmEditor_code effectprmModFile = new Tool_effectprmEditor_code();
+                                        effectprmModFile.OpenFile(ModeffectprmPath);
+                                        if (File.Exists(effectprmPath))
+                                            effectprmOriginalFile.OpenFile(effectprmPath);
+                                        else {
+                                            effectprmOriginalFile.OpenFile(originaleffectprmPath);
+                                        }
+
+                                        for (int j = 0; j < effectprmModFile.EntryCount; j++) {
+                                            OldEffectIds.Add(effectprmModFile.EffectPrmID_List[j]);
+                                            NewEffectIds.Add(effectprmOriginalFile.EffectPrmID_List.Max() + 1);
+                                            effectprmModFile.EffectPrmID_List[j] = effectprmOriginalFile.EffectPrmID_List.Max() + 1;
+                                            effectprmOriginalFile.EffectPrmID_List.Add(effectprmModFile.EffectPrmID_List[j]);
+                                            effectprmOriginalFile.EffectPrmPath_List.Add(effectprmModFile.EffectPrmPath_List[j]);
+                                            effectprmOriginalFile.EffectPrmAnm_List.Add(effectprmModFile.EffectPrmAnm_List[j]);
+                                            effectprmOriginalFile.EffectPrmType_List.Add(effectprmModFile.EffectPrmType_List[j]);
+                                            effectprmOriginalFile.EntryCount++;
+                                        }
+                                        if (!Directory.Exists(datawin32Path + "\\spc")) {
+                                            Directory.CreateDirectory(datawin32Path + "\\spc");
+                                        }
+                                        effectprmOriginalFile.SaveFileAs(datawin32Path + "\\spc\\effectprm.bin.xfbin");
                                     }
 
-                                    for (int j = 0; j < effectprmModFile.EntryCount; j++) {
-                                        OldEffectIds.Add(effectprmModFile.EffectPrmID_List[j]);
-                                        NewEffectIds.Add(effectprmOriginalFile.EffectPrmID_List.Max() + 1);
-                                        effectprmModFile.EffectPrmID_List[j] = effectprmOriginalFile.EffectPrmID_List.Max() + 1;
-                                        effectprmOriginalFile.EffectPrmID_List.Add(effectprmModFile.EffectPrmID_List[j]);
-                                        effectprmOriginalFile.EffectPrmPath_List.Add(effectprmModFile.EffectPrmPath_List[j]);
-                                        effectprmOriginalFile.EffectPrmAnm_List.Add(effectprmModFile.EffectPrmAnm_List[j]);
-                                        effectprmOriginalFile.EffectPrmType_List.Add(effectprmModFile.EffectPrmType_List[j]);
-                                        effectprmOriginalFile.EntryCount++;
+                                    List<int> OldHitIds = new List<int>();
+                                    List<int> NewHitIds = new List<int>();
+                                    for (int c = 0; c < damageeffModFile.EntryCount; c++) {
+                                        for (int f = 0; f < OldEffectIds.Count; f++) {
+                                            if (damageeffModFile.EffectPrmId_List[c] == OldEffectIds[f])
+                                                damageeffModFile.EffectPrmId_List[c] = NewEffectIds[f];
+                                        }
+
+
+                                    }
+                                    for (int c = 0; c < damageeffModFile.EntryCount; c++) {
+                                        int maxValue = damageeffOriginalFile.HitId_List.Max();
+                                        OldHitIds.Add(damageeffModFile.HitId_List[c]);
+                                        NewHitIds.Add(maxValue + 1);
+                                        damageeffOriginalFile.HitId_List.Add(maxValue + 1);
+                                        if (OldHitIds.Contains(damageeffModFile.ExtraHitId_List[c])) {
+                                            for (int s = 0; s < OldHitIds.Count; s++) {
+                                                damageeffModFile.ExtraHitId_List[c] = NewHitIds[s];
+                                            }
+                                        } else {
+                                            damageeffOriginalFile.ExtraHitId_List.Add(damageeffModFile.ExtraHitId_List[c]);
+                                        }
+                                        damageeffOriginalFile.ExtraSoundId_List.Add(damageeffModFile.ExtraSoundId_List[c]);
+                                        damageeffOriginalFile.EffectPrmId_List.Add(damageeffModFile.EffectPrmId_List[c]);
+                                        damageeffOriginalFile.SoundId_List.Add(damageeffModFile.SoundId_List[c]);
+                                        damageeffOriginalFile.Unknown1_List.Add(damageeffModFile.Unknown1_List[c]);
+                                        damageeffOriginalFile.Unknown2_List.Add(damageeffModFile.Unknown2_List[c]);
+                                        damageeffOriginalFile.ExtraEffectPrmId_List.Add(damageeffModFile.ExtraEffectPrmId_List[c]);
+                                        damageeffOriginalFile.EntryCount++;
+                                    }
+
+                                    Tool_MovesetCoder_code PrmFile = new Tool_MovesetCoder_code();
+                                    PrmFile.OpenFile(ModprmPath);
+                                    for (int k1 = 0; k1 < PrmFile.movementList.Count; k1++) {
+                                        for (int k2 = 0; k2 < PrmFile.movementList[k1].Count; k2++) {
+                                            for (int k3 = 0; k3 < PrmFile.movementList[k1][k2].Count; k3++) {
+                                                if (PrmFile.movementList[k1][k2][k3].Length > 0x40) {
+                                                    int selectedhit = MainFunctions.b_ReadIntFromTwoBytes(PrmFile.movementList[k1][k2][k3], 0x82);
+                                                    for (int g = 0; g < OldHitIds.Count; g++) {
+                                                        if (OldHitIds[g] == selectedhit) {
+                                                            PrmFile.movementList[k1][k2][k3][0x82] = BitConverter.GetBytes(NewHitIds[g])[0];
+                                                            PrmFile.movementList[k1][k2][k3][0x83] = BitConverter.GetBytes(NewHitIds[g])[1];
+                                                        }
+
+                                                    }
+
+                                                }
+                                            }
+                                        }
                                     }
                                     if (!Directory.Exists(datawin32Path + "\\spc")) {
                                         Directory.CreateDirectory(datawin32Path + "\\spc");
                                     }
-                                    effectprmOriginalFile.SaveFileAs(datawin32Path + "\\spc\\effectprm.bin.xfbin");
-                                }
-
-                                List<int> OldHitIds = new List<int>();
-                                List<int> NewHitIds = new List<int>();
-                                for (int c = 0; c < damageeffModFile.EntryCount; c++) {
-                                    for (int f = 0; f < OldEffectIds.Count; f++) {
-                                        if (damageeffModFile.EffectPrmId_List[c] == OldEffectIds[f])
-                                            damageeffModFile.EffectPrmId_List[c] = NewEffectIds[f];
+                                    damageeffOriginalFile.SaveFileAs(datawin32Path + "\\spc\\damageeff.bin.xfbin");
+                                    if (!Directory.Exists(System.IO.Path.GetDirectoryName(datawin32Path + "\\" + ModprmPath.Substring(ModprmPath.IndexOf(dataWinFolder) + dataWinFolderLength)))) {
+                                        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(datawin32Path + "\\" + ModprmPath.Substring(ModprmPath.IndexOf(dataWinFolder) + dataWinFolderLength)));
                                     }
-
-
+                                    PrmFile.SaveFileAs(datawin32Path + "\\" + ModprmPath.Substring(ModprmPath.IndexOf(dataWinFolder) + dataWinFolderLength));
                                 }
-                                for (int c = 0; c < damageeffModFile.EntryCount; c++) {
-                                    int maxValue = damageeffOriginalFile.HitId_List.Max();
-                                    OldHitIds.Add(damageeffModFile.HitId_List[c]);
-                                    NewHitIds.Add(maxValue + 1);
-                                    damageeffOriginalFile.HitId_List.Add(maxValue + 1);
-                                    if (OldHitIds.Contains(damageeffModFile.ExtraHitId_List[c])) {
-                                        for (int s = 0; s < OldHitIds.Count; s++) {
-                                            damageeffModFile.ExtraHitId_List[c] = NewHitIds[s];
-                                        }
-                                    } else {
-                                        damageeffOriginalFile.ExtraHitId_List.Add(damageeffModFile.ExtraHitId_List[c]);
-                                    }
-                                    damageeffOriginalFile.ExtraSoundId_List.Add(damageeffModFile.ExtraSoundId_List[c]);
-                                    damageeffOriginalFile.EffectPrmId_List.Add(damageeffModFile.EffectPrmId_List[c]);
-                                    damageeffOriginalFile.SoundId_List.Add(damageeffModFile.SoundId_List[c]);
-                                    damageeffOriginalFile.Unknown1_List.Add(damageeffModFile.Unknown1_List[c]);
-                                    damageeffOriginalFile.Unknown2_List.Add(damageeffModFile.Unknown2_List[c]);
-                                    damageeffOriginalFile.ExtraEffectPrmId_List.Add(damageeffModFile.ExtraEffectPrmId_List[c]);
-                                    damageeffOriginalFile.EntryCount++;
-                                }
-
-                                Tool_MovesetCoder_code PrmFile = new Tool_MovesetCoder_code();
-                                PrmFile.OpenFile(ModprmPath);
-                                for (int k1 = 0; k1 < PrmFile.movementList.Count; k1++) {
-                                    for (int k2 = 0; k2 < PrmFile.movementList[k1].Count; k2++) {
-                                        for (int k3 = 0; k3 < PrmFile.movementList[k1][k2].Count; k3++) {
-                                            if (PrmFile.movementList[k1][k2][k3].Length > 0x40) {
-                                                int selectedhit = MainFunctions.b_ReadIntFromTwoBytes(PrmFile.movementList[k1][k2][k3], 0x82);
-                                                for (int g = 0; g < OldHitIds.Count; g++) {
-                                                    if (OldHitIds[g] == selectedhit) {
-                                                        PrmFile.movementList[k1][k2][k3][0x82] = BitConverter.GetBytes(NewHitIds[g])[0];
-                                                        PrmFile.movementList[k1][k2][k3][0x83] = BitConverter.GetBytes(NewHitIds[g])[1];
-                                                    }
-
-                                                }
-
-                                            }
-                                        }
-                                    }
-                                }
-                                if (!Directory.Exists(datawin32Path + "\\spc")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\spc");
-                                }
-                                damageeffOriginalFile.SaveFileAs(datawin32Path + "\\spc\\damageeff.bin.xfbin");
-                                if (!Directory.Exists(System.IO.Path.GetDirectoryName(datawin32Path + "\\" + ModprmPath.Substring(ModprmPath.IndexOf(dataWinFolder) + dataWinFolderLength)))) {
-                                    Directory.CreateDirectory(System.IO.Path.GetDirectoryName(datawin32Path + "\\" + ModprmPath.Substring(ModprmPath.IndexOf(dataWinFolder) + dataWinFolderLength)));
-                                }
-                                PrmFile.SaveFileAs(datawin32Path + "\\" + ModprmPath.Substring(ModprmPath.IndexOf(dataWinFolder) + dataWinFolderLength));
+                                
                             }
                             if (damageprmExist) {
                                 Tool_damageprmEditor_code damageprmModFile = new Tool_damageprmEditor_code();
