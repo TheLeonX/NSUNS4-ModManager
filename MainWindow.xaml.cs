@@ -1,10 +1,15 @@
 ﻿using IWshRuntimeLibrary;
 using NSUNS4_ModManager.ToolBoxCode;
+using SharpCompress.Archives;
+using SharpCompress.Archives.Rar;
+using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -96,6 +101,7 @@ namespace NSUNS4_ModManager {
         public List<string> IconPaths = new List<string>();
         public List<string> AuthorPaths = new List<string>();
         public List<string> DescriptionPaths = new List<string>();
+        public List<string> ModdingAPI_requirement_Paths = new List<string>();
         public List<ModList_class> ModInfoList = new List<ModList_class>();
 
 
@@ -151,6 +157,7 @@ namespace NSUNS4_ModManager {
                 DirectoryInfo d = new DirectoryInfo(GameModsPath);
                 FileInfo[] Description_Files = d.GetFiles("Description.txt", SearchOption.AllDirectories);
                 FileInfo[] Author_Files = d.GetFiles("Author.txt", SearchOption.AllDirectories);
+                FileInfo[] ModdingAPI_req_Files = d.GetFiles("ModdingAPI.txt", SearchOption.AllDirectories);
                 FileInfo[] Icon_Files = d.GetFiles("Icon.png", SearchOption.AllDirectories);
                 ModInfoList.Clear();
                 ModName_List.Clear();
@@ -159,6 +166,7 @@ namespace NSUNS4_ModManager {
                 IconPaths.Clear();
                 ImportedCharacodesList.Clear();
                 CharacterPathList.Clear();
+                ModdingAPI_requirement_Paths.Clear();
                 foreach (FileInfo file in Description_Files) {
                     if (file.FullName.Contains("Description.txt")) {
                         DescriptionPaths.Add(file.FullName);
@@ -174,6 +182,11 @@ namespace NSUNS4_ModManager {
                 foreach (FileInfo file in Author_Files) {
                     if (file.FullName.Contains("Author.txt")) {
                         AuthorPaths.Add(file.FullName);
+                    }
+                }
+                foreach (FileInfo file in ModdingAPI_req_Files) {
+                    if (file.FullName.Contains("ModdingAPI.txt")) {
+                        ModdingAPI_requirement_Paths.Add(file.FullName);
                     }
                 }
                 ModsList.ItemsSource = ModInfoList;
@@ -214,6 +227,12 @@ namespace NSUNS4_ModManager {
         }
         private void Button_Click_1(object sender, RoutedEventArgs e) {
             if (Directory.Exists(GameRootPath) && Directory.Exists(GameModsPath)) {
+                List<bool> ModdingAPIRequirement_list = new List<bool>();
+                for (int c = 0; c< ModdingAPI_requirement_Paths.Count; c++) {
+                    ModdingAPIRequirement_list.Add(Convert.ToBoolean(File.ReadAllText(ModdingAPI_requirement_Paths[c])));
+                }
+                if (ModdingAPIRequirement_list.Contains(true))
+                    InstallModdingAPI();
                 List<string> CharacodePaths = new List<string>();
                 List<string> CharacodesList = new List<string>();
                 if (Directory.Exists(GameModsPath)) {
@@ -1662,36 +1681,40 @@ namespace NSUNS4_ModManager {
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e) {
-            if (Directory.Exists(GameRootPath + "\\data_win32")) {
-                Directory.Delete(GameRootPath + "\\data_win32",true);
-            }
-            for (int c = 0; c < ImportedCharacodesList.Count; c++) {
-                if (Directory.Exists(GameRootPath + "\\moddingapi\\mods\\"+ ImportedCharacodesList[c])) {
-                    Directory.Delete(GameRootPath + "\\moddingapi\\mods\\" + ImportedCharacodesList[c], true);
+            if (Directory.Exists(GameRootPath)) {
+                if (Directory.Exists(GameRootPath + "\\data_win32")) {
+                    Directory.Delete(GameRootPath + "\\data_win32", true);
                 }
-            }
-            
-            string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER";
-            DirectoryInfo d_gfx = new DirectoryInfo(gfx_path);
-            bool gfx_charselExist = false;
-            string Modgfx_charselPath = "";
-            FileInfo[] gfx_Files = d_gfx.GetFiles("*.gfx", SearchOption.AllDirectories);
+                for (int c = 0; c < ImportedCharacodesList.Count; c++) {
+                    if (Directory.Exists(GameRootPath + "\\moddingapi\\mods\\" + ImportedCharacodesList[c])) {
+                        Directory.Delete(GameRootPath + "\\moddingapi\\mods\\" + ImportedCharacodesList[c], true);
+                    }
+                }
 
-            foreach (FileInfo file in gfx_Files) {
-                if (file.FullName.Contains("charsel\\charsel.gfx")) {
-                    gfx_charselExist = true;
-                    Modgfx_charselPath = file.FullName;
-                    break;
-                } else {
-                    gfx_charselExist = false;
-                    Modgfx_charselPath = "";
+                string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER";
+                DirectoryInfo d_gfx = new DirectoryInfo(gfx_path);
+                bool gfx_charselExist = false;
+                string Modgfx_charselPath = "";
+                FileInfo[] gfx_Files = d_gfx.GetFiles("*.gfx", SearchOption.AllDirectories);
+
+                foreach (FileInfo file in gfx_Files) {
+                    if (file.FullName.Contains("charsel\\charsel.gfx")) {
+                        gfx_charselExist = true;
+                        Modgfx_charselPath = file.FullName;
+                        break;
+                    } else {
+                        gfx_charselExist = false;
+                        Modgfx_charselPath = "";
+                    }
                 }
-            }
-            if (gfx_charselExist) {
-                byte[] charsel = File.ReadAllBytes(Modgfx_charselPath);
-                int pos = MainFunctions.b_FindBytes(charsel, new byte[16] { 0x02, 0x68, 0xF7, 0x06, 0x5E, 0xF8, 0x06, 0x24, 0x03, 0x68, 0xF8, 0x06, 0x5E, 0xF9, 0x06, 0x24 }) + 0x10;
-                charsel[pos] = (byte)5;
-                File.WriteAllBytes(Modgfx_charselPath, charsel);
+                if (gfx_charselExist) {
+                    byte[] charsel = File.ReadAllBytes(Modgfx_charselPath);
+                    int pos = MainFunctions.b_FindBytes(charsel, new byte[16] { 0x02, 0x68, 0xF7, 0x06, 0x5E, 0xF8, 0x06, 0x24, 0x03, 0x68, 0xF8, 0x06, 0x5E, 0xF9, 0x06, 0x24 }) + 0x10;
+                    charsel[pos] = (byte)5;
+                    File.WriteAllBytes(Modgfx_charselPath, charsel);
+                }
+            } else {
+                MessageBox.Show("Select root folder of game");
             }
         }
 
@@ -1712,6 +1735,91 @@ namespace NSUNS4_ModManager {
             //}
             //else
             //    MessageBox.Show("NSUNS4.exe wasn't found");
+        }
+
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e) {
+            if (Directory.Exists(GameRootPath)) {
+                InstallModdingAPI();
+                MessageBox.Show("ModdingAPI Installed");
+            } else
+                MessageBox.Show("Select root folder of game");
+        }
+        private static void CopyFilesRecursively(string sourcePath, string targetPath) {
+            //Now Create all of the directories
+            foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories)) {
+                Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
+            }
+
+            //Copy all the files & Replaces any files with the same name
+            foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories)) {
+                File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
+            }
+        }
+        private void MenuItem_Click_3(object sender, RoutedEventArgs e) {
+            if (Directory.Exists(GameRootPath)) {
+                if (File.Exists(GameRootPath+ "\\D3DCompiler_47.dll") && File.Exists(GameRootPath + "\\d3dcompiler_47_o.dll")) {
+                    File.Delete(GameRootPath + "\\D3DCompiler_47.dll");
+                    if (File.Exists(GameRootPath + "\\d3dcompiler_47_o.dll")) {
+                        File.WriteAllBytes(GameRootPath + "\\D3DCompiler_47.dll", File.ReadAllBytes(GameRootPath + "\\d3dcompiler_47_o.dll"));
+                        File.Delete(GameRootPath + "\\d3dcompiler_47_o.dll");
+                    }
+                }
+                if (File.Exists(GameRootPath + "\\xinput9_1_0.dll") && File.Exists(GameRootPath + "\\xinput9_1_0_o.dll")) {
+                    File.Delete(GameRootPath + "\\xinput9_1_0.dll");
+                    File.Delete(GameRootPath + "\\xinput9_1_0_o.dll");
+                }
+                if (Directory.Exists(GameRootPath + "\\moddingapi")) {
+                    Directory.Delete(GameRootPath + "\\moddingapi",true);
+                }
+                MessageBox.Show("ModdingAPI Deleted");
+            } else
+                MessageBox.Show("Select root folder of game");
+        }
+
+        private void Window_Closed(object sender, EventArgs e) {
+            if (Directory.Exists(@Directory.GetCurrentDirectory() + "\\temp")) {
+                Directory.Delete(@Directory.GetCurrentDirectory() + "\\temp", true);
+            }
+        }
+        public void InstallModdingAPI() {
+            if (!Directory.Exists(GameRootPath + "\\moddingapi")) {
+                using (WebClient wc = new WebClient()) {
+                    wc.Headers.Add("a", "a");
+                    if (!Directory.Exists(Directory.GetCurrentDirectory() + "\\temp"))
+                        Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\temp");
+                    wc.DownloadFile(File.ReadAllText(@Directory.GetCurrentDirectory() + "\\ModdingAPI_link.txt"), @Directory.GetCurrentDirectory() + "\\temp\\ModdingAPI.rar"); ;
+                }
+                if (!Directory.Exists(@Directory.GetCurrentDirectory() + "\\temp\\ModdingAPI_files"))
+                    Directory.CreateDirectory(@Directory.GetCurrentDirectory() + "\\temp\\ModdingAPI_files");
+
+                using (var archive = RarArchive.Open(@Directory.GetCurrentDirectory() + "\\temp\\ModdingAPI.rar")) {
+                    foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory)) {
+                        entry.WriteToDirectory(@Directory.GetCurrentDirectory() + "\\temp\\ModdingAPI_files", new ExtractionOptions() {
+                            ExtractFullPath = true,
+                            Overwrite = true
+                        });
+                    }
+                }
+                CopyFilesRecursively(@Directory.GetCurrentDirectory() + "\\temp\\ModdingAPI_files", GameRootPath);
+                string[] cfg = File.ReadAllLines(GameRootPath + "\\moddingapi\\config.ini");
+                string moddingAPI_name = "";
+                string EnableConsole = "";
+                string EnableModList = "";
+                string LangEN = "";
+                if (cfg.Length > 0) moddingAPI_name = cfg[0];
+                if (cfg.Length > 1) EnableConsole = cfg[1];
+                if (cfg.Length > 2) EnableModList = cfg[2];
+                if (cfg.Length > 3) LangEN = cfg[3];
+                EnableConsole = "EnableConsole=0";
+                EnableModList = "EnableModList=0";
+                List<string> cfg_new = new List<string>();
+                cfg_new.Add(moddingAPI_name);
+                cfg_new.Add(EnableConsole);
+                cfg_new.Add(EnableModList);
+                cfg_new.Add(LangEN);
+                File.WriteAllLines(GameRootPath + "\\moddingapi\\config.ini", cfg_new.ToArray());
+            }
+            
         }
     }
 }

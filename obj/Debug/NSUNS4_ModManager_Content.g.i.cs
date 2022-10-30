@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("trial_clear_i1out.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("modmanager_icon1.ico")]
 
 

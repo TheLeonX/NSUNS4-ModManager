@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True"
-        MinWidth="850" MinHeight="520" Width="850" Height="520" Foreground="White">
+        MinWidth="850" MinHeight="520" Width="850" Height="520" Foreground="White" Closed="Window_Closed">
     <Window.Background>
         <ImageBrush ImageSource="trial_clear_i1out.png" Stretch="UniformToFill"/>
     </Window.Background>
@@ -40,6 +40,10 @@
             <MenuItem Header="Settings" Foreground="White">
                 <MenuItem Header="Set path to game" Click="MenuItem_Click"/>
                 <MenuItem Header="Set path to mod folder" Click="MenuItem_Click_1"/>
+            </MenuItem>
+            <MenuItem Header="Modding API" Foreground="White">
+                <MenuItem Header="Install" Click="MenuItem_Click_2"/>
+                <MenuItem Header="Delete" Click="MenuItem_Click_3"/>
             </MenuItem>
         </Menu>
         <Label Content="Naruto Storm 4 Character Mod Manager" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" FontFamily="Yu Gothic UI Light" FontSize="24" Foreground="White" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>

@@ -148,3 +148,10 @@ E:\Desktop\MS Projects\NSUNS4_ModManager\bin\Debug\Microsoft.WindowsAPICodePack.
 E:\Desktop\MS Projects\NSUNS4_ModManager\obj\Debug\NSUNS4_ModManager.csproj.AssemblyReference.cache
 E:\Desktop\MS Projects\NSUNS4_ModManager\obj\Debug\Interop.IWshRuntimeLibrary.dll
 E:\Desktop\MS Projects\NSUNS4_ModManager\obj\Debug\NSUNS4_ModManager.csproj.ResolveComReference.cache
+E:\Desktop\MS Projects\NSUNS4_ModManager\bin\Debug\SharpCompress.dll
+E:\Desktop\MS Projects\NSUNS4_ModManager\bin\Debug\System.Buffers.dll
+E:\Desktop\MS Projects\NSUNS4_ModManager\bin\Debug\System.Memory.dll
+E:\Desktop\MS Projects\NSUNS4_ModManager\bin\Debug\System.Numerics.Vectors.dll
+E:\Desktop\MS Projects\NSUNS4_ModManager\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+E:\Desktop\MS Projects\NSUNS4_ModManager\bin\Debug\System.Text.Encoding.CodePages.dll
+E:\Desktop\MS Projects\NSUNS4_ModManager\obj\Debug\NSUNS4_ModManager.exe.config
