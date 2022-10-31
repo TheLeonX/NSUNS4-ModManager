@@ -42,6 +42,12 @@
   <PropertyGroup>
     <ApplicationIcon>tempdel13.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="netstandard" />
     <Reference Include="System" />
