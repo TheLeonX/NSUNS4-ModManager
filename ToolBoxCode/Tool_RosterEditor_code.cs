@@ -48,6 +48,16 @@ namespace NSUNS4_ModManager.ToolBoxCode {
 			PagePosList.Add(Pos);
 			return PagePosList;
 		}
+		public int SearchMaxCostumeInPageAndSlotIndex(int page, int pos) {
+			List<int> PagePosList = new List<int>();
+			for (int x = 0; x < EntryCount; x++) {
+				if (PageList[x] == page && PositionList[x] == pos) {
+					PagePosList.Add(CostumeList[x]);
+				}
+			}
+			int maxCostume = PagePosList.Max();
+			return maxCostume + 1;
+		}
 		public void OpenFile(string basepath = "") {
 			NewFile();
 			FileOpen = false;
