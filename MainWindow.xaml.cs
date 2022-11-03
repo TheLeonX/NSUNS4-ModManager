@@ -251,8 +251,8 @@ namespace NSUNS4_ModManager {
                     //This function reading moddingAPI.txt to get boolean value for requirement of moddingAPI
                     ModdingAPIRequirement_list.Add(Convert.ToBoolean(File.ReadAllText(ModdingAPI_requirement_Paths[c])));
                 }
-                if (ModdingAPIRequirement_list.Contains(true))
-                    InstallModdingAPI();
+                //if (ModdingAPIRequirement_list.Contains(true))
+                    //InstallModdingAPI();
                 List<string> CharacodePaths = new List<string>(); //This list was used for saving characode.txt path
                 List<string> CharacodesList = new List<string>(); //This list was used for saving characode
                 if (Directory.Exists(GameModsPath)) {
@@ -1925,7 +1925,7 @@ namespace NSUNS4_ModManager {
         private void MenuItem_Click_2(object sender, RoutedEventArgs e) {
             //This function was used for installing moddingAPI
             if (Directory.Exists(GameRootPath)) {
-                InstallModdingAPI();
+                //InstallModdingAPI();
                 MessageBox.Show("ModdingAPI Installed");
             } else
                 MessageBox.Show("Select root folder of game");
@@ -1972,7 +1972,9 @@ namespace NSUNS4_ModManager {
         public void InstallModdingAPI() {
             //Function for installing ModdingAPI
             if (!Directory.Exists(GameRootPath + "\\moddingapi")) {
-                //Downloads moddingAPI from gitHub link which is stored in moddingAPI_link.txt file
+                //Downloads moddingAPI from gitHub link which is stored in moddingAPI_link.txt file\
+
+                //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
                 using (WebClient wc = new WebClient()) {
                     wc.Headers.Add("a", "a");
                     if (!Directory.Exists(Directory.GetCurrentDirectory() + "\\temp"))
