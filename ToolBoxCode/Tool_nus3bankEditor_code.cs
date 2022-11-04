@@ -417,7 +417,7 @@ namespace NSUNS4_ModManager.ToolBoxCode {
             int NUS3_Size = ConvertedFile.Length - NUS3_Length_ptr - 0x08;
             ConvertedFile = MainFunctions.b_ReplaceBytes(ConvertedFile, BitConverter.GetBytes(NUS3_Size), NUS3_Length_ptr + 4);
             if (XfbinHeader && extension.Contains("xfbin")) {
-                ConvertedFile = MainFunctions.b_ReplaceBytes(ConvertedFile, BitConverter.GetBytes(FileID), NUS3_Position - 4);
+                //ConvertedFile = MainFunctions.b_ReplaceBytes(ConvertedFile, BitConverter.GetBytes(FileID), NUS3_Position - 4);
                 ConvertedFile = MainFunctions.b_ReplaceBytes(ConvertedFile, BitConverter.GetBytes(ConvertedFile.Length - NUS3_Length_ptr), NUS3_Length_ptr - 4, 1);
                 ConvertedFile = MainFunctions.b_ReplaceBytes(ConvertedFile, BitConverter.GetBytes(ConvertedFile.Length - NUS3_Length_ptr + 4), NUS3_Length_ptr - 0x10, 1);
                 ConvertedFile = MainFunctions.b_AddBytes(ConvertedFile, new byte[0x14] { 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x02, 0x00, 0x79, 0x18, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 });

@@ -37,9 +37,10 @@
             <Menu.Background>
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Menu.Background>
-            <MenuItem Header="Settings" Foreground="White">
+            <MenuItem x:Name="MenuHeader" Header="Settings" Foreground="White">
                 <MenuItem Header="Set path to game" Click="MenuItem_Click"/>
-                <MenuItem Header="Set path to mod folder" Click="MenuItem_Click_1"/>
+                <CheckBox x:Name="GameCleanItem" Content="Clean game before compiling" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked"/>
+                <!--<MenuItem Header="Set path to mod folder" Click="MenuItem_Click_1"/>-->
             </MenuItem>
             <MenuItem Header="Modding API" Foreground="White">
                 <MenuItem Header="Install" Click="MenuItem_Click_2"/>
@@ -47,7 +48,7 @@
             </MenuItem>
         </Menu>
         <Label Content="Naruto Storm 4 Character Mod Manager" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" FontFamily="Yu Gothic UI Light" FontSize="24" Foreground="White" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <ListView Grid.Row="2" Grid.Column="1" x:Name="ModsList" SelectionChanged="ModsList_Selected">
+        <ListView Grid.Row="2" Grid.Column="1" x:Name="ModsList" SelectionChanged="ModsList_Selected" AllowDrop="True" Drop="ModsList_Drop" DragEnter="ModsList_DragEnter">
             <ListView.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#7FFFFFFF" Offset="0"/>
@@ -60,8 +61,12 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <WrapPanel Grid.ColumnSpan="3" Orientation="Horizontal" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Button Content="Update mod list" Click="Button_Click" MinHeight="40" MinWidth="160"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
+        <WrapPanel Grid.Column="1"  Orientation="Horizontal" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Content="Install Mod" AllowDrop="True" Drop="ModsList_Drop" Click="Button_Click_4" MinHeight="40" MinWidth="100" FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
+            <Button Content="Delete mod" Click="Button_Click_5" MinHeight="40" MinWidth="100" FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
+        </WrapPanel>
+        <WrapPanel Grid.Column="3"  Orientation="Horizontal" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <!--<Button Content="Update mod list" Click="Button_Click" MinHeight="40" MinWidth="160"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>-->
             <Button Content="Compile mods" Click="Button_Click_1" MinHeight="40" MinWidth="150"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
             <Button Content="Clear game" Click="Button_Click_2" MinHeight="40" MinWidth="150"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>
             <!--<Button Content="Start game" Click="Button_Click_3" MinHeight="40" MinWidth="160"  FontFamily="Yu Gothic UI Light" VerticalAlignment="Center" Margin="10,0" Padding="10,0" Foreground="White"/>-->
@@ -76,11 +81,17 @@
                 <RowDefinition Height="10*"/>
                 <RowDefinition Height="5"/>
                 <RowDefinition Height="1*"/>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <TextBlock x:Name="ModDescription" TextWrapping="Wrap" Grid.Row="0" Grid.Column="2" FontFamily="Yu Gothic UI Light" FontSize="18" Foreground="White" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Image x:Name="ModIcon" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
             <Label x:Name="ModAuthor" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" FontFamily="Yu Gothic UI Light" FontSize="16" Foreground="White" ClipToBounds="True" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-
+            <CheckBox Checked="ModEnabler_Checked" Unchecked="ModEnabler_Checked" x:Name="ModEnabler" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" FontFamily="Yu Gothic UI Light" FontSize="16" ClipToBounds="True" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White">
+                <CheckBox.Content>
+                    <Label Content="Enable mod" FontFamily="Yu Gothic UI Light" FontSize="16" Foreground="White" ClipToBounds="True" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                </CheckBox.Content>
+            </CheckBox>
         </Grid>
     </Grid>
 </Window>
