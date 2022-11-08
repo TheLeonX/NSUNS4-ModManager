@@ -47,7 +47,7 @@
                 <MenuItem Header="Delete" Click="MenuItem_Click_3"/>
             </MenuItem>
         </Menu>
-        <Label Content="Naruto Storm 4 Character Mod Manager" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" FontFamily="Yu Gothic UI Light" FontSize="24" Foreground="White" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Label Content="Naruto Storm 4 Mod Manager" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" FontFamily="Yu Gothic UI Light" FontSize="24" Foreground="White" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <ListView Grid.Row="2" Grid.Column="1" x:Name="ModsList" SelectionChanged="ModsList_Selected" AllowDrop="True" Drop="ModsList_Drop" DragEnter="ModsList_DragEnter">
             <ListView.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -73,9 +73,10 @@
         </WrapPanel>
         <Grid Grid.Column="3" Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="10*"/>
@@ -84,7 +85,7 @@
                 <RowDefinition Height="5"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="ModDescription" TextWrapping="Wrap" Grid.Row="0" Grid.Column="2" FontFamily="Yu Gothic UI Light" FontSize="18" Foreground="White" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock x:Name="ModDescription" TextWrapping="Wrap" Grid.Row="0" Grid.Column="2" FontFamily="Yu Gothic UI Light" FontSize="18" Foreground="White" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
             <Image x:Name="ModIcon" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
             <Label x:Name="ModAuthor" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" FontFamily="Yu Gothic UI Light" FontSize="16" Foreground="White" ClipToBounds="True" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <CheckBox Checked="ModEnabler_Checked" Unchecked="ModEnabler_Checked" x:Name="ModEnabler" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" FontFamily="Yu Gothic UI Light" FontSize="16" ClipToBounds="True" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White">

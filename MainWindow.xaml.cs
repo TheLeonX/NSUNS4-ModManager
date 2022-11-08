@@ -36,6 +36,10 @@ namespace NSUNS4_ModManager {
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
+            if (Directory.Exists(@Directory.GetCurrentDirectory() + "\\temp")) {
+
+                Directory.Delete(@Directory.GetCurrentDirectory() + "\\temp", true);
+            }
             //This code checking if config file exist. If it doesnt exist, it will create config file, otherwise it will load it
             if (File.Exists(ConfigPath) == false) {
                 CreateConfig();
@@ -71,6 +75,7 @@ namespace NSUNS4_ModManager {
         string originalseparamPath = Directory.GetCurrentDirectory() + "\\systemFiles\\separam.xfbin";
         string originalspTypeSupportParamPath = Directory.GetCurrentDirectory() + "\\systemFiles\\spTypeSupport.xfbin";
         string originalnuccMaterialDx11Path = Directory.GetCurrentDirectory() + "\\systemFiles\\nuccMaterial_dx11.nsh";
+        string originalstageInfoPath = Directory.GetCurrentDirectory() + "\\systemFiles\\StageInfo.bin.xfbin";
 
         //This is paths for root folder where will be saved edited files
         public static string datawin32Path = "[null]";
@@ -226,6 +231,15 @@ namespace NSUNS4_ModManager {
                     }
 
                 }
+                if (Directory.Exists(GameModsPath)) {
+                    FileInfo[] characode_Files = d.GetFiles("BGM_ID.txt", SearchOption.AllDirectories);
+                    foreach (FileInfo file in characode_Files) {
+                        if (file.FullName.Contains("BGM_ID.txt")) {
+                            ImportedCharacodesList.Add(System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(file.FullName)));
+                        }
+                    }
+
+                }
             }
         }
 
@@ -263,12 +277,21 @@ namespace NSUNS4_ModManager {
             CharacterPathList.Clear();
             if (CleanGame)
                 CleanGameAssets(false);
+            Tool_MessageInfoEditor_code MessageOriginalFile = new Tool_MessageInfoEditor_code();
+            if (Directory.Exists(messageInfoPath))
+                MessageOriginalFile.OpenFilesStart(messageInfoPath);
+            else {
+                MessageOriginalFile.OpenFilesStart(originalMessagePath);
+            }
             //This is compile mod function
             if (Directory.Exists(GameRootPath) && Directory.Exists(GameModsPath)) {
 
                 List<string> characterDescription = new List<string>();
                 List<string> characterAuthor = new List<string>();
                 List<string> characterName = new List<string>();
+                List<string> stageDescription = new List<string>();
+                List<string> stageAuthor = new List<string>();
+                List<string> stageName = new List<string>();
                 List<string> UsedShaders = new List<string>(); //List for used shaders to prevent loading same shader twice
                 List<bool> ModdingAPIRequirement_list = new List<bool>(); //List for installing moddingapi in case, if mod requires it
                 for (int c = 0; c < ModdingAPI_requirement_Paths.Count; c++) {
@@ -298,6 +321,28 @@ namespace NSUNS4_ModManager {
                     }
 
                 }
+
+                List<string> stagePaths = new List<string>(); //This list was used for saving BGM_ID.txt path
+                List<string> stageList = new List<string>(); //This list was used for saving stage name
+                if (Directory.Exists(GameModsPath)) {
+                    DirectoryInfo d = new DirectoryInfo(@GameModsPath);
+                    FileInfo[] BGM_Files = d.GetFiles("BGM_ID.txt", SearchOption.AllDirectories);
+                    foreach (FileInfo file in BGM_Files) {
+                        string ModPath = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(file.FullName));
+                        int ModIndex = ModName_List.IndexOf(ModPath);
+                        bool ModIsEnabled = EnableMod_List[ModIndex];
+                        if (file.FullName.Contains("BGM_ID.txt") && ModIsEnabled) {
+                            stagePaths.Add(file.FullName);
+                            stageList.Add(System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(file.FullName)));
+                            stageDescription.Add(File.ReadAllText(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(file.FullName)) + "\\Description.txt"));
+                            stageAuthor.Add(File.ReadAllText(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(file.FullName)) + "\\Author.txt"));
+                            stageName.Add(System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(file.FullName))));
+                            //This function checking for all stages in mod folder
+                        }
+                    }
+
+                }
+
                 //This paths used for saving edited files
                 datawin32Path = GameRootPath + "\\data_win32";
                 chaPath = GameRootPath + "\\data_win32\\spc\\characode.bin.xfbin";
@@ -348,6 +393,661 @@ namespace NSUNS4_ModManager {
 
 
                 }
+                List<string> StageOriginalList = new List<string>();
+                StageOriginalList.Add("STAGE_SD62B");
+                StageOriginalList.Add("STAGE_SD62A");
+                StageOriginalList.Add("STAGE_SD01B");
+                StageOriginalList.Add("STAGE_SD03B");
+                StageOriginalList.Add("STAGE_SD03E");
+                StageOriginalList.Add("STAGE_SD12A");
+                StageOriginalList.Add("STAGE_SI00A");
+                StageOriginalList.Add("STAGE_SD01D");
+                StageOriginalList.Add("STAGE_SI06A");
+                StageOriginalList.Add("STAGE_SD14A");
+                StageOriginalList.Add("STAGE_SI01A");
+                StageOriginalList.Add("STAGE_SI01A");
+                StageOriginalList.Add("STAGE_SD06A");
+                StageOriginalList.Add("STAGE_SD07A");
+                StageOriginalList.Add("STAGE_SD07B");
+                StageOriginalList.Add("STAGE_SD10A");
+                StageOriginalList.Add("STAGE_SI09A_NR");
+                StageOriginalList.Add("STAGE_SI08A");
+                StageOriginalList.Add("STAGE_SD13A");
+                StageOriginalList.Add("STAGE_SD15A_NOSNOW");
+                StageOriginalList.Add("STAGE_SD17A");
+                StageOriginalList.Add("STAGE_SD16A");
+                StageOriginalList.Add("STAGE_SD22A");
+                StageOriginalList.Add("STAGE_SD25A");
+                StageOriginalList.Add("STAGE_SD23A");
+                StageOriginalList.Add("STAGE_SD21A");
+                StageOriginalList.Add("STAGE_SD19A");
+                StageOriginalList.Add("STAGE_SD33A");
+                StageOriginalList.Add("STAGE_SD05D");
+                StageOriginalList.Add("STAGE_SD04B");
+                StageOriginalList.Add("STAGE_SI43A");
+                StageOriginalList.Add("STAGE_SI35A");
+                StageOriginalList.Add("STAGE_SI33A");
+                StageOriginalList.Add("STAGE_SI42B");
+                StageOriginalList.Add("STAGE_SI42A");
+                StageOriginalList.Add("STAGE_SI44A");
+                StageOriginalList.Add("STAGE_SI45A");
+                StageOriginalList.Add("STAGE_SI50E");
+                StageOriginalList.Add("STAGE_SD60A");
+                StageOriginalList.Add("STAGE_SD05B");
+                StageOriginalList.Add("STAGE_SI51C");
+                StageOriginalList.Add("STAGE_SD70B");
+                StageOriginalList.Add("STAGE_SI70A");
+                StageOriginalList.Add("STAGE_SI71A");
+                List<string> stagesToAddList = new List<string>();
+                List<string> stagesImagesToAddList = new List<string>();
+                List<string> StageMessageId = new List<string>();
+                List<List<string>> StageText = new List<List<string>>();
+                List<int> FreeBGM_slot = new List<int>();
+                FreeBGM_slot.Add(0x1527840);
+                FreeBGM_slot.Add(0x1527880);
+                FreeBGM_slot.Add(0x1527940);
+                FreeBGM_slot.Add(0x1527A20);
+                FreeBGM_slot.Add(0x1527B60);
+                FreeBGM_slot.Add(0x1527BE0);
+                FreeBGM_slot.Add(0x1527C20);
+                FreeBGM_slot.Add(0x1527C40);
+                FreeBGM_slot.Add(0x1527CA0);
+                FreeBGM_slot.Add(0x1527CE0);
+                FreeBGM_slot.Add(0x1527D00);
+                FreeBGM_slot.Add(0x1527D20);
+                FreeBGM_slot.Add(0x1527DA0);
+                FreeBGM_slot.Add(0x1527DC0);
+                FreeBGM_slot.Add(0x1527DE0);
+                FreeBGM_slot.Add(0x1527E00);
+                FreeBGM_slot.Add(0x1527E20);
+                FreeBGM_slot.Add(0x1527E40);
+                FreeBGM_slot.Add(0x1527E60);
+                FreeBGM_slot.Add(0x1527E80);
+                FreeBGM_slot.Add(0x1527EA0);
+                FreeBGM_slot.Add(0x1527EC0);
+                FreeBGM_slot.Add(0x1527EE0);
+                FreeBGM_slot.Add(0x1527F00);
+                FreeBGM_slot.Add(0x1527F20);
+                FreeBGM_slot.Add(0x1527FC0);
+                FreeBGM_slot.Add(0x1527FE0);
+                FreeBGM_slot.Add(0x1528020);
+                FreeBGM_slot.Add(0x1528060);
+                FreeBGM_slot.Add(0x1528080);
+                FreeBGM_slot.Add(0x15280A0);
+                FreeBGM_slot.Add(0x15280C0);
+                FreeBGM_slot.Add(0x15280E0);
+                FreeBGM_slot.Add(0x1528100);
+                FreeBGM_slot.Add(0x1528120);
+                FreeBGM_slot.Add(0x1528160);
+                FreeBGM_slot.Add(0x1528180);
+                FreeBGM_slot.Add(0x15281A0);
+                FreeBGM_slot.Add(0x15281E0);
+                FreeBGM_slot.Add(0x1528200);
+                FreeBGM_slot.Add(0x1528220);
+                FreeBGM_slot.Add(0x1528240);
+                FreeBGM_slot.Add(0x1528260);
+                FreeBGM_slot.Add(0x1528280);
+                FreeBGM_slot.Add(0x15282A0);
+                FreeBGM_slot.Add(0x15282C0);
+                FreeBGM_slot.Add(0x15282E0);
+                FreeBGM_slot.Add(0x1528300);
+                FreeBGM_slot.Add(0x1528320);
+                FreeBGM_slot.Add(0x1528340);
+                FreeBGM_slot.Add(0x1528360);
+                FreeBGM_slot.Add(0x1528400);
+                FreeBGM_slot.Add(0x1528420);
+                FreeBGM_slot.Add(0x1528440);
+                FreeBGM_slot.Add(0x1528460);
+                FreeBGM_slot.Add(0x1528480);
+                FreeBGM_slot.Add(0x15284A0);
+                FreeBGM_slot.Add(0x15284C0);
+                FreeBGM_slot.Add(0x15284E0);
+                FreeBGM_slot.Add(0x1528500);
+                FreeBGM_slot.Add(0x1528520);
+                FreeBGM_slot.Add(0x1528540);
+                FreeBGM_slot.Add(0x1528560);
+                FreeBGM_slot.Add(0x1528580);
+                FreeBGM_slot.Add(0x1528680);
+                FreeBGM_slot.Add(0x1528720);
+                FreeBGM_slot.Add(0x1528740);
+                FreeBGM_slot.Add(0x1528760);
+                FreeBGM_slot.Add(0x1528780);
+                if (stagePaths.Count > 0) {
+                    Tool_stageInfoEditor_code stageInfoEditor = new Tool_stageInfoEditor_code();
+                    if (File.Exists(stageInfoPath)) //This code open vanilla duelPlayerParam or edited stageInfo (goes in root folder)
+                        stageInfoEditor.OpenFile(stageInfoPath);
+                    else {
+                        stageInfoEditor.OpenFile(originalstageInfoPath);
+                    }
+                    for (int i = 0; i < stagePaths.Count; i++) {
+                        DirectoryInfo d = new DirectoryInfo(System.IO.Path.GetDirectoryName(stagePaths[i])); //Information about all files in stagemod folder
+                        FileInfo[] stage_Files = d.GetFiles("*.txt", SearchOption.AllDirectories); //This function getting info about BGM_ID.txt in stagemod folder
+                        FileInfo[] stage_png_Files = d.GetFiles("*.png", SearchOption.AllDirectories); //This function getting info about images in stagemod folder
+                        FileInfo[] Files = d.GetFiles("*.xfbin", SearchOption.AllDirectories); //This function getting info about all .xfbin files in stagemod folder
+                        FileInfo[] cpk_Files = d.GetFiles("*.cpk", SearchOption.AllDirectories); //This function getting info about all .cpk files in stagemod folder
+                        FileInfo[] Shader_Files = d.GetFiles("*.hlsl", SearchOption.AllDirectories); //This function getting info about all .hlsl shaders in stagemod folder
+
+                        string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER"; //path to vanilla gfx files
+                        DirectoryInfo d_gfx = new DirectoryInfo(gfx_path);
+                        FileInfo[] gfx_Files = d_gfx.GetFiles("*.gfx", SearchOption.AllDirectories); //This function getting info about all .gfx files in root game folder
+
+                        DirectoryInfo d_or = new DirectoryInfo(datawin32Path);  //Information about all files in data_win32 folder in root game folder
+                        List<string> cpk_paths = new List<string>(); //list of paths of cpk files in stagemod folder
+                        List<string> cpk_names = new List<string>(); //list of names of cpk files in stagemod folder
+                        List<string> shader_paths = new List<string>(); //list of paths of shaders in stagemod folder
+                        string dataWinFolder = d_or.Name + "\\"; //data_win32 name
+                        int dataWinFolderLength = dataWinFolder.Length; //data_win32 length (just of name)
+
+                        string ModStageInfoPath = "";
+                        foreach (FileInfo file in Files) {
+                            if (file.FullName.Contains("stage\\WIN64\\stageInfo.bin.xfbin")) {
+                                ModStageInfoPath = file.FullName;
+                                break;
+                            }
+                        }
+
+                        foreach (FileInfo file in Shader_Files) {
+                            shader_paths.Add(file.FullName);
+                        }
+                        string ModStageMessagePath = "";
+                        foreach (FileInfo file in stage_Files) {
+                            if (file.FullName.Contains("stageMessage.txt")) {
+                                ModStageMessagePath = file.FullName;
+                                break;
+                            }
+                        }
+                        string mod_img_tex_path = "";
+                        foreach (FileInfo file in stage_png_Files) {
+                            if (file.FullName.Contains("stage_tex.png")) {
+                                mod_img_tex_path = file.FullName;
+                                break;
+                            }
+                        }
+                        string ModBGMPath = "";
+                        foreach (FileInfo file in stage_Files) {
+                            if (file.FullName.Contains("BGM_ID.txt")) {
+                                ModBGMPath = file.FullName;
+                                break;
+                            }
+                        }
+                        foreach (FileInfo file in cpk_Files) {
+                            if (file.FullName.Contains(d.Name)) {
+                                cpk_paths.Add(file.FullName);
+                                cpk_names.Add(file.Name);
+                                break;
+                            }
+                        }
+                        foreach (FileInfo file in Files) {
+                            if (!file.Name.Contains("StageInfo")
+                                && !file.Name.Contains("characode")
+                                && !file.Name.Contains("cmnparam")
+                                && !file.Name.Contains("duelPlayerParam")
+                                && !file.Name.Contains("awakeAura")
+                                && !file.Name.Contains("appearanceAnm")
+                                && !file.Name.Contains("afterAttachObject")
+                                && !file.Name.Contains("characterSelectParam")
+                                && !file.Name.Contains("playerSettingParam")
+                                && !file.Name.Contains("skillCustomizeParam")
+                                && !file.Name.Contains("spSkillCustomizeParam")
+                                && !file.Name.Contains("player_icon")
+                                && !file.Name.Contains("damageeff")
+                                && !file.Name.Contains("effectprm")
+                                && !file.Name.Contains("conditionprm")
+                                && !file.Name.Contains("damageprm")
+                                && !file.Name.Contains("unlockCharaTotal")
+                                && !file.Name.Contains("messageInfo")
+                                && !file.Name.Contains("btlcmn")
+                                && !file.Name.Contains("spTypeSupportParam")) {
+                                //This code prevents from copy pasting moddingApi files
+                                if (!file.FullName.Contains("moddingapi")) {
+                                    //This code loads all files from mod folder
+                                    CopyFiles(System.IO.Path.GetDirectoryName(datawin32Path + "\\" + file.FullName.Substring(file.FullName.IndexOf(dataWinFolder) + dataWinFolderLength)), file.FullName, datawin32Path + "\\" + file.FullName.Substring(file.FullName.IndexOf(dataWinFolder) + dataWinFolderLength));
+
+                                }
+                            }
+                        }
+                        if (shader_paths.Count > 0) { // This function reading nuccMaterial_dx11.nsh and adding new shaders to it in case, if it exist in mod folder
+
+                            byte[] nuccMaterialFile = File.ReadAllBytes(nuccMaterialDx11Path); // This function reading all bytes from nuccMaterial_dx11 file
+                            int EntryCount = MainFunctions.b_ReadIntFromTwoBytes(nuccMaterialFile, 0x0E); // This function reading shader count from nuccMaterial_dx11 file
+                            for (int sh = 0; sh < shader_paths.Count; sh++) {
+                                if (!UsedShaders.Contains(System.IO.Path.GetFileName(shader_paths[sh]))) { //If shaders wasnt added before, it will add it at the end of file and will change count of shaders
+                                    nuccMaterialFile = MainFunctions.b_AddBytes(nuccMaterialFile, File.ReadAllBytes(shader_paths[sh]));
+                                    EntryCount++;
+                                    UsedShaders.Add(System.IO.Path.GetFileName(shader_paths[sh])); //Adding name of shader in list of used shaders
+                                }
+                            }
+                            nuccMaterialFile = MainFunctions.b_ReplaceBytes(nuccMaterialFile, BitConverter.GetBytes(EntryCount), 0x0E, 0, 2); //Replacing byte of shader's count
+                            nuccMaterialFile = MainFunctions.b_ReplaceBytes(nuccMaterialFile, BitConverter.GetBytes(nuccMaterialFile.Length), 0x04, 0); //Replacing size bytes of nuccMaterial_dx11 file
+                            File.WriteAllBytes(nuccMaterialDx11Path, nuccMaterialFile);
+                        }
+                        
+                        if (File.Exists(ModStageInfoPath)) {
+                            Tool_stageInfoEditor_code stageInfoModFile = new Tool_stageInfoEditor_code();
+                            stageInfoModFile.OpenFile(ModStageInfoPath); //This code open modded stageInfo (goes in mod folder)
+
+                            int x = 0;
+                            if (!StageOriginalList.Contains(stageInfoModFile.StageNameList[x])) {
+                                stageInfoEditor.MainStageSection.Add(stageInfoModFile.MainStageSection[x]);
+                                stageInfoEditor.StageNameList.Add(stageInfoModFile.StageNameList[x]);
+                                stageInfoEditor.c_sta_List.Add(stageInfoModFile.c_sta_List[x]);
+                                stageInfoEditor.BTL_NSX_List.Add(stageInfoModFile.BTL_NSX_List[x]);
+                                stageInfoEditor.CountOfFiles.Add(stageInfoModFile.CountOfFiles[x]);
+                                stageInfoEditor.CountOfMeshes.Add(stageInfoModFile.CountOfMeshes[x]);
+                                stageInfoEditor.MainSection_WeatherSettings.Add(stageInfoModFile.MainSection_WeatherSettings[x]);
+                                stageInfoEditor.MainSection_lensFlareSettings.Add(stageInfoModFile.MainSection_lensFlareSettings[x]);
+                                stageInfoEditor.MainSection_EnablelensFlareSettings.Add(stageInfoModFile.MainSection_EnablelensFlareSettings[x]);
+                                stageInfoEditor.MainSection_X_PositionLightPoint.Add(stageInfoModFile.MainSection_X_PositionLightPoint[x]);
+                                stageInfoEditor.MainSection_Y_PositionLightPoint.Add(stageInfoModFile.MainSection_Y_PositionLightPoint[x]);
+                                stageInfoEditor.MainSection_Z_PositionLightPoint.Add(stageInfoModFile.MainSection_Z_PositionLightPoint[x]);
+                                stageInfoEditor.MainSection_X_PositionShadow.Add(stageInfoModFile.MainSection_X_PositionShadow[x]);
+                                stageInfoEditor.MainSection_Y_PositionShadow.Add(stageInfoModFile.MainSection_Y_PositionShadow[x]);
+                                stageInfoEditor.MainSection_Z_PositionShadow.Add(stageInfoModFile.MainSection_Z_PositionShadow[x]);
+                                stageInfoEditor.MainSection_unk1.Add(stageInfoModFile.MainSection_unk1[x]);
+                                stageInfoEditor.MainSection_ShadowSetting_value1.Add(stageInfoModFile.MainSection_ShadowSetting_value1[x]);
+                                stageInfoEditor.MainSection_ShadowSetting_value2.Add(stageInfoModFile.MainSection_ShadowSetting_value2[x]);
+                                stageInfoEditor.MainSection_PowerLight.Add(stageInfoModFile.MainSection_PowerLight[x]);
+                                stageInfoEditor.MainSection_PowerSkyColor.Add(stageInfoModFile.MainSection_PowerSkyColor[x]);
+                                stageInfoEditor.MainSection_PowerGlare.Add(stageInfoModFile.MainSection_PowerGlare[x]);
+                                stageInfoEditor.MainSection_blur.Add(stageInfoModFile.MainSection_blur[x]);
+                                stageInfoEditor.MainSection_X_PositionGlarePoint.Add(stageInfoModFile.MainSection_X_PositionGlarePoint[x]);
+                                stageInfoEditor.MainSection_Y_PositionGlarePoint.Add(stageInfoModFile.MainSection_Y_PositionGlarePoint[x]);
+                                stageInfoEditor.MainSection_Z_PositionGlarePoint.Add(stageInfoModFile.MainSection_Z_PositionGlarePoint[x]);
+                                stageInfoEditor.MainSectionGlareVagueness.Add(stageInfoModFile.MainSectionGlareVagueness[x]);
+                                stageInfoEditor.MainSection_ColorGlare.Add(stageInfoModFile.MainSection_ColorGlare[x]);
+                                stageInfoEditor.MainSection_ColorSky.Add(stageInfoModFile.MainSection_ColorSky[x]);
+                                stageInfoEditor.MainSection_ColorRock.Add(stageInfoModFile.MainSection_ColorRock[x]);
+                                stageInfoEditor.MainSection_ColorGroundEffect.Add(stageInfoModFile.MainSection_ColorGroundEffect[x]);
+                                stageInfoEditor.MainSection_ColorPlayerLight.Add(stageInfoModFile.MainSection_ColorPlayerLight[x]);
+                                stageInfoEditor.MainSection_ColorLight.Add(stageInfoModFile.MainSection_ColorLight[x]);
+                                stageInfoEditor.MainSection_ColorShadow.Add(stageInfoModFile.MainSection_ColorShadow[x]);
+                                stageInfoEditor.MainSection_ColorUnknown.Add(stageInfoModFile.MainSection_ColorUnknown[x]);
+                                stageInfoEditor.MainSection_ColorUnknown2.Add(stageInfoModFile.MainSection_ColorUnknown2[x]);
+                                stageInfoEditor.MainSection_EnableGlareSettingValue1.Add(stageInfoModFile.MainSection_EnableGlareSettingValue1[x]);
+                                stageInfoEditor.MainSection_EnableGlareSettingValue2.Add(stageInfoModFile.MainSection_EnableGlareSettingValue2[x]);
+                                stageInfoEditor.MainSection_EnableGlareSettingValue3.Add(stageInfoModFile.MainSection_EnableGlareSettingValue3[x]);
+                                stageInfoEditor.GlareEnabled.Add(stageInfoModFile.GlareEnabled[x]);
+                                stageInfoEditor.MainSection_X_MysteriousPosition.Add(stageInfoModFile.MainSection_X_MysteriousPosition[x]);
+                                stageInfoEditor.MainSection_Y_MysteriousPosition.Add(stageInfoModFile.MainSection_Y_MysteriousPosition[x]);
+                                stageInfoEditor.MainSection_Z_MysteriousPosition.Add(stageInfoModFile.MainSection_Z_MysteriousPosition[x]);
+                                stageInfoEditor.MainSection_MysteriousGlareValue1.Add(stageInfoModFile.MainSection_MysteriousGlareValue1[x]);
+                                stageInfoEditor.MainSection_MysteriousGlareValue2.Add(stageInfoModFile.MainSection_MysteriousGlareValue2[x]);
+                                stageInfoEditor.MainSection_MysteriousGlareValue3.Add(stageInfoModFile.MainSection_MysteriousGlareValue3[x]);
+                                stageInfoEditor.MainSection_UnknownValue1.Add(stageInfoModFile.MainSection_UnknownValue1[x]);
+                                stageInfoEditor.MainSection_UnknownValue2.Add(stageInfoModFile.MainSection_UnknownValue2[x]);
+                                stageInfoEditor.MainSection_UnknownValue3.Add(stageInfoModFile.MainSection_UnknownValue3[x]);
+                                stageInfoEditor.SecondarySectionFilePath.Add(stageInfoModFile.SecondarySectionFilePath[x]);
+                                stageInfoEditor.SecondarySectionLoadPath.Add(stageInfoModFile.SecondarySectionLoadPath[x]);
+                                stageInfoEditor.SecondarySectionLoadMesh.Add(stageInfoModFile.SecondarySectionLoadMesh[x]);
+                                stageInfoEditor.SecondarySectionPositionFilePath.Add(stageInfoModFile.SecondarySectionPositionFilePath[x]);
+                                stageInfoEditor.SecondarySectionPosition.Add(stageInfoModFile.SecondarySectionPosition[x]);
+                                stageInfoEditor.SecondaryTypeSection.Add(stageInfoModFile.SecondaryTypeSection[x]);
+                                stageInfoEditor.SecondaryTypeAnimationSection_speed.Add(stageInfoModFile.SecondaryTypeAnimationSection_speed[x]);
+                                stageInfoEditor.SecondarySectionCameraValue.Add(stageInfoModFile.SecondarySectionCameraValue[x]);
+                                stageInfoEditor.SecondarySectionMysteriousValue.Add(stageInfoModFile.SecondarySectionMysteriousValue[x]);
+                                stageInfoEditor.SecondaryConst3C.Add(stageInfoModFile.SecondaryConst3C[x]);
+                                stageInfoEditor.SecondaryConst78.Add(stageInfoModFile.SecondaryConst78[x]);
+                                stageInfoEditor.SecondaryConstBreakableWallValue1.Add(stageInfoModFile.SecondaryConstBreakableWallValue1[x]);
+                                stageInfoEditor.SecondaryConstBreakableWallValue2.Add(stageInfoModFile.SecondaryConstBreakableWallValue2[x]);
+                                stageInfoEditor.SecondaryTypeBreakableWall_Effect01.Add(stageInfoModFile.SecondaryTypeBreakableWall_Effect01[x]);
+                                stageInfoEditor.SecondaryTypeBreakableWall_Effect02.Add(stageInfoModFile.SecondaryTypeBreakableWall_Effect02[x]);
+                                stageInfoEditor.SecondaryTypeBreakableWall_Effect03.Add(stageInfoModFile.SecondaryTypeBreakableWall_Effect03[x]);
+                                stageInfoEditor.SecondaryTypeBreakableWall_Sound.Add(stageInfoModFile.SecondaryTypeBreakableWall_Sound[x]);
+                                stageInfoEditor.SecondaryTypeBreakableObject_Effect01.Add(stageInfoModFile.SecondaryTypeBreakableObject_Effect01[x]);
+                                stageInfoEditor.SecondaryTypeBreakableObject_Effect02.Add(stageInfoModFile.SecondaryTypeBreakableObject_Effect02[x]);
+                                stageInfoEditor.SecondaryTypeBreakableObject_Effect03.Add(stageInfoModFile.SecondaryTypeBreakableObject_Effect03[x]);
+                                stageInfoEditor.SecondaryTypeBreakableObject_path.Add(stageInfoModFile.SecondaryTypeBreakableObject_path[x]);
+                                stageInfoEditor.SecondaryTypeBreakableObject_Speed01.Add(stageInfoModFile.SecondaryTypeBreakableObject_Speed01[x]);
+                                stageInfoEditor.SecondaryTypeBreakableObject_Speed02.Add(stageInfoModFile.SecondaryTypeBreakableObject_Speed02[x]);
+                                stageInfoEditor.SecondaryTypeBreakableObject_Speed03.Add(stageInfoModFile.SecondaryTypeBreakableObject_Speed03[x]);
+                                stageInfoEditor.SecondaryTypeBreakableWall_volume.Add(stageInfoModFile.SecondaryTypeBreakableWall_volume[x]);
+                                stageInfoEditor.EntryCount++;
+                                stagesToAddList.Add(stageInfoModFile.StageNameList[x]);
+                                StageMessageId.Add("c_modmanager_sta_" + (StageMessageId.Count + 1).ToString());
+                                StageText.Add(File.ReadAllLines(ModStageMessagePath).ToList());
+                                stagesImagesToAddList.Add(mod_img_tex_path);
+                            }
+                            else {
+                                int index = stageInfoEditor.StageNameList.IndexOf(stageInfoModFile.StageNameList[x]);
+                                stageInfoEditor.MainStageSection[index] = stageInfoModFile.MainStageSection[x];
+                                stageInfoEditor.c_sta_List[index] = stageInfoModFile.c_sta_List[x];
+                                stageInfoEditor.BTL_NSX_List[index] = stageInfoModFile.BTL_NSX_List[x];
+                                stageInfoEditor.CountOfFiles[index] = stageInfoModFile.CountOfFiles[x];
+                                stageInfoEditor.CountOfMeshes[index] = stageInfoModFile.CountOfMeshes[x];
+                                stageInfoEditor.MainSection_WeatherSettings[index] = stageInfoModFile.MainSection_WeatherSettings[x];
+                                stageInfoEditor.MainSection_lensFlareSettings[index] = stageInfoModFile.MainSection_lensFlareSettings[x];
+                                stageInfoEditor.MainSection_EnablelensFlareSettings[index] = stageInfoModFile.MainSection_EnablelensFlareSettings[x];
+                                stageInfoEditor.MainSection_X_PositionLightPoint[index] = stageInfoModFile.MainSection_X_PositionLightPoint[x];
+                                stageInfoEditor.MainSection_Y_PositionLightPoint[index] = stageInfoModFile.MainSection_Y_PositionLightPoint[x];
+                                stageInfoEditor.MainSection_Z_PositionLightPoint[index] = stageInfoModFile.MainSection_Z_PositionLightPoint[x];
+                                stageInfoEditor.MainSection_X_PositionShadow[index] = stageInfoModFile.MainSection_X_PositionShadow[x];
+                                stageInfoEditor.MainSection_Y_PositionShadow[index] = stageInfoModFile.MainSection_Y_PositionShadow[x];
+                                stageInfoEditor.MainSection_Z_PositionShadow[index] = stageInfoModFile.MainSection_Z_PositionShadow[x];
+                                stageInfoEditor.MainSection_unk1[index] = stageInfoModFile.MainSection_unk1[x];
+                                stageInfoEditor.MainSection_ShadowSetting_value1[index] = stageInfoModFile.MainSection_ShadowSetting_value1[x];
+                                stageInfoEditor.MainSection_ShadowSetting_value2[index] = stageInfoModFile.MainSection_ShadowSetting_value2[x];
+                                stageInfoEditor.MainSection_PowerLight[index] = stageInfoModFile.MainSection_PowerLight[x];
+                                stageInfoEditor.MainSection_PowerSkyColor[index] = stageInfoModFile.MainSection_PowerSkyColor[x];
+                                stageInfoEditor.MainSection_PowerGlare[index] = stageInfoModFile.MainSection_PowerGlare[x];
+                                stageInfoEditor.MainSection_blur[index] = stageInfoModFile.MainSection_blur[x];
+                                stageInfoEditor.MainSection_X_PositionGlarePoint[index] = stageInfoModFile.MainSection_X_PositionGlarePoint[x];
+                                stageInfoEditor.MainSection_Y_PositionGlarePoint[index] = stageInfoModFile.MainSection_Y_PositionGlarePoint[x];
+                                stageInfoEditor.MainSection_Z_PositionGlarePoint[index] = stageInfoModFile.MainSection_Z_PositionGlarePoint[x];
+                                stageInfoEditor.MainSectionGlareVagueness[index] = stageInfoModFile.MainSectionGlareVagueness[x];
+                                stageInfoEditor.MainSection_ColorGlare[index] = stageInfoModFile.MainSection_ColorGlare[x];
+                                stageInfoEditor.MainSection_ColorSky[index] = stageInfoModFile.MainSection_ColorSky[x];
+                                stageInfoEditor.MainSection_ColorRock[index] = stageInfoModFile.MainSection_ColorRock[x];
+                                stageInfoEditor.MainSection_ColorGroundEffect[index] = stageInfoModFile.MainSection_ColorGroundEffect[x];
+                                stageInfoEditor.MainSection_ColorPlayerLight[index] = stageInfoModFile.MainSection_ColorPlayerLight[x];
+                                stageInfoEditor.MainSection_ColorLight[index] = stageInfoModFile.MainSection_ColorLight[x];
+                                stageInfoEditor.MainSection_ColorShadow[index] = stageInfoModFile.MainSection_ColorShadow[x];
+                                stageInfoEditor.MainSection_ColorUnknown[index] = stageInfoModFile.MainSection_ColorUnknown[x];
+                                stageInfoEditor.MainSection_ColorUnknown2[index] = stageInfoModFile.MainSection_ColorUnknown2[x];
+                                stageInfoEditor.MainSection_EnableGlareSettingValue1[index] = stageInfoModFile.MainSection_EnableGlareSettingValue1[x];
+                                stageInfoEditor.MainSection_EnableGlareSettingValue2[index] = stageInfoModFile.MainSection_EnableGlareSettingValue2[x];
+                                stageInfoEditor.MainSection_EnableGlareSettingValue3[index] = stageInfoModFile.MainSection_EnableGlareSettingValue3[x];
+                                stageInfoEditor.GlareEnabled[index] = stageInfoModFile.GlareEnabled[x];
+                                stageInfoEditor.MainSection_X_MysteriousPosition[index] = stageInfoModFile.MainSection_X_MysteriousPosition[x];
+                                stageInfoEditor.MainSection_Y_MysteriousPosition[index] = stageInfoModFile.MainSection_Y_MysteriousPosition[x];
+                                stageInfoEditor.MainSection_Z_MysteriousPosition[index] = stageInfoModFile.MainSection_Z_MysteriousPosition[x];
+                                stageInfoEditor.MainSection_MysteriousGlareValue1[index] = stageInfoModFile.MainSection_MysteriousGlareValue1[x];
+                                stageInfoEditor.MainSection_MysteriousGlareValue2[index] = stageInfoModFile.MainSection_MysteriousGlareValue2[x];
+                                stageInfoEditor.MainSection_MysteriousGlareValue3[index] = stageInfoModFile.MainSection_MysteriousGlareValue3[x];
+                                stageInfoEditor.MainSection_UnknownValue1[index] = stageInfoModFile.MainSection_UnknownValue1[x];
+                                stageInfoEditor.MainSection_UnknownValue2[index] = stageInfoModFile.MainSection_UnknownValue2[x];
+                                stageInfoEditor.MainSection_UnknownValue3[index] = stageInfoModFile.MainSection_UnknownValue3[x];
+                                stageInfoEditor.SecondarySectionFilePath[index] = stageInfoModFile.SecondarySectionFilePath[x];
+                                stageInfoEditor.SecondarySectionLoadPath[index] = stageInfoModFile.SecondarySectionLoadPath[x];
+                                stageInfoEditor.SecondarySectionLoadMesh[index] = stageInfoModFile.SecondarySectionLoadMesh[x];
+                                stageInfoEditor.SecondarySectionPositionFilePath[index] = stageInfoModFile.SecondarySectionPositionFilePath[x];
+                                stageInfoEditor.SecondarySectionPosition[index] = stageInfoModFile.SecondarySectionPosition[x];
+                                stageInfoEditor.SecondaryTypeSection[index] = stageInfoModFile.SecondaryTypeSection[x];
+                                stageInfoEditor.SecondaryTypeAnimationSection_speed[index] = stageInfoModFile.SecondaryTypeAnimationSection_speed[x];
+                                stageInfoEditor.SecondarySectionCameraValue[index] = stageInfoModFile.SecondarySectionCameraValue[x];
+                                stageInfoEditor.SecondarySectionMysteriousValue[index] = stageInfoModFile.SecondarySectionMysteriousValue[x];
+                                stageInfoEditor.SecondaryConst3C[index] = stageInfoModFile.SecondaryConst3C[x];
+                                stageInfoEditor.SecondaryConst78[index] = stageInfoModFile.SecondaryConst78[x];
+                                stageInfoEditor.SecondaryConstBreakableWallValue1[index] = stageInfoModFile.SecondaryConstBreakableWallValue1[x];
+                                stageInfoEditor.SecondaryConstBreakableWallValue2[index] = stageInfoModFile.SecondaryConstBreakableWallValue2[x];
+                                stageInfoEditor.SecondaryTypeBreakableWall_Effect01[index] = stageInfoModFile.SecondaryTypeBreakableWall_Effect01[x];
+                                stageInfoEditor.SecondaryTypeBreakableWall_Effect02[index] = stageInfoModFile.SecondaryTypeBreakableWall_Effect02[x];
+                                stageInfoEditor.SecondaryTypeBreakableWall_Effect03[index] = stageInfoModFile.SecondaryTypeBreakableWall_Effect03[x];
+                                stageInfoEditor.SecondaryTypeBreakableWall_Sound[index] = stageInfoModFile.SecondaryTypeBreakableWall_Sound[x];
+                                stageInfoEditor.SecondaryTypeBreakableObject_Effect01[index] = stageInfoModFile.SecondaryTypeBreakableObject_Effect01[x];
+                                stageInfoEditor.SecondaryTypeBreakableObject_Effect02[index] = stageInfoModFile.SecondaryTypeBreakableObject_Effect02[x];
+                                stageInfoEditor.SecondaryTypeBreakableObject_Effect03[index] = stageInfoModFile.SecondaryTypeBreakableObject_Effect03[x];
+                                stageInfoEditor.SecondaryTypeBreakableObject_path[index] = stageInfoModFile.SecondaryTypeBreakableObject_path[x];
+                                stageInfoEditor.SecondaryTypeBreakableObject_Speed01[index] = stageInfoModFile.SecondaryTypeBreakableObject_Speed01[x];
+                                stageInfoEditor.SecondaryTypeBreakableObject_Speed02[index] = stageInfoModFile.SecondaryTypeBreakableObject_Speed02[x];
+                                stageInfoEditor.SecondaryTypeBreakableObject_Speed03[index] = stageInfoModFile.SecondaryTypeBreakableObject_Speed03[x];
+                                stageInfoEditor.SecondaryTypeBreakableWall_volume[index] = stageInfoModFile.SecondaryTypeBreakableWall_volume[x];
+                            }
+                            
+                            if (Directory.Exists(System.IO.Path.GetDirectoryName(mod_img_tex_path)+ "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)))){
+                                Directory.CreateDirectory(GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)));
+                                CopyFilesRecursively(System.IO.Path.GetDirectoryName(mod_img_tex_path) + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)), GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)));
+                                byte[] BGM_patch = MainFunctions.crc32(System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)));
+                                BGM_patch = MainFunctions.b_AddBytes(BGM_patch, BitConverter.GetBytes(Convert.ToInt32(File.ReadAllText(ModBGMPath))));
+                                BGM_patch = MainFunctions.b_AddBytes(BGM_patch, new byte[8] { 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00 });
+                                if (FreeBGM_slot.Count > 0) {
+                                    File.WriteAllBytes(GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)) + "\\" + FreeBGM_slot[0].ToString("X2") + ".ns4p", BGM_patch);
+                                    FreeBGM_slot.RemoveAt(0);
+                                }
+                                FileStream ffParameter = new FileStream(GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)) + "\\info.txt", FileMode.Create, FileAccess.Write);
+                                StreamWriter mm_WriterParameter = new StreamWriter(ffParameter);
+                                mm_WriterParameter.BaseStream.Seek(0, SeekOrigin.End);
+                                mm_WriterParameter.Write(stageName[i] + " - " + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)) + "|" + stageDescription[i] + "|" + stageAuthor[i]);
+                                mm_WriterParameter.Flush();
+                                mm_WriterParameter.Close();
+                                File.WriteAllText(GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)) + "\\clean.txt", "");
+                            } else {
+                                Directory.CreateDirectory(GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)));
+                                byte[] BGM_patch = MainFunctions.crc32(System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)));
+                                BGM_patch = MainFunctions.b_AddBytes(BGM_patch, BitConverter.GetBytes(Convert.ToInt32(File.ReadAllText(ModBGMPath))));
+                                BGM_patch = MainFunctions.b_AddBytes(BGM_patch, new byte[8] { 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00 });
+                                if (FreeBGM_slot.Count > 0) {
+                                    File.WriteAllBytes(GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)) + "\\" + FreeBGM_slot[0].ToString("X2") + ".ns4p", BGM_patch);
+                                    FreeBGM_slot.RemoveAt(0);
+                                }
+                                File.WriteAllText(GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)) + "\\clean.txt", "");
+                                FileStream ffParameter = new FileStream(GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)) + "\\info.txt", FileMode.Create, FileAccess.Write);
+                                StreamWriter mm_WriterParameter = new StreamWriter(ffParameter);
+                                mm_WriterParameter.BaseStream.Seek(0, SeekOrigin.End);
+                                mm_WriterParameter.Write(stageName[i] + " - " + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)) + "|" + stageDescription[i] + "|" + stageAuthor[i]);
+                                mm_WriterParameter.Flush();
+                                mm_WriterParameter.Close();
+                                
+                            }
+
+                        }
+                    }
+                    if (!Directory.Exists(System.IO.Path.GetDirectoryName(stageInfoPath))) {
+                        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(stageInfoPath));
+                    }
+                    stageInfoEditor.SaveFileAs(stageInfoPath);
+
+                }
+                
+                if (stagesToAddList.Count > 0) {
+                    
+                    byte[] stageSel_file = File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\systemFiles\\select_stage.xfbin");
+                    byte[] stagesel_header = MainFunctions.b_ReadByteArray(stageSel_file, 0, 0x144);
+                    byte[] stagesel_body = MainFunctions.b_ReadByteArray(stageSel_file, 0x144, 0xBEB);
+                    byte[] stagesel_end = MainFunctions.b_ReadByteArray(stageSel_file, 0xD39, 0x14);
+                    byte[] stagesel_xml_add = new byte[0];
+                    byte[] stagesel_new_file = new byte[0];
+                    for (int st = 0; st < stagesToAddList.Count; st++) {
+                        byte[] xml_line = new byte[0x0E] { 0x0D, 0x0A, 0x09, 0x3C, 0x73, 0x74, 0x61, 0x67, 0x65, 0x20, 0x69, 0x64, 0x3D, 0x22 };
+                        xml_line = MainFunctions.b_AddBytes(xml_line, Encoding.ASCII.GetBytes((44 + st).ToString()));
+                        xml_line = MainFunctions.b_AddBytes(xml_line, new byte[0x0A] { 0x22, 0x20, 0x6E, 0x61, 0x6D, 0x65, 0x69, 0x64, 0x3D, 0x22 });
+                        xml_line = MainFunctions.b_AddBytes(xml_line, Encoding.ASCII.GetBytes(("c_modmanager_sta_" + st + 1).ToString()));
+                        xml_line = MainFunctions.b_AddBytes(xml_line, new byte[0x0B] { 0x22, 0x20, 0x73, 0x74, 0x61, 0x67, 0x65, 0x69, 0x64, 0x3D, 0x22 });
+                        xml_line = MainFunctions.b_AddBytes(xml_line, Encoding.ASCII.GetBytes((stagesToAddList[st]).ToString()));
+                        xml_line = MainFunctions.b_AddBytes(xml_line, new byte[0x0C] { 0x22, 0x20, 0x68, 0x65, 0x6C, 0x6C, 0x3D, 0x22, 0x30, 0x22, 0x2F, 0x3E });
+                        stagesel_xml_add = MainFunctions.b_AddBytes(stagesel_xml_add, xml_line);
+                        for (int l = 0; l < 12; l++) {
+                            //This function adding all modded entries to all messageInfo files in all languages
+                            MessageOriginalFile.CRC32CodesList[l].Add(MainFunctions.crc32(("c_modmanager_sta_" + st + 1).ToString()));
+                            MessageOriginalFile.MainTextsList[l].Add(Encoding.UTF8.GetBytes(StageText[st][l].Replace(Program.LANG[l] + "=", "")));
+                            MessageOriginalFile.ExtraTextsList[l].Add(Encoding.UTF8.GetBytes(StageText[st][l].Replace(Program.LANG[l] + "=", "")));
+                            MessageOriginalFile.ACBFilesList[l].Add(-1);
+                            MessageOriginalFile.CueIDsList[l].Add(-1);
+                            MessageOriginalFile.VoiceOnlysList[l].Add(0);
+                            MessageOriginalFile.EntryCounts[l]++;
+                            //Creates directory for each language
+                            if (!Directory.Exists(datawin32Path + "\\message\\WIN64\\" + Program.LANG[l])) {
+                                Directory.CreateDirectory(datawin32Path + "\\message\\WIN64\\" + Program.LANG[l]);
+                            }
+                        }
+                        if (File.Exists(stagesImagesToAddList[st])) {
+                            byte[] st_img_header = new byte[0];
+                            byte[] st_img_body = File.ReadAllBytes(stagesImagesToAddList[st]);
+                            byte[] st_img_end = new byte[0x14] { 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x02, 0x00, 0x79, 0x18, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 };
+                            if (43 + st>9 && 43 + st < 100) {
+                                byte[] st_img = File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\systemFiles\\st_img_l_10.xfbin");
+                                st_img_header = MainFunctions.b_AddBytes(st_img_header, st_img, 0, 0, 0x12C);
+                            }
+                            else if (43 + st > 99 && 43 + st < 1000) {
+                                byte[] st_img = File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\systemFiles\\st_img_l_100.xfbin");
+                                st_img_header = MainFunctions.b_AddBytes(st_img_header, st_img, 0, 0, 0x12C);
+
+                            }
+                            else if (43+st> 1000 && 43+st< 10000) {
+                                byte[] st_img = File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\systemFiles\\st_img_l_1000.xfbin");
+                                st_img_header = MainFunctions.b_AddBytes(st_img_header, st_img, 0, 0, 0x130);
+                            }
+                            byte[] st_img_new_file = new byte[0];
+                            st_img_new_file = MainFunctions.b_AddBytes(st_img_new_file, st_img_header);
+                            st_img_new_file = MainFunctions.b_AddBytes(st_img_new_file, st_img_body);
+                            st_img_new_file = MainFunctions.b_AddBytes(st_img_new_file, st_img_end);
+                            st_img_new_file = MainFunctions.b_ReplaceBytes(st_img_new_file, BitConverter.GetBytes(st_img_body.Length), st_img_header.Length - 4, 1);
+                            st_img_new_file = MainFunctions.b_ReplaceBytes(st_img_new_file, BitConverter.GetBytes(st_img_body.Length+4), st_img_header.Length - 16, 1);
+                            int index = MainFunctions.b_FindBytes(st_img_header, new byte[0xA] { 0x73, 0x74, 0x5F, 0x69, 0x6D, 0x67, 0x5F, 0x6C, 0x5F, 0x31 }, 0xA8);
+                            st_img_new_file = MainFunctions.b_ReplaceBytes(st_img_new_file, Encoding.ASCII.GetBytes("st_img_l_"+(43+st).ToString()), index);
+                            if (!Directory.Exists(datawin32Path + "\\ui\\flash\\OTHER\\stagesel\\tex_l")) {
+                                Directory.CreateDirectory(datawin32Path + "\\ui\\flash\\OTHER\\stagesel\\tex_l");
+                            }
+                            File.WriteAllBytes(datawin32Path + "\\ui\\flash\\OTHER\\stagesel\\tex_l\\st_img_l_"+(43 + st).ToString()+".xfbin", st_img_new_file);
+                        }
+
+                    }
+                    //stagesel_image.gfx
+                    byte[] stagesel_image_original = File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\systemFiles\\stagesel_image.gfx");
+                    byte[] stagesel_image_header = MainFunctions.b_ReadByteArray(stagesel_image_original, 0x00, 0x55);
+                    byte[] stagesel_image_header_add = new byte[0];
+                    byte[] stagesel_image_body1 = MainFunctions.b_ReadByteArray(stagesel_image_original, 0x55, 0xC0D);
+                    byte[] stagesel_image_body1_add = new byte[0];
+                    byte[] stagesel_image_body2 = MainFunctions.b_ReadByteArray(stagesel_image_original, 0xC62, 0x45D);
+                    byte[] stagesel_image_body2_add = new byte[0];
+                    byte[] stagesel_image_end = MainFunctions.b_ReadByteArray(stagesel_image_original, 0x10BF, 0x8DF);
+                    byte[] stagesel_image_new_file = new byte[0];
+                    for (int st = 0; st < stagesToAddList.Count; st++) {
+                        stagesel_image_header_add = MainFunctions.b_AddBytes(stagesel_image_header_add, new byte[2] { (byte)(0x4C + ("stagesel_image_" + stagesToAddList[st] + ".dds").Length), 0xFC });
+                        stagesel_image_header_add = MainFunctions.b_AddBytes(stagesel_image_header_add, BitConverter.GetBytes(st + 1), 0, 0, 2);
+                        stagesel_image_header_add = MainFunctions.b_AddBytes(stagesel_image_header_add, new byte[] { 0x09, 0x00, 0x0E, 0x00, 0xa8, 0x00, 0x4c, 0x00, 0x00 });
+                        stagesel_image_header_add = MainFunctions.b_AddBytes(stagesel_image_header_add, new byte[1] { (byte)("stagesel_image_" + stagesToAddList[st] + ".dds").Length });
+                        stagesel_image_header_add = MainFunctions.b_AddBytes(stagesel_image_header_add, Encoding.ASCII.GetBytes("stagesel_image_" + stagesToAddList[st] + ".dds"));
+                        stagesel_image_body1_add = MainFunctions.b_AddBytes(stagesel_image_body1_add, new byte[2] { 0x0C, 0xFC });
+                        stagesel_image_body1_add = MainFunctions.b_AddBytes(stagesel_image_body1_add, BitConverter.GetBytes(0x55 + ((st + 1) * 2)), 0, 0, 2);
+                        stagesel_image_body1_add = MainFunctions.b_AddBytes(stagesel_image_body1_add, BitConverter.GetBytes(st + 1), 0, 0, 2);
+                        stagesel_image_body1_add = MainFunctions.b_AddBytes(stagesel_image_body1_add, new byte[0x0E] { 0x00, 0x00, 0x00, 0x00, 0xA8, 0x00, 0x4C, 0x00, 0xBF, 0x00, 0x33, 0x00, 0x00, 0x00 });
+                        stagesel_image_body1_add = MainFunctions.b_AddBytes(stagesel_image_body1_add, BitConverter.GetBytes(0x56 + ((st + 1) * 2)), 0, 0, 2);
+                        stagesel_image_body1_add = MainFunctions.b_AddBytes(stagesel_image_body1_add, new byte[0x13] { 0x64, 0xC2, 0x33, 0xE6, 0x84, 0x17, 0xC0, 0x02, 0x41, 0xFF, 0xFF, 0xD9, 0x40, 0x00, 0x05, 0x00, 0x00, 0x00, 0x41 });
+                        stagesel_image_body1_add = MainFunctions.b_AddBytes(stagesel_image_body1_add, BitConverter.GetBytes(0x55 + ((st + 1) * 2)), 0, 0, 2);
+                        stagesel_image_body1_add = MainFunctions.b_AddBytes(stagesel_image_body1_add, new byte[0x1C] { 0xD9, 0x40, 0x00, 0x05, 0x00, 0x00, 0x0C, 0x98, 0x4D, 0x08, 0x00, 0x20, 0x15, 0x93, 0x09, 0xA1, 0x17, 0x63, 0x3E, 0x3A, 0x57, 0xC3, 0xB2, 0x61, 0x1D, 0x34, 0x20, 0x00 });
+                        stagesel_image_body2_add = MainFunctions.b_AddBytes(stagesel_image_body2_add, new byte[0x0C] { 0xFF, 0x0A, (byte)(("img_s_" + (43 + st).ToString()).Length + 1), 0x00, 0x00, 0x00, 0x69, 0x6D, 0x67, 0x5F, 0x73, 0x5F });
+                        stagesel_image_body2_add = MainFunctions.b_AddBytes(stagesel_image_body2_add, Encoding.ASCII.GetBytes((43 + st).ToString()));
+                        stagesel_image_body2_add = MainFunctions.b_AddBytes(stagesel_image_body2_add, new byte[0x0A] { 0x00, 0x85, 0x06, 0x03, 0x01, 0x00, (byte)(0x56 + ((st + 1) * 2)), 0x00, 0x40, 0x00 });
+                    }
+                    stagesel_image_end = MainFunctions.b_ReplaceBytes(stagesel_image_end, BitConverter.GetBytes(0x57 + (stagesToAddList.Count * 2)), 0x11, 0, 2);
+                    stagesel_image_end = MainFunctions.b_ReplaceBytes(stagesel_image_end, BitConverter.GetBytes(0x2B + stagesToAddList.Count), 0x48, 0, 2);
+                    stagesel_image_end = MainFunctions.b_ReplaceBytes(stagesel_image_end, BitConverter.GetBytes(0x58 + (stagesToAddList.Count * 2)), 0x53, 0, 2);
+                    stagesel_image_end = MainFunctions.b_ReplaceBytes(stagesel_image_end, BitConverter.GetBytes(0x58 + (stagesToAddList.Count * 2)), 0x8B8, 0, 2);
+
+                    stagesel_image_body2 = MainFunctions.b_ReplaceBytes(stagesel_image_body2, BitConverter.GetBytes(0x45B + stagesel_image_body2_add.Length), 0x4C, 0, 2);
+                    stagesel_image_body2 = MainFunctions.b_ReplaceBytes(stagesel_image_body2, BitConverter.GetBytes(0x58 + (stagesToAddList.Count * 2)), 0x50, 0, 2);
+                    stagesel_image_body2 = MainFunctions.b_ReplaceBytes(stagesel_image_body2, BitConverter.GetBytes(0x2C + stagesToAddList.Count), 0x52, 0, 2);
+
+                    stagesel_image_new_file = MainFunctions.b_AddBytes(stagesel_image_new_file, stagesel_image_header);
+                    stagesel_image_new_file = MainFunctions.b_AddBytes(stagesel_image_new_file, stagesel_image_header_add);
+                    stagesel_image_new_file = MainFunctions.b_AddBytes(stagesel_image_new_file, stagesel_image_body1);
+                    stagesel_image_new_file = MainFunctions.b_AddBytes(stagesel_image_new_file, stagesel_image_body1_add);
+                    stagesel_image_new_file = MainFunctions.b_AddBytes(stagesel_image_new_file, stagesel_image_body2);
+                    stagesel_image_new_file = MainFunctions.b_AddBytes(stagesel_image_new_file, stagesel_image_body2_add);
+                    stagesel_image_new_file = MainFunctions.b_AddBytes(stagesel_image_new_file, stagesel_image_end);
+                    stagesel_image_new_file = MainFunctions.b_ReplaceBytes(stagesel_image_new_file, BitConverter.GetBytes(stagesel_image_new_file.Length), 0x04);
+                    File.WriteAllBytes(GameRootPath + "\\data\\ui\\flash\\OTHER\\stagesel\\stagesel_image.gfx", stagesel_image_new_file);
+
+                    //stagesel.gfx
+                    List<byte[]> stagesel_slot_posList = new List<byte[]>();
+                    stagesel_slot_posList.Add(new byte[] { 0x9B, 0x06, 0x26, 0xC7, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF3, 0xB1, 0xE0 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xC2, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF7, 0xB1, 0xE0 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xBD, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xFB, 0xB1, 0xE0 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xB8, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xFE, 0xC7, 0x80 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xB3, 0x00, 0x09, 0x00, 0x1B, 0x94, 0x0B, 0x1E, 0x00 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xAE, 0x00, 0x09, 0x00, 0x1A, 0x68, 0x1B, 0x1E, 0x00 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xA9, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x16, 0xC7, 0x80 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xA4, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0F, 0xB1, 0xE0 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x9F, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x13, 0xB1, 0xE0 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x9A, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x23, 0xB1, 0xE0 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x95, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF3, 0xE4, 0x10 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x90, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF7, 0xE4, 0x10 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x8B, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xFB, 0xE4, 0x10 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x86, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xFF, 0x90, 0x40 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x81, 0x00, 0x09, 0x00, 0x19, 0x28, 0x19, 0x04 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x7C, 0x00, 0x09, 0x00, 0x18, 0xD0, 0x39, 0x04 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x77, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x17, 0x90, 0x40 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x72, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0F, 0xE4, 0x10 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x6D, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x13, 0xE4, 0x10 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x68, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x23, 0xE4, 0x10 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x63, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF0, 0x16, 0x40 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x5E, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF4, 0x16, 0x40 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x59, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xF8, 0x16, 0x40 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x54, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xF8, 0x59, 0x00 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x4F, 0x00, 0x09, 0x00, 0x19, 0x28, 0x05, 0x90 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x4A, 0x00, 0x09, 0x00, 0x18, 0xD0, 0x25, 0x90 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x45, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x10, 0x59, 0x00 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x40, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0C, 0x16, 0x40 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x3B, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x10, 0x16, 0x40 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x36, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x20, 0x16, 0x40 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x31, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF0, 0x48, 0x80 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x2C, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF4, 0x48, 0x80 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x27, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xF8, 0x48, 0x80 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x22, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xF9, 0x22, 0x00 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x1D, 0x00, 0x09, 0x00, 0x1B, 0x94, 0x04, 0x88, 0x00 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x18, 0x00, 0x09, 0x00, 0x1A, 0x68, 0x14, 0x88, 0x00 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x13, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x11, 0x22, 0x00 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x0E, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0C, 0x48, 0x80 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x09, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x10, 0x48, 0x80 });
+                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x04, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x20, 0x48, 0x80 });
+
+                    int pageCount = (43 + stagesToAddList.Count)/40;
+                    byte[] stagesel_gfx_original = File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\systemFiles\\stagesel.gfx");
+                    byte[] stagesel_gfx_new_file = new byte[0];
+                        byte[] stagesel_gfx_header = MainFunctions.b_ReadByteArray(stagesel_gfx_original, 0x00, 0x2EF);
+                        byte[] stagesel_gfx_body = MainFunctions.b_ReadByteArray(stagesel_gfx_original, 0x2EF, 0x5c1);
+                        byte[] stagesel_gfx_body_add = new byte[0];
+                        byte[] stagesel_gfx_end = MainFunctions.b_ReadByteArray(stagesel_gfx_original, 0x8B0, stagesel_gfx_original.Length - 0x8B0);
+                    if (stagesToAddList.Count > 1) {
+
+                        for (int st = 1; st < stagesToAddList.Count; st++) {
+                            int slot_index = (43 + st) % 40;
+                            byte[] slotInfo = stagesel_slot_posList[slot_index];
+                            if (slotInfo.Length == 0x0C) {
+                                slotInfo = MainFunctions.b_ReplaceBytes(slotInfo, BitConverter.GetBytes(0xDB + (st * 5)), 0x03, 0, 2);
+                                string slotName = "mc_stage_image" + (43 + st).ToString();
+                                slotInfo = MainFunctions.b_AddBytes(slotInfo, Encoding.ASCII.GetBytes(slotName));
+                                slotInfo = MainFunctions.b_AddBytes(slotInfo, new byte[1]);
+                                int newLenght = slotName.Length - 0x10;
+                                slotInfo = MainFunctions.b_ReplaceBytes(slotInfo, BitConverter.GetBytes(slotInfo[0] + newLenght), 0x00, 0, 1);
+                            } else if (slotInfo.Length == 0x0F || slotInfo.Length == 0x10) {
+                                slotInfo = MainFunctions.b_ReplaceBytes(slotInfo, BitConverter.GetBytes(0xDB + (st * 5)), 0x07, 0, 2);
+                                string slotName = "mc_stage_image" + (43 + st).ToString();
+                                slotInfo = MainFunctions.b_AddBytes(slotInfo, Encoding.ASCII.GetBytes(slotName));
+                                slotInfo = MainFunctions.b_AddBytes(slotInfo, new byte[1]);
+                                int newLenght = slotName.Length - 0x10;
+                                slotInfo = MainFunctions.b_ReplaceBytes(slotInfo, BitConverter.GetBytes(slotInfo[2] + newLenght), 0x02, 0, 1);
+                            }
+                            stagesel_gfx_body_add = MainFunctions.b_AddBytes(stagesel_gfx_body_add, slotInfo);
+                        }
+                        
+                    }
+                    stagesel_gfx_body = MainFunctions.b_AddBytes(stagesel_gfx_body, stagesel_gfx_body_add);
+                    stagesel_gfx_body = MainFunctions.b_ReplaceBytes(stagesel_gfx_body, BitConverter.GetBytes(0x5BF + stagesel_gfx_body_add.Length), 0x02, 0, 2);
+                    int pos = MainFunctions.b_FindBytes(stagesel_gfx_end, new byte[] { 0x68, 0xB1, 0x07, 0x5E, 0xB2, 0x07, 0x24, 0x02 }) + 7;
+                    stagesel_gfx_end = MainFunctions.b_ReplaceBytes(stagesel_gfx_end, BitConverter.GetBytes(pageCount), pos, 0, 1);
+                    stagesel_gfx_new_file = MainFunctions.b_AddBytes(stagesel_gfx_new_file, stagesel_gfx_header);
+                    stagesel_gfx_new_file = MainFunctions.b_AddBytes(stagesel_gfx_new_file, stagesel_gfx_body);
+                    stagesel_gfx_new_file = MainFunctions.b_AddBytes(stagesel_gfx_new_file, stagesel_gfx_end);
+                    stagesel_gfx_new_file = MainFunctions.b_ReplaceBytes(stagesel_gfx_new_file, BitConverter.GetBytes(stagesel_gfx_new_file.Length), 0x04);
+                    File.WriteAllBytes(GameRootPath + "\\data\\ui\\flash\\OTHER\\stagesel\\stagesel.gfx", stagesel_gfx_new_file);
+
+                    //select_stage.xfbin
+                    stagesel_xml_add = MainFunctions.b_AddBytes(stagesel_xml_add, new byte[0x0A] { 0x0D, 0x0A, 0x3C, 0x2F, 0x5F, 0x72, 0x6F, 0x6F, 0x74, 0x3E });
+                    stagesel_new_file = MainFunctions.b_AddBytes(stagesel_new_file, stagesel_header);
+                    stagesel_new_file = MainFunctions.b_ReplaceBytes(stagesel_new_file, BitConverter.GetBytes(stagesel_body.Length + stagesel_xml_add.Length), 0x140, 1);
+                    stagesel_new_file = MainFunctions.b_ReplaceBytes(stagesel_new_file, BitConverter.GetBytes(stagesel_body.Length + stagesel_xml_add.Length + 4), 0x134, 1);
+                    stagesel_new_file = MainFunctions.b_AddBytes(stagesel_new_file, stagesel_body);
+                    stagesel_new_file = MainFunctions.b_AddBytes(stagesel_new_file, stagesel_xml_add);
+                    stagesel_new_file = MainFunctions.b_AddBytes(stagesel_new_file, stagesel_end);
+
+                    if (!Directory.Exists(datawin32Path + "\\ui\\max\\select\\"))
+                        Directory.CreateDirectory(datawin32Path + "\\ui\\max\\select\\");
+                    File.WriteAllBytes(datawin32Path + "\\ui\\max\\select\\select_stage.xfbin", stagesel_new_file);
+
+
+                    //This function merges all messageInfo files on all languages
+
+                    //This cycle checking each language
+
+                    //Saves all edited messageInfo files
+                }
+                
+
+
+
+
+
                 string Modgfx_charsel_iconsPath = "";
                 bool gfx_charsel_iconsExist = false;
                 List<string> pl_sound_files = new List<string>();
@@ -718,6 +1418,8 @@ namespace NSUNS4_ModManager {
                                 }
                             }
                             if (specialCondParamExist || partnerSlotParamExist || cpk_paths.Count > 0) { //If anything was added in moddingAPI folder, it will add info.txt file for loading cpk files or conditions for character
+
+                                File.WriteAllText(root_path + "\\moddingapi\\mods\\" + d.Name + "\\clean.txt", ""); 
                                 FileStream ffParameter = new FileStream(root_path + "\\moddingapi\\mods\\" + d.Name + "\\info.txt", FileMode.Create, FileAccess.Write);
                                 StreamWriter mm_WriterParameter = new StreamWriter(ffParameter);
                                 mm_WriterParameter.BaseStream.Seek(0, SeekOrigin.End);
@@ -745,6 +1447,7 @@ namespace NSUNS4_ModManager {
                                     && !file.Name.Contains("unlockCharaTotal")
                                     && !file.Name.Contains("messageInfo")
                                     && !file.Name.Contains("btlcmn")
+                                    && !file.Name.Contains("StageInfo")
                                     && !file.Name.Contains("spTypeSupportParam")) {
                                     //This code prevents from copy pasting moddingApi files
                                     if (!file.FullName.Contains("moddingapi")) {
@@ -1797,13 +2500,7 @@ namespace NSUNS4_ModManager {
                             if (messageExistList.Contains(true)) {
                                 //This function merges all messageInfo files on all languages
                                 Tool_MessageInfoEditor_code MessageModFile = new Tool_MessageInfoEditor_code();
-                                Tool_MessageInfoEditor_code MessageOriginalFile = new Tool_MessageInfoEditor_code();
                                 MessageModFile.OpenFilesStart(ModmessagePathList.Remove(ModmessagePathList.IndexOf("\\WIN64"), ModmessagePathList.Length - ModmessagePathList.IndexOf("\\WIN64")));
-                                if (Directory.Exists(messageInfoPath))
-                                    MessageOriginalFile.OpenFilesStart(messageInfoPath);
-                                else {
-                                    MessageOriginalFile.OpenFilesStart(originalMessagePath);
-                                }
                                 //This cycle checking each language
                                 for (int l = 0; l < Program.LANG.Length; l++) {
                                     //This function adding all modded entries to all messageInfo files in all languages
@@ -1821,8 +2518,7 @@ namespace NSUNS4_ModManager {
                                         Directory.CreateDirectory(datawin32Path + "\\message\\WIN64\\" + Program.LANG[l]);
                                     }
                                 }
-                                //Saves all edited messageInfo files
-                                MessageOriginalFile.SaveFilesAs(datawin32Path + "\\message");
+                                
                             }
                             
                             if (btlcmnExist) {
@@ -1965,6 +2661,8 @@ namespace NSUNS4_ModManager {
                     charicon_s_newFile = MainFunctions.b_ReplaceBytes(charicon_s_newFile, BitConverter.GetBytes(charicon_s_newFile.Length), 0x04, 0, 4);
                     File.WriteAllBytes(Modgfx_charsel_iconsPath, charicon_s_newFile);
                 }
+                //Saves all edited messageInfo files
+                MessageOriginalFile.SaveFilesAs(datawin32Path + "\\message");
                 WinForms.MessageBox.Show("Finished compiling.");
             }
 
@@ -1993,6 +2691,22 @@ namespace NSUNS4_ModManager {
                         if (Directory.Exists(GameRootPath + "\\moddingapi\\mods\\" + ImportedCharacodesList[c])) {
                             Directory.Delete(GameRootPath + "\\moddingapi\\mods\\" + ImportedCharacodesList[c], true);
                         }
+                    }
+
+                    DirectoryInfo d_clean = new DirectoryInfo(GameRootPath + "\\moddingapi\\mods\\");
+                    FileInfo[] clean_Files = d_clean.GetFiles("clean.txt", SearchOption.AllDirectories);
+                    List<string> CleanPaths = new List<string>();
+
+                    foreach (FileInfo file in clean_Files) {
+                        if (file.FullName.Contains("clean.txt")) {
+                            if (!CleanPaths.Contains(file.FullName))
+                                CleanPaths.Add(file.FullName);
+                        }
+                    }
+
+                    for (int c = 0; c< CleanPaths.Count; c++) {
+                        if (Directory.Exists(System.IO.Path.GetDirectoryName(CleanPaths[c])))
+                            Directory.Delete(System.IO.Path.GetDirectoryName(CleanPaths[c]), true);
                     }
 
                     string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER";
@@ -2026,6 +2740,10 @@ namespace NSUNS4_ModManager {
                         byte[] charicon_s = File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\systemFiles\\charicon_s.gfx");
                         File.WriteAllBytes(Modgfx_charsel_iconPath, charicon_s);
                     }
+                    byte[] stagesel_gfx = File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\systemFiles\\stagesel.vanilla.gfx");
+                    File.WriteAllBytes(GameRootPath+"\\data\\ui\\flash\\OTHER\\stagesel\\stagesel.gfx", stagesel_gfx);
+                    byte[] stagesel_image_gfx = File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\systemFiles\\stagesel_image.vanilla.gfx");
+                    File.WriteAllBytes(GameRootPath + "\\data\\ui\\flash\\OTHER\\stagesel\\stagesel_image.gfx", stagesel_image_gfx);
                     //Replaces edited nuccMaterial_dx11.nsh file with vanilla file
                     if (File.Exists(GameRootPath + "\\data\\system\\nuccMaterial_dx11.nsh")) {
                         byte[] nuccMat = File.ReadAllBytes(originalnuccMaterialDx11Path);
@@ -2207,8 +2925,8 @@ namespace NSUNS4_ModManager {
             if (Directory.Exists(GameModsPath)) {
                 OpenFileDialog o = new OpenFileDialog();
                 {
-                    o.DefaultExt = ".rar";
-                    o.Filter = "All files|*.*|RAR Archives|*.rar|ZIP Archives|*.zip";
+                    o.DefaultExt = ".NUS4";
+                    o.Filter = "Naruto Storm 4 Mod Manager Archives|*.NUS4|ZIP Archives|*.zip";
                 }
                 o.ShowDialog();
                 if (!(o.FileName != "") || !File.Exists(o.FileName)) {
@@ -2302,17 +3020,18 @@ namespace NSUNS4_ModManager {
 
             }
             if (ext.Contains("rar")) {
-                using (var archive = RarArchive.Open(modPath)) {
-                    foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory)) {
-                        entry.WriteToDirectory(@Directory.GetCurrentDirectory() + "\\temp\\" + System.IO.Path.GetFileName(modPath), new ExtractionOptions() {
-                            ExtractFullPath = true,
-                            Overwrite = true
-                        });
-                    }
-                }
-            } else if (System.IO.Path.GetExtension(modPath).Contains("zip")) {
+                System.Windows.MessageBox.Show("RAR Archives aren't supported anymore due to problem with crashes for some users. If you have an actual fix for it, leave a report on gitHub.");
+                //using (var archive = RarArchive.Open(modPath)) {
+                //    foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory)) {
+                //        entry.WriteToDirectory(@Directory.GetCurrentDirectory() + "\\temp\\" + System.IO.Path.GetFileName(modPath), new ExtractionOptions() {
+                //            ExtractFullPath = true,
+                //            Overwrite = true
+                //        });
+                //    }
+                //}
+            } else if (System.IO.Path.GetExtension(modPath).Contains("zip") || System.IO.Path.GetExtension(modPath).Contains("nus4")) {
                 System.IO.Compression.ZipFile.ExtractToDirectory(modPath, @Directory.GetCurrentDirectory() + "\\temp\\" + System.IO.Path.GetFileName(modPath));
-                CopyFilesRecursively(@Directory.GetCurrentDirectory() + "\\temp\\" + System.IO.Path.GetFileName(modPath),GameModsPath);
+                CopyFilesRecursively(@Directory.GetCurrentDirectory() + "\\temp\\" + System.IO.Path.GetFileName(modPath), GameModsPath);
             }
             bool supportedMod = false;
             

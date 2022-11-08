@@ -95,6 +95,7 @@
     <Compile Include="ToolBoxCode\Tool_SpcloadEditor_code.cs" />
     <Compile Include="ToolBoxCode\Tool_SpSkillCustomizeParamEditor_code.cs" />
     <Compile Include="ToolBoxCode\Tool_spTypeSupportParamEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_stageInfoEditor_code.cs" />
     <Compile Include="ToolBoxCode\Tool_UnlockCharaTotalEditor_code.cs" />
     <Compile Include="ToolBoxCode\XfbinParser.cs" />
     <Page Include="MainWindow.xaml">

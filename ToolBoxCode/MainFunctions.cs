@@ -332,5 +332,30 @@ namespace NSUNS4_ModManager.ToolBoxCode {
 
             return indexes;
         }
+        public static List<long> crc32_table() {
+            var a = new List<long>();
+            foreach (var i in Enumerable.Range(0, 256)) {
+                var k = i << 24;
+                foreach (var _ in Enumerable.Range(0, 8)) {
+                    if (Convert.ToBoolean(k & 0x80000000))
+                        k = k << 1 ^ 0x4c11db7;
+                    else
+                        k = k << 1;
+                }
+                a.Add(k & 0xffffffff);
+            }
+            return a;
+        }
+        public static byte[] crc32(string str) {
+            byte[] bytestream = Encoding.ASCII.GetBytes(str);
+            var crc_table = crc32_table();
+            var crc = 0xffffffff;
+            foreach (var bytes in bytestream) {
+                var lookup_index = (crc >> 24 ^ bytes) & 0xff;
+                crc = (uint)((crc & 0xffffff) << 8 ^ crc_table[(int)lookup_index]);
+            }
+            crc = ~crc & 0xffffffff;
+            return BitConverter.GetBytes(crc);
+        }
     }
 }
