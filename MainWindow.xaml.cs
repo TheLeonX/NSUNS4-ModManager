@@ -73,7 +73,7 @@ namespace NSUNS4_ModManager {
         string originalMessagePath = Directory.GetCurrentDirectory() + "\\systemFiles\\message";
         string originalBtlcmnPath = Directory.GetCurrentDirectory() + "\\systemFiles\\btlcmn.xfbin";
         string originalseparamPath = Directory.GetCurrentDirectory() + "\\systemFiles\\separam.xfbin";
-        string originalspTypeSupportParamPath = Directory.GetCurrentDirectory() + "\\systemFiles\\spTypeSupport.xfbin";
+        string originalspTypeSupportParamPath = Directory.GetCurrentDirectory() + "\\systemFiles\\spTypeSupportParam.xfbin";
         string originalnuccMaterialDx11Path = Directory.GetCurrentDirectory() + "\\systemFiles\\nuccMaterial_dx11.nsh";
         string originalstageInfoPath = Directory.GetCurrentDirectory() + "\\systemFiles\\StageInfo.bin.xfbin";
 
@@ -273,6 +273,10 @@ namespace NSUNS4_ModManager {
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e) {
+            List<int> SkipCharacode = new List<int>();
+            List<int> SkipPSP_PresetID = new List<int>();
+            //SkipCharacode.Add(0xEA);
+            SkipPSP_PresetID.Add(0x14);
             List<string> player_icon_entries_list = new List<string>();
             CharacterPathList.Clear();
             if (CleanGame)
@@ -1372,6 +1376,12 @@ namespace NSUNS4_ModManager {
                                 else {
                                     CharacodeFile.OpenFile(originalChaPath);
                                 }
+                                if (SkipCharacode.Contains(CharacodeFile.CharacterList.Count + 1)) {
+                                    do {
+                                        CharacodeFile.AddID("2nrt");
+                                    }
+                                    while (SkipCharacode.Contains(CharacodeFile.CharacterList.Count+1));
+                                }
                                 CharacodeFile.AddID(d.Name);
                                 if (!Directory.Exists(datawin32Path + "\\spc")) {
                                     Directory.CreateDirectory(datawin32Path + "\\spc");
@@ -1572,7 +1582,7 @@ namespace NSUNS4_ModManager {
                                             do {
                                                 new_presetID++;
                                             }
-                                            while (PresetID_List.Contains(new_presetID));
+                                            while (PresetID_List.Contains(new_presetID) || SkipPSP_PresetID.Contains(new_presetID));
                                             int old_PresetID = MainFunctions.b_byteArrayToInt(PspModFile.PresetList[y]);
                                             PspModFile.PresetList[y] = BitConverter.GetBytes(new_presetID);
                                             for (int h = 0; h < PspModFile.EntryCount; h++) {
@@ -1619,7 +1629,7 @@ namespace NSUNS4_ModManager {
                                         do {
                                             new_presetID++;
                                         }
-                                        while (PresetID_List.Contains(new_presetID));
+                                        while (PresetID_List.Contains(new_presetID) || SkipPSP_PresetID.Contains(new_presetID));
                                         int old_PresetID = MainFunctions.b_byteArrayToInt(PspModFile.PresetList[y]);
                                         PspModFile.PresetList[y] = BitConverter.GetBytes(new_presetID);
                                         for (int h = 0; h < PspModFile.EntryCount; h++) {
