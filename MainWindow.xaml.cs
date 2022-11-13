@@ -703,7 +703,7 @@ namespace NSUNS4_ModManager {
                                 stageInfoEditor.SecondaryTypeBreakableWall_volume.Add(stageInfoModFile.SecondaryTypeBreakableWall_volume[x]);
                                 stageInfoEditor.EntryCount++;
                                 stagesToAddList.Add(stageInfoModFile.StageNameList[x]);
-                                StageMessageId.Add("c_modmanager_sta_" + (StageMessageId.Count + 1).ToString());
+                                StageMessageId.Add(stageInfoModFile.c_sta_List[x]);
                                 StageText.Add(File.ReadAllLines(ModStageMessagePath).ToList());
                                 stagesImagesToAddList.Add(mod_img_tex_path);
                             }
@@ -840,20 +840,27 @@ namespace NSUNS4_ModManager {
                         byte[] xml_line = new byte[0x0E] { 0x0D, 0x0A, 0x09, 0x3C, 0x73, 0x74, 0x61, 0x67, 0x65, 0x20, 0x69, 0x64, 0x3D, 0x22 };
                         xml_line = MainFunctions.b_AddBytes(xml_line, Encoding.ASCII.GetBytes((44 + st).ToString()));
                         xml_line = MainFunctions.b_AddBytes(xml_line, new byte[0x0A] { 0x22, 0x20, 0x6E, 0x61, 0x6D, 0x65, 0x69, 0x64, 0x3D, 0x22 });
-                        xml_line = MainFunctions.b_AddBytes(xml_line, Encoding.ASCII.GetBytes(("c_modmanager_sta_" + st + 1).ToString()));
+                        if (StageText[st].Count != 0)
+                            xml_line = MainFunctions.b_AddBytes(xml_line, Encoding.ASCII.GetBytes(("c_modmanager_sta_" + st + 1).ToString()));
+                        else
+                            xml_line = MainFunctions.b_AddBytes(xml_line, Encoding.ASCII.GetBytes(StageMessageId[st])); 
                         xml_line = MainFunctions.b_AddBytes(xml_line, new byte[0x0B] { 0x22, 0x20, 0x73, 0x74, 0x61, 0x67, 0x65, 0x69, 0x64, 0x3D, 0x22 });
                         xml_line = MainFunctions.b_AddBytes(xml_line, Encoding.ASCII.GetBytes((stagesToAddList[st]).ToString()));
                         xml_line = MainFunctions.b_AddBytes(xml_line, new byte[0x0C] { 0x22, 0x20, 0x68, 0x65, 0x6C, 0x6C, 0x3D, 0x22, 0x30, 0x22, 0x2F, 0x3E });
                         stagesel_xml_add = MainFunctions.b_AddBytes(stagesel_xml_add, xml_line);
                         for (int l = 0; l < 12; l++) {
                             //This function adding all modded entries to all messageInfo files in all languages
-                            MessageOriginalFile.CRC32CodesList[l].Add(MainFunctions.crc32(("c_modmanager_sta_" + st + 1).ToString()));
-                            MessageOriginalFile.MainTextsList[l].Add(Encoding.UTF8.GetBytes(StageText[st][l].Replace(Program.LANG[l] + "=", "")));
-                            MessageOriginalFile.ExtraTextsList[l].Add(Encoding.UTF8.GetBytes(StageText[st][l].Replace(Program.LANG[l] + "=", "")));
-                            MessageOriginalFile.ACBFilesList[l].Add(-1);
-                            MessageOriginalFile.CueIDsList[l].Add(-1);
-                            MessageOriginalFile.VoiceOnlysList[l].Add(0);
-                            MessageOriginalFile.EntryCounts[l]++;
+                            if (StageText[st].Count != 0) {
+                                MessageOriginalFile.CRC32CodesList[l].Add(MainFunctions.crc32(("c_modmanager_sta_" + st + 1).ToString()));
+                                MessageOriginalFile.MainTextsList[l].Add(Encoding.UTF8.GetBytes(StageText[st][l].Replace(Program.LANG[l] + "=", "")));
+                                MessageOriginalFile.ExtraTextsList[l].Add(Encoding.UTF8.GetBytes(StageText[st][l].Replace(Program.LANG[l] + "=", "")));
+                                MessageOriginalFile.ACBFilesList[l].Add(-1);
+                                MessageOriginalFile.CueIDsList[l].Add(-1);
+                                MessageOriginalFile.VoiceOnlysList[l].Add(0);
+                                MessageOriginalFile.EntryCounts[l]++;
+
+                            }
+                            
                             //Creates directory for each language
                             if (!Directory.Exists(datawin32Path + "\\message\\WIN64\\" + Program.LANG[l])) {
                                 Directory.CreateDirectory(datawin32Path + "\\message\\WIN64\\" + Program.LANG[l]);
@@ -1448,6 +1455,7 @@ namespace NSUNS4_ModManager {
                                     && !file.Name.Contains("messageInfo")
                                     && !file.Name.Contains("btlcmn")
                                     && !file.Name.Contains("StageInfo")
+                                    && !file.Name.Contains("select_stage")
                                     && !file.Name.Contains("spTypeSupportParam")) {
                                     //This code prevents from copy pasting moddingApi files
                                     if (!file.FullName.Contains("moddingapi")) {
@@ -2692,22 +2700,24 @@ namespace NSUNS4_ModManager {
                             Directory.Delete(GameRootPath + "\\moddingapi\\mods\\" + ImportedCharacodesList[c], true);
                         }
                     }
+                    if (Directory.Exists(GameRootPath + "\\moddingapi")) {
+                        DirectoryInfo d_clean = new DirectoryInfo(GameRootPath + "\\moddingapi\\mods\\");
+                        FileInfo[] clean_Files = d_clean.GetFiles("clean.txt", SearchOption.AllDirectories);
+                        List<string> CleanPaths = new List<string>();
 
-                    DirectoryInfo d_clean = new DirectoryInfo(GameRootPath + "\\moddingapi\\mods\\");
-                    FileInfo[] clean_Files = d_clean.GetFiles("clean.txt", SearchOption.AllDirectories);
-                    List<string> CleanPaths = new List<string>();
+                        foreach (FileInfo file in clean_Files) {
+                            if (file.FullName.Contains("clean.txt")) {
+                                if (!CleanPaths.Contains(file.FullName))
+                                    CleanPaths.Add(file.FullName);
+                            }
+                        }
 
-                    foreach (FileInfo file in clean_Files) {
-                        if (file.FullName.Contains("clean.txt")) {
-                            if (!CleanPaths.Contains(file.FullName))
-                                CleanPaths.Add(file.FullName);
+                        for (int c = 0; c < CleanPaths.Count; c++) {
+                            if (Directory.Exists(System.IO.Path.GetDirectoryName(CleanPaths[c])))
+                                Directory.Delete(System.IO.Path.GetDirectoryName(CleanPaths[c]), true);
                         }
                     }
-
-                    for (int c = 0; c< CleanPaths.Count; c++) {
-                        if (Directory.Exists(System.IO.Path.GetDirectoryName(CleanPaths[c])))
-                            Directory.Delete(System.IO.Path.GetDirectoryName(CleanPaths[c]), true);
-                    }
+                    
 
                     string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER";
                     DirectoryInfo d_gfx = new DirectoryInfo(gfx_path);
