@@ -5,6 +5,7 @@ using SharpCompress.Archives.Rar;
 using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -22,6 +23,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Windows.UI.Xaml.Shapes;
 using File = System.IO.File;
 using WinForms = System.Windows.Forms;
 namespace NSUNS4_ModManager {
@@ -146,20 +148,22 @@ namespace NSUNS4_ModManager {
 
         void CreateConfig() {
             //This function creates new config file
-            List<string> cfg = new List<string>();
-            cfg.Add("[null]");
-            cfg.Add("[null]");
-            cfg.Add("true");
+            List<string> cfg = new List<string> {
+                "[null]",
+                "[null]",
+                "true"
+            };
             File.WriteAllLines(ConfigPath, cfg.ToArray());
             System.Windows.MessageBox.Show("Config file created.");
         }
 
         void SaveConfig() {
             //This function saves config file
-            List<string> cfg = new List<string>();
-            cfg.Add(GameRootPath);
-            cfg.Add(GameModsPath);
-            cfg.Add(CleanGame.ToString());
+            List<string> cfg = new List<string> {
+                GameRootPath,
+                GameModsPath,
+                CleanGame.ToString()
+            };
             File.WriteAllLines(ConfigPath, cfg.ToArray());
         }
 
@@ -273,10 +277,20 @@ namespace NSUNS4_ModManager {
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e) {
+            if (!Directory.Exists(GameRootPath + "\\moddingapi\\modmanager_assets"))
+                Directory.CreateDirectory(GameRootPath + "\\moddingapi\\modmanager_assets");
+            else {
+                Directory.Delete(GameRootPath + "\\moddingapi\\modmanager_assets", true);
+                Directory.CreateDirectory(GameRootPath + "\\moddingapi\\modmanager_assets");
+
+            }
+
+
             List<int> SkipCharacode = new List<int>();
-            List<int> SkipPSP_PresetID = new List<int>();
             //SkipCharacode.Add(0xEA);
-            SkipPSP_PresetID.Add(0x14);
+            List<int> SkipPSP_PresetID = new List<int> {
+                0x14
+            };
             List<string> player_icon_entries_list = new List<string>();
             CharacterPathList.Clear();
             if (CleanGame)
@@ -397,125 +411,127 @@ namespace NSUNS4_ModManager {
 
 
                 }
-                List<string> StageOriginalList = new List<string>();
-                StageOriginalList.Add("STAGE_SD62B");
-                StageOriginalList.Add("STAGE_SD62A");
-                StageOriginalList.Add("STAGE_SD01B");
-                StageOriginalList.Add("STAGE_SD03B");
-                StageOriginalList.Add("STAGE_SD03E");
-                StageOriginalList.Add("STAGE_SD12A");
-                StageOriginalList.Add("STAGE_SI00A");
-                StageOriginalList.Add("STAGE_SD01D");
-                StageOriginalList.Add("STAGE_SI06A");
-                StageOriginalList.Add("STAGE_SD14A");
-                StageOriginalList.Add("STAGE_SI01A");
-                StageOriginalList.Add("STAGE_SI01A");
-                StageOriginalList.Add("STAGE_SD06A");
-                StageOriginalList.Add("STAGE_SD07A");
-                StageOriginalList.Add("STAGE_SD07B");
-                StageOriginalList.Add("STAGE_SD10A");
-                StageOriginalList.Add("STAGE_SI09A_NR");
-                StageOriginalList.Add("STAGE_SI08A");
-                StageOriginalList.Add("STAGE_SD13A");
-                StageOriginalList.Add("STAGE_SD15A_NOSNOW");
-                StageOriginalList.Add("STAGE_SD17A");
-                StageOriginalList.Add("STAGE_SD16A");
-                StageOriginalList.Add("STAGE_SD22A");
-                StageOriginalList.Add("STAGE_SD25A");
-                StageOriginalList.Add("STAGE_SD23A");
-                StageOriginalList.Add("STAGE_SD21A");
-                StageOriginalList.Add("STAGE_SD19A");
-                StageOriginalList.Add("STAGE_SD33A");
-                StageOriginalList.Add("STAGE_SD05D");
-                StageOriginalList.Add("STAGE_SD04B");
-                StageOriginalList.Add("STAGE_SI43A");
-                StageOriginalList.Add("STAGE_SI35A");
-                StageOriginalList.Add("STAGE_SI33A");
-                StageOriginalList.Add("STAGE_SI42B");
-                StageOriginalList.Add("STAGE_SI42A");
-                StageOriginalList.Add("STAGE_SI44A");
-                StageOriginalList.Add("STAGE_SI45A");
-                StageOriginalList.Add("STAGE_SI50E");
-                StageOriginalList.Add("STAGE_SD60A");
-                StageOriginalList.Add("STAGE_SD05B");
-                StageOriginalList.Add("STAGE_SI51C");
-                StageOriginalList.Add("STAGE_SD70B");
-                StageOriginalList.Add("STAGE_SI70A");
-                StageOriginalList.Add("STAGE_SI71A");
+                List<string> StageOriginalList = new List<string> {
+                    "STAGE_SD62B",
+                    "STAGE_SD62A",
+                    "STAGE_SD01B",
+                    "STAGE_SD03B",
+                    "STAGE_SD03E",
+                    "STAGE_SD12A",
+                    "STAGE_SI00A",
+                    "STAGE_SD01D",
+                    "STAGE_SI06A",
+                    "STAGE_SD14A",
+                    "STAGE_SI01A",
+                    "STAGE_SI01A",
+                    "STAGE_SD06A",
+                    "STAGE_SD07A",
+                    "STAGE_SD07B",
+                    "STAGE_SD10A",
+                    "STAGE_SI09A_NR",
+                    "STAGE_SI08A",
+                    "STAGE_SD13A",
+                    "STAGE_SD15A_NOSNOW",
+                    "STAGE_SD17A",
+                    "STAGE_SD16A",
+                    "STAGE_SD22A",
+                    "STAGE_SD25A",
+                    "STAGE_SD23A",
+                    "STAGE_SD21A",
+                    "STAGE_SD19A",
+                    "STAGE_SD33A",
+                    "STAGE_SD05D",
+                    "STAGE_SD04B",
+                    "STAGE_SI43A",
+                    "STAGE_SI35A",
+                    "STAGE_SI33A",
+                    "STAGE_SI42B",
+                    "STAGE_SI42A",
+                    "STAGE_SI44A",
+                    "STAGE_SI45A",
+                    "STAGE_SI50E",
+                    "STAGE_SD60A",
+                    "STAGE_SD05B",
+                    "STAGE_SI51C",
+                    "STAGE_SD70B",
+                    "STAGE_SI70A",
+                    "STAGE_SI71A"
+                };
                 List<string> stagesToAddList = new List<string>();
                 List<string> stagesImagesToAddList = new List<string>();
                 List<string> StageMessageId = new List<string>();
                 List<List<string>> StageText = new List<List<string>>();
-                List<int> FreeBGM_slot = new List<int>();
-                FreeBGM_slot.Add(0x1527840);
-                FreeBGM_slot.Add(0x1527880);
-                FreeBGM_slot.Add(0x1527940);
-                FreeBGM_slot.Add(0x1527A20);
-                FreeBGM_slot.Add(0x1527B60);
-                FreeBGM_slot.Add(0x1527BE0);
-                FreeBGM_slot.Add(0x1527C20);
-                FreeBGM_slot.Add(0x1527C40);
-                FreeBGM_slot.Add(0x1527CA0);
-                FreeBGM_slot.Add(0x1527CE0);
-                FreeBGM_slot.Add(0x1527D00);
-                FreeBGM_slot.Add(0x1527D20);
-                FreeBGM_slot.Add(0x1527DA0);
-                FreeBGM_slot.Add(0x1527DC0);
-                FreeBGM_slot.Add(0x1527DE0);
-                FreeBGM_slot.Add(0x1527E00);
-                FreeBGM_slot.Add(0x1527E20);
-                FreeBGM_slot.Add(0x1527E40);
-                FreeBGM_slot.Add(0x1527E60);
-                FreeBGM_slot.Add(0x1527E80);
-                FreeBGM_slot.Add(0x1527EA0);
-                FreeBGM_slot.Add(0x1527EC0);
-                FreeBGM_slot.Add(0x1527EE0);
-                FreeBGM_slot.Add(0x1527F00);
-                FreeBGM_slot.Add(0x1527F20);
-                FreeBGM_slot.Add(0x1527FC0);
-                FreeBGM_slot.Add(0x1527FE0);
-                FreeBGM_slot.Add(0x1528020);
-                FreeBGM_slot.Add(0x1528060);
-                FreeBGM_slot.Add(0x1528080);
-                FreeBGM_slot.Add(0x15280A0);
-                FreeBGM_slot.Add(0x15280C0);
-                FreeBGM_slot.Add(0x15280E0);
-                FreeBGM_slot.Add(0x1528100);
-                FreeBGM_slot.Add(0x1528120);
-                FreeBGM_slot.Add(0x1528160);
-                FreeBGM_slot.Add(0x1528180);
-                FreeBGM_slot.Add(0x15281A0);
-                FreeBGM_slot.Add(0x15281E0);
-                FreeBGM_slot.Add(0x1528200);
-                FreeBGM_slot.Add(0x1528220);
-                FreeBGM_slot.Add(0x1528240);
-                FreeBGM_slot.Add(0x1528260);
-                FreeBGM_slot.Add(0x1528280);
-                FreeBGM_slot.Add(0x15282A0);
-                FreeBGM_slot.Add(0x15282C0);
-                FreeBGM_slot.Add(0x15282E0);
-                FreeBGM_slot.Add(0x1528300);
-                FreeBGM_slot.Add(0x1528320);
-                FreeBGM_slot.Add(0x1528340);
-                FreeBGM_slot.Add(0x1528360);
-                FreeBGM_slot.Add(0x1528400);
-                FreeBGM_slot.Add(0x1528420);
-                FreeBGM_slot.Add(0x1528440);
-                FreeBGM_slot.Add(0x1528460);
-                FreeBGM_slot.Add(0x1528480);
-                FreeBGM_slot.Add(0x15284A0);
-                FreeBGM_slot.Add(0x15284C0);
-                FreeBGM_slot.Add(0x15284E0);
-                FreeBGM_slot.Add(0x1528500);
-                FreeBGM_slot.Add(0x1528520);
-                FreeBGM_slot.Add(0x1528540);
-                FreeBGM_slot.Add(0x1528560);
-                FreeBGM_slot.Add(0x1528580);
-                FreeBGM_slot.Add(0x1528680);
-                FreeBGM_slot.Add(0x1528720);
-                FreeBGM_slot.Add(0x1528740);
-                FreeBGM_slot.Add(0x1528760);
-                FreeBGM_slot.Add(0x1528780);
+                List<int> FreeBGM_slot = new List<int> {
+                    0x1527840,
+                    0x1527880,
+                    0x1527940,
+                    0x1527A20,
+                    0x1527B60,
+                    0x1527BE0,
+                    0x1527C20,
+                    0x1527C40,
+                    0x1527CA0,
+                    0x1527CE0,
+                    0x1527D00,
+                    0x1527D20,
+                    0x1527DA0,
+                    0x1527DC0,
+                    0x1527DE0,
+                    0x1527E00,
+                    0x1527E20,
+                    0x1527E40,
+                    0x1527E60,
+                    0x1527E80,
+                    0x1527EA0,
+                    0x1527EC0,
+                    0x1527EE0,
+                    0x1527F00,
+                    0x1527F20,
+                    0x1527FC0,
+                    0x1527FE0,
+                    0x1528020,
+                    0x1528060,
+                    0x1528080,
+                    0x15280A0,
+                    0x15280C0,
+                    0x15280E0,
+                    0x1528100,
+                    0x1528120,
+                    0x1528160,
+                    0x1528180,
+                    0x15281A0,
+                    0x15281E0,
+                    0x1528200,
+                    0x1528220,
+                    0x1528240,
+                    0x1528260,
+                    0x1528280,
+                    0x15282A0,
+                    0x15282C0,
+                    0x15282E0,
+                    0x1528300,
+                    0x1528320,
+                    0x1528340,
+                    0x1528360,
+                    0x1528400,
+                    0x1528420,
+                    0x1528440,
+                    0x1528460,
+                    0x1528480,
+                    0x15284A0,
+                    0x15284C0,
+                    0x15284E0,
+                    0x1528500,
+                    0x1528520,
+                    0x1528540,
+                    0x1528560,
+                    0x1528580,
+                    0x1528680,
+                    0x1528720,
+                    0x1528740,
+                    0x1528760,
+                    0x1528780
+                };
                 if (stagePaths.Count > 0) {
                     Tool_stageInfoEditor_code stageInfoEditor = new Tool_stageInfoEditor_code();
                     if (File.Exists(stageInfoPath)) //This code open vanilla duelPlayerParam or edited stageInfo (goes in root folder)
@@ -786,10 +802,34 @@ namespace NSUNS4_ModManager {
                                 stageInfoEditor.SecondaryTypeBreakableObject_Speed03[index] = stageInfoModFile.SecondaryTypeBreakableObject_Speed03[x];
                                 stageInfoEditor.SecondaryTypeBreakableWall_volume[index] = stageInfoModFile.SecondaryTypeBreakableWall_volume[x];
                             }
-                            
+                            if (cpk_paths.Count > 0) {//If character mod contains cpk archives, it will copy paste them in root game folder (requires to have characode in name of cpk)
+                                
+
+
+                                for (int c = 0; c < cpk_paths.Count; c++) {
+                                    Process p = new Process();
+                                    // Redirect the output stream of the child process.
+                                    p.StartInfo.UseShellExecute = false;
+                                    p.StartInfo.CreateNoWindow = true;
+                                    p.StartInfo.FileName = "YACpkTool.exe";
+                                    p.StartInfo.Arguments = ("-X -i \"" + cpk_paths[c] + "\"").ToString();
+                                    p.Start();
+                                    p.WaitForExit();
+                                    string file_name = System.IO.Path.GetFileNameWithoutExtension(cpk_paths[c]);
+
+                                    CopyFilesRecursively(System.IO.Path.GetDirectoryName(cpk_paths[c]) + "\\" + file_name, GameRootPath + "\\moddingapi\\modmanager_assets");
+                                    if (Directory.Exists(System.IO.Path.GetDirectoryName(cpk_paths[c]) + "\\" + file_name))
+                                        Directory.Delete(System.IO.Path.GetDirectoryName(cpk_paths[c]) + "\\" + file_name, true);
+                                    /*if (File.Exists(cpk_paths[c] + ".info")) {
+                                        CopyFiles(root_path + "\\moddingapi\\mods\\" + d.Name, cpk_paths[c] + ".info", root_path + "\\moddingapi\\mods\\" + d.Name + "\\" + cpk_names[c] + ".info");
+
+                                    }*/
+                                }
+
+                            }
                             if (Directory.Exists(System.IO.Path.GetDirectoryName(mod_img_tex_path)+ "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)))){
                                 Directory.CreateDirectory(GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)));
-                                CopyFilesRecursively(System.IO.Path.GetDirectoryName(mod_img_tex_path) + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)), GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)));
+                                //CopyFilesRecursively(System.IO.Path.GetDirectoryName(mod_img_tex_path) + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)), GameRootPath + "\\moddingapi\\mods\\" + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)));
                                 byte[] BGM_patch = MainFunctions.crc32(System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(mod_img_tex_path)));
                                 BGM_patch = MainFunctions.b_AddBytes(BGM_patch, BitConverter.GetBytes(Convert.ToInt32(File.ReadAllText(ModBGMPath))));
                                 BGM_patch = MainFunctions.b_AddBytes(BGM_patch, new byte[8] { 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00 });
@@ -950,47 +990,48 @@ namespace NSUNS4_ModManager {
                     File.WriteAllBytes(GameRootPath + "\\data\\ui\\flash\\OTHER\\stagesel\\stagesel_image.gfx", stagesel_image_new_file);
 
                     //stagesel.gfx
-                    List<byte[]> stagesel_slot_posList = new List<byte[]>();
-                    stagesel_slot_posList.Add(new byte[] { 0x9B, 0x06, 0x26, 0xC7, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF3, 0xB1, 0xE0 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xC2, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF7, 0xB1, 0xE0 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xBD, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xFB, 0xB1, 0xE0 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xB8, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xFE, 0xC7, 0x80 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xB3, 0x00, 0x09, 0x00, 0x1B, 0x94, 0x0B, 0x1E, 0x00 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xAE, 0x00, 0x09, 0x00, 0x1A, 0x68, 0x1B, 0x1E, 0x00 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xA9, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x16, 0xC7, 0x80 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xA4, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0F, 0xB1, 0xE0 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x9F, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x13, 0xB1, 0xE0 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x9A, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x23, 0xB1, 0xE0 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x95, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF3, 0xE4, 0x10 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x90, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF7, 0xE4, 0x10 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x8B, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xFB, 0xE4, 0x10 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x86, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xFF, 0x90, 0x40 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x81, 0x00, 0x09, 0x00, 0x19, 0x28, 0x19, 0x04 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x7C, 0x00, 0x09, 0x00, 0x18, 0xD0, 0x39, 0x04 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x77, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x17, 0x90, 0x40 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x72, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0F, 0xE4, 0x10 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x6D, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x13, 0xE4, 0x10 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x68, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x23, 0xE4, 0x10 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x63, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF0, 0x16, 0x40 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x5E, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF4, 0x16, 0x40 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x59, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xF8, 0x16, 0x40 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x54, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xF8, 0x59, 0x00 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x4F, 0x00, 0x09, 0x00, 0x19, 0x28, 0x05, 0x90 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x4A, 0x00, 0x09, 0x00, 0x18, 0xD0, 0x25, 0x90 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x45, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x10, 0x59, 0x00 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x40, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0C, 0x16, 0x40 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x3B, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x10, 0x16, 0x40 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x36, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x20, 0x16, 0x40 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x31, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF0, 0x48, 0x80 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x2C, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF4, 0x48, 0x80 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x27, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xF8, 0x48, 0x80 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x22, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xF9, 0x22, 0x00 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x1D, 0x00, 0x09, 0x00, 0x1B, 0x94, 0x04, 0x88, 0x00 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x18, 0x00, 0x09, 0x00, 0x1A, 0x68, 0x14, 0x88, 0x00 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x13, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x11, 0x22, 0x00 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x0E, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0C, 0x48, 0x80 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x09, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x10, 0x48, 0x80 });
-                    stagesel_slot_posList.Add(new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x04, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x20, 0x48, 0x80 });
+                    List<byte[]> stagesel_slot_posList = new List<byte[]> {
+                        new byte[] { 0x9B, 0x06, 0x26, 0xC7, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF3, 0xB1, 0xE0 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xC2, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF7, 0xB1, 0xE0 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xBD, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xFB, 0xB1, 0xE0 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xB8, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xFE, 0xC7, 0x80 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xB3, 0x00, 0x09, 0x00, 0x1B, 0x94, 0x0B, 0x1E, 0x00 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xAE, 0x00, 0x09, 0x00, 0x1A, 0x68, 0x1B, 0x1E, 0x00 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xA9, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x16, 0xC7, 0x80 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0xA4, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0F, 0xB1, 0xE0 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x9F, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x13, 0xB1, 0xE0 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x9A, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x23, 0xB1, 0xE0 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x95, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF3, 0xE4, 0x10 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x90, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF7, 0xE4, 0x10 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x8B, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xFB, 0xE4, 0x10 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x86, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xFF, 0x90, 0x40 },
+                        new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x81, 0x00, 0x09, 0x00, 0x19, 0x28, 0x19, 0x04 },
+                        new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x7C, 0x00, 0x09, 0x00, 0x18, 0xD0, 0x39, 0x04 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x77, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x17, 0x90, 0x40 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x72, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0F, 0xE4, 0x10 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x6D, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x13, 0xE4, 0x10 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x68, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x23, 0xE4, 0x10 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x63, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF0, 0x16, 0x40 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x5E, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF4, 0x16, 0x40 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x59, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xF8, 0x16, 0x40 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x54, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xF8, 0x59, 0x00 },
+                        new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x4F, 0x00, 0x09, 0x00, 0x19, 0x28, 0x05, 0x90 },
+                        new byte[] { 0xBF, 0x06, 0x1A, 0x00, 0x00, 0x00, 0x26, 0x4A, 0x00, 0x09, 0x00, 0x18, 0xD0, 0x25, 0x90 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x45, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x10, 0x59, 0x00 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x40, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0C, 0x16, 0x40 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x3B, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x10, 0x16, 0x40 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x36, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x20, 0x16, 0x40 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x31, 0x00, 0x09, 0x00, 0x1F, 0x10, 0xF0, 0x48, 0x80 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x2C, 0x00, 0x09, 0x00, 0x1F, 0x45, 0xF4, 0x48, 0x80 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x27, 0x00, 0x09, 0x00, 0x1F, 0x7A, 0xF8, 0x48, 0x80 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x22, 0x00, 0x09, 0x00, 0x1D, 0x5F, 0xF9, 0x22, 0x00 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x1D, 0x00, 0x09, 0x00, 0x1B, 0x94, 0x04, 0x88, 0x00 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x18, 0x00, 0x09, 0x00, 0x1A, 0x68, 0x14, 0x88, 0x00 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x13, 0x00, 0x09, 0x00, 0x1C, 0x9E, 0x11, 0x22, 0x00 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x0E, 0x00, 0x09, 0x00, 0x1E, 0x84, 0x0C, 0x48, 0x80 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x09, 0x00, 0x09, 0x00, 0x1E, 0xB9, 0x10, 0x48, 0x80 },
+                        new byte[] { 0xBF, 0x06, 0x1B, 0x00, 0x00, 0x00, 0x26, 0x04, 0x00, 0x09, 0x00, 0x1E, 0xEE, 0x20, 0x48, 0x80 }
+                    };
 
                     int pageCount = (43 + stagesToAddList.Count)/40;
                     byte[] stagesel_gfx_original = File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\systemFiles\\stagesel.gfx");
@@ -1047,11 +1088,7 @@ namespace NSUNS4_ModManager {
                     File.WriteAllBytes(datawin32Path + "\\ui\\max\\select\\select_stage.xfbin", stagesel_new_file);
 
 
-                    //This function merges all messageInfo files on all languages
-
-                    //This cycle checking each language
-
-                    //Saves all edited messageInfo files
+                   
                 }
                 
 
@@ -1426,15 +1463,33 @@ namespace NSUNS4_ModManager {
                                 File.WriteAllBytes(root_path + "\\moddingapi\\mods\\" + d.Name + "\\partnerSlotParam.xfbin", partnerSlotParamFile);
                             }
                             if (cpk_paths.Count > 0) {//If character mod contains cpk archives, it will copy paste them in root game folder (requires to have characode in name of cpk)
+                                if (!Directory.Exists(GameRootPath + "\\moddingapi\\modmanager_assets"))
+                                    Directory.CreateDirectory(GameRootPath + "\\moddingapi\\modmanager_assets");
+                                
+
                                 for (int c = 0; c < cpk_paths.Count; c++) {
-                                    CopyFiles(root_path + "\\moddingapi\\mods\\" + d.Name, cpk_paths[c], root_path + "\\moddingapi\\mods\\" + d.Name + "\\" + cpk_names[c]);
-                                    if (File.Exists(cpk_paths[c] + ".info")) {
+                                    Process p = new Process();
+                                    // Redirect the output stream of the child process.
+                                    p.StartInfo.UseShellExecute = false;
+                                    p.StartInfo.CreateNoWindow = true;
+                                    p.StartInfo.FileName = "YACpkTool.exe";
+                                    p.StartInfo.Arguments = ("-X -i \"" + cpk_paths[c]+"\"").ToString();
+                                    p.Start();
+                                    p.WaitForExit();
+                                    string file_name = System.IO.Path.GetFileNameWithoutExtension(cpk_paths[c]);
+
+                                    CopyFilesRecursively(System.IO.Path.GetDirectoryName(cpk_paths[c])+ "\\" + file_name, GameRootPath + "\\moddingapi\\modmanager_assets");
+                                    if (Directory.Exists(System.IO.Path.GetDirectoryName(cpk_paths[c]) +"\\"+ file_name))
+                                        Directory.Delete(System.IO.Path.GetDirectoryName(cpk_paths[c]) + "\\" + file_name, true);
+                                    /*if (File.Exists(cpk_paths[c] + ".info")) {
                                         CopyFiles(root_path + "\\moddingapi\\mods\\" + d.Name, cpk_paths[c] + ".info", root_path + "\\moddingapi\\mods\\" + d.Name + "\\" + cpk_names[c] + ".info");
 
-                                    }
+                                    }*/
                                 }
+                                
                             }
-                            if (specialCondParamExist || partnerSlotParamExist || cpk_paths.Count > 0) { //If anything was added in moddingAPI folder, it will add info.txt file for loading cpk files or conditions for character
+                            if (specialCondParamExist || partnerSlotParamExist) { //If anything was added in moddingAPI folder, it will add info.txt file for loading cpk files or conditions for character
+
 
                                 File.WriteAllText(root_path + "\\moddingapi\\mods\\" + d.Name + "\\clean.txt", ""); 
                                 FileStream ffParameter = new FileStream(root_path + "\\moddingapi\\mods\\" + d.Name + "\\info.txt", FileMode.Create, FileAccess.Write);
@@ -2681,6 +2736,25 @@ namespace NSUNS4_ModManager {
                 }
                 //Saves all edited messageInfo files
                 MessageOriginalFile.SaveFilesAs(datawin32Path + "\\message");
+
+                Process p2 = new Process();
+                // Redirect the output stream of the child process.
+                p2.StartInfo.UseShellExecute = false;
+                p2.StartInfo.CreateNoWindow = true;
+                p2.StartInfo.FileName = "YACpkTool.exe";
+                p2.StartInfo.Arguments = ("-P -i \"" + GameRootPath + "\\moddingapi\\modmanager_assets\"").ToString();
+                //MessageBox.Show(p.StartInfo.Arguments);
+                p2.Start();
+                p2.WaitForExit();
+                File.WriteAllBytes(GameRootPath + "\\moddingapi\\mods\\base_game\\modmanager_assets.cpk.info", new byte[4] { 0x20, 0, 0, 0 });
+
+                CopyFiles(GameRootPath + "\\moddingapi\\mods\\base_game", GameRootPath + "\\moddingapi\\modmanager_assets.cpk", GameRootPath + "\\moddingapi\\mods\\base_game\\modmanager_assets.cpk");
+
+                if (File.Exists(GameRootPath + "\\moddingapi\\modmanager_assets.cpk"))
+                    File.Delete(GameRootPath + "\\moddingapi\\modmanager_assets.cpk");
+                if (Directory.Exists(GameRootPath + "\\moddingapi\\modmanager_assets"))
+                    Directory.Delete(GameRootPath + "\\moddingapi\\modmanager_assets", true);
+
                 WinForms.MessageBox.Show("Finished compiling.");
             }
 
@@ -2727,8 +2801,14 @@ namespace NSUNS4_ModManager {
                                 Directory.Delete(System.IO.Path.GetDirectoryName(CleanPaths[c]), true);
                         }
                     }
-                    
-
+                    if (File.Exists(GameRootPath + "\\moddingapi\\mods\\base_game\\modmanager_assets.cpk"))
+                        File.Delete(GameRootPath + "\\moddingapi\\mods\\base_game\\modmanager_assets.cpk");
+                    if (File.Exists(GameRootPath + "\\moddingapi\\mods\\base_game\\modmanager_assets.cpk.info"))
+                        File.Delete(GameRootPath + "\\moddingapi\\mods\\base_game\\modmanager_assets.cpk.info");
+                    if (File.Exists(GameRootPath + "\\moddingapi\\mods\\\\modmanager_assets.cpk"))
+                        File.Delete(GameRootPath + "\\moddingapi\\mods\\modmanager_assets.cpk");
+                    if (Directory.Exists(GameRootPath + "\\moddingapi\\mods\\\\modmanager_assets"))
+                        Directory.Delete(GameRootPath + "\\moddingapi\\mods\\modmanager_assets");
                     string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER";
                     DirectoryInfo d_gfx = new DirectoryInfo(gfx_path);
                     string Modgfx_charselPath = "";

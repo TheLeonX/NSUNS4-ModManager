@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "jN6s5X07bo9dIgzRWq4ajwcKWvOXFIyK3iHuYenlsV7Po4vD5TUM3mU9kLJLOyhQpg/+vuTc6tQDUYS7hWZhsw==",
+  "dgSpecHash": "stLHjpfWnOj9AwIfq/oxcJGV7kdSPvTgMzZqDlw9RcIIRoznWDBlbC5u+r9u46rMkkh5g+bM8d2d+GlxCdnhHw==",
   "success": true,
-  "projectFilePath": "E:\\Desktop\\MS Projects\\NSUNS4_ModManager\\NSUNS4_ModManager.csproj",
+  "projectFilePath": "E:\\Desktop\\C# Projects\\NSUNS4-ModManager\\NSUNS4_ModManager.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\microsoft.windows.sdk.contracts\\10.0.18362.2005\\microsoft.windows.sdk.contracts.10.0.18362.2005.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\modernwpfui\\0.9.6\\modernwpfui.0.9.6.nupkg.sha512",

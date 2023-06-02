@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Desktop\\MS Projects\\NSUNS4_ModManager\\NSUNS4_ModManager.csproj": {}
+    "E:\\Desktop\\C# Projects\\NSUNS4-ModManager\\NSUNS4_ModManager.csproj": {}
   },
   "projects": {
-    "E:\\Desktop\\MS Projects\\NSUNS4_ModManager\\NSUNS4_ModManager.csproj": {
+    "E:\\Desktop\\C# Projects\\NSUNS4-ModManager\\NSUNS4_ModManager.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Desktop\\MS Projects\\NSUNS4_ModManager\\NSUNS4_ModManager.csproj",
+        "projectUniqueName": "E:\\Desktop\\C# Projects\\NSUNS4-ModManager\\NSUNS4_ModManager.csproj",
         "projectName": "NSUNS4_ModManager",
-        "projectPath": "E:\\Desktop\\MS Projects\\NSUNS4_ModManager\\NSUNS4_ModManager.csproj",
+        "projectPath": "E:\\Desktop\\C# Projects\\NSUNS4-ModManager\\NSUNS4_ModManager.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "E:\\Desktop\\MS Projects\\NSUNS4_ModManager\\obj\\",
+        "outputPath": "E:\\Desktop\\C# Projects\\NSUNS4-ModManager\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [

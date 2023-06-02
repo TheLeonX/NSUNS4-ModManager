@@ -109,12 +109,20 @@
           "netstandard"
         ],
         "compile": {
-          "lib/net462/ModernWpf.Controls.dll": {},
-          "lib/net462/ModernWpf.dll": {}
+          "lib/net462/ModernWpf.Controls.dll": {
+            "related": ".xml"
+          },
+          "lib/net462/ModernWpf.dll": {
+            "related": ".Controls.xml;.xml"
+          }
         },
         "runtime": {
-          "lib/net462/ModernWpf.Controls.dll": {},
-          "lib/net462/ModernWpf.dll": {}
+          "lib/net462/ModernWpf.Controls.dll": {
+            "related": ".xml"
+          },
+          "lib/net462/ModernWpf.dll": {
+            "related": ".Controls.xml;.xml"
+          }
         },
         "resource": {
           "lib/net462/af-ZA/ModernWpf.Controls.resources.dll": {
@@ -516,10 +524,14 @@
           "mscorlib"
         ],
         "compile": {
-          "ref/net45/System.Buffers.dll": {}
+          "ref/net45/System.Buffers.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Buffers.dll": {}
+          "lib/net461/System.Buffers.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Memory/4.5.4": {
@@ -534,10 +546,14 @@
           "mscorlib"
         ],
         "compile": {
-          "lib/net461/System.Memory.dll": {}
+          "lib/net461/System.Memory.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Memory.dll": {}
+          "lib/net461/System.Memory.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Numerics.Vectors/4.5.0": {
@@ -547,10 +563,14 @@
           "mscorlib"
         ],
         "compile": {
-          "ref/net46/System.Numerics.Vectors.dll": {}
+          "ref/net46/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net46/System.Numerics.Vectors.dll": {}
+          "lib/net46/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {
@@ -559,10 +579,14 @@
           "mscorlib"
         ],
         "compile": {
-          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Runtime.WindowsRuntime/4.6.0": {
@@ -599,10 +623,14 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "compile": {
-          "lib/net461/System.Text.Encoding.CodePages.dll": {}
+          "lib/net461/System.Text.Encoding.CodePages.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Text.Encoding.CodePages.dll": {}
+          "lib/net461/System.Text.Encoding.CodePages.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/win/lib/net461/System.Text.Encoding.CodePages.dll": {
@@ -620,7 +648,9 @@
           "ref/net47/System.ValueTuple.dll": {}
         },
         "runtime": {
-          "lib/net47/System.ValueTuple.dll": {}
+          "lib/net47/System.ValueTuple.dll": {
+            "related": ".xml"
+          }
         }
       },
       "WindowsAPICodePack-Core/1.1.1": {
@@ -753,12 +783,20 @@
           "netstandard"
         ],
         "compile": {
-          "lib/net462/ModernWpf.Controls.dll": {},
-          "lib/net462/ModernWpf.dll": {}
+          "lib/net462/ModernWpf.Controls.dll": {
+            "related": ".xml"
+          },
+          "lib/net462/ModernWpf.dll": {
+            "related": ".Controls.xml;.xml"
+          }
         },
         "runtime": {
-          "lib/net462/ModernWpf.Controls.dll": {},
-          "lib/net462/ModernWpf.dll": {}
+          "lib/net462/ModernWpf.Controls.dll": {
+            "related": ".xml"
+          },
+          "lib/net462/ModernWpf.dll": {
+            "related": ".Controls.xml;.xml"
+          }
         },
         "resource": {
           "lib/net462/af-ZA/ModernWpf.Controls.resources.dll": {
@@ -1160,10 +1198,14 @@
           "mscorlib"
         ],
         "compile": {
-          "ref/net45/System.Buffers.dll": {}
+          "ref/net45/System.Buffers.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Buffers.dll": {}
+          "lib/net461/System.Buffers.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Memory/4.5.4": {
@@ -1178,10 +1220,14 @@
           "mscorlib"
         ],
         "compile": {
-          "lib/net461/System.Memory.dll": {}
+          "lib/net461/System.Memory.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Memory.dll": {}
+          "lib/net461/System.Memory.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Numerics.Vectors/4.5.0": {
@@ -1191,10 +1237,14 @@
           "mscorlib"
         ],
         "compile": {
-          "ref/net46/System.Numerics.Vectors.dll": {}
+          "ref/net46/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net46/System.Numerics.Vectors.dll": {}
+          "lib/net46/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {
@@ -1203,10 +1253,14 @@
           "mscorlib"
         ],
         "compile": {
-          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Runtime.WindowsRuntime/4.6.0": {
@@ -1243,10 +1297,14 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "compile": {
-          "lib/net461/System.Text.Encoding.CodePages.dll": {}
+          "lib/net461/System.Text.Encoding.CodePages.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "runtimes/win/lib/net461/System.Text.Encoding.CodePages.dll": {}
+          "runtimes/win/lib/net461/System.Text.Encoding.CodePages.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.ValueTuple/4.5.0": {
@@ -1258,7 +1316,9 @@
           "ref/net47/System.ValueTuple.dll": {}
         },
         "runtime": {
-          "lib/net47/System.ValueTuple.dll": {}
+          "lib/net47/System.ValueTuple.dll": {
+            "related": ".xml"
+          }
         }
       },
       "WindowsAPICodePack-Core/1.1.1": {
@@ -1391,12 +1451,20 @@
           "netstandard"
         ],
         "compile": {
-          "lib/net462/ModernWpf.Controls.dll": {},
-          "lib/net462/ModernWpf.dll": {}
+          "lib/net462/ModernWpf.Controls.dll": {
+            "related": ".xml"
+          },
+          "lib/net462/ModernWpf.dll": {
+            "related": ".Controls.xml;.xml"
+          }
         },
         "runtime": {
-          "lib/net462/ModernWpf.Controls.dll": {},
-          "lib/net462/ModernWpf.dll": {}
+          "lib/net462/ModernWpf.Controls.dll": {
+            "related": ".xml"
+          },
+          "lib/net462/ModernWpf.dll": {
+            "related": ".Controls.xml;.xml"
+          }
         },
         "resource": {
           "lib/net462/af-ZA/ModernWpf.Controls.resources.dll": {
@@ -1798,10 +1866,14 @@
           "mscorlib"
         ],
         "compile": {
-          "ref/net45/System.Buffers.dll": {}
+          "ref/net45/System.Buffers.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Buffers.dll": {}
+          "lib/net461/System.Buffers.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Memory/4.5.4": {
@@ -1816,10 +1888,14 @@
           "mscorlib"
         ],
         "compile": {
-          "lib/net461/System.Memory.dll": {}
+          "lib/net461/System.Memory.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Memory.dll": {}
+          "lib/net461/System.Memory.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Numerics.Vectors/4.5.0": {
@@ -1829,10 +1905,14 @@
           "mscorlib"
         ],
         "compile": {
-          "ref/net46/System.Numerics.Vectors.dll": {}
+          "ref/net46/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net46/System.Numerics.Vectors.dll": {}
+          "lib/net46/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {
@@ -1841,10 +1921,14 @@
           "mscorlib"
         ],
         "compile": {
-          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Runtime.WindowsRuntime/4.6.0": {
@@ -1881,10 +1965,14 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "compile": {
-          "lib/net461/System.Text.Encoding.CodePages.dll": {}
+          "lib/net461/System.Text.Encoding.CodePages.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Text.Encoding.CodePages.dll": {}
+          "lib/net461/System.Text.Encoding.CodePages.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.ValueTuple/4.5.0": {
@@ -1896,7 +1984,9 @@
           "ref/net47/System.ValueTuple.dll": {}
         },
         "runtime": {
-          "lib/net47/System.ValueTuple.dll": {}
+          "lib/net47/System.ValueTuple.dll": {
+            "related": ".xml"
+          }
         }
       },
       "WindowsAPICodePack-Core/1.1.1": {
@@ -2029,12 +2119,20 @@
           "netstandard"
         ],
         "compile": {
-          "lib/net462/ModernWpf.Controls.dll": {},
-          "lib/net462/ModernWpf.dll": {}
+          "lib/net462/ModernWpf.Controls.dll": {
+            "related": ".xml"
+          },
+          "lib/net462/ModernWpf.dll": {
+            "related": ".Controls.xml;.xml"
+          }
         },
         "runtime": {
-          "lib/net462/ModernWpf.Controls.dll": {},
-          "lib/net462/ModernWpf.dll": {}
+          "lib/net462/ModernWpf.Controls.dll": {
+            "related": ".xml"
+          },
+          "lib/net462/ModernWpf.dll": {
+            "related": ".Controls.xml;.xml"
+          }
         },
         "resource": {
           "lib/net462/af-ZA/ModernWpf.Controls.resources.dll": {
@@ -2436,10 +2534,14 @@
           "mscorlib"
         ],
         "compile": {
-          "ref/net45/System.Buffers.dll": {}
+          "ref/net45/System.Buffers.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Buffers.dll": {}
+          "lib/net461/System.Buffers.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Memory/4.5.4": {
@@ -2454,10 +2556,14 @@
           "mscorlib"
         ],
         "compile": {
-          "lib/net461/System.Memory.dll": {}
+          "lib/net461/System.Memory.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Memory.dll": {}
+          "lib/net461/System.Memory.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Numerics.Vectors/4.5.0": {
@@ -2467,10 +2573,14 @@
           "mscorlib"
         ],
         "compile": {
-          "ref/net46/System.Numerics.Vectors.dll": {}
+          "ref/net46/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net46/System.Numerics.Vectors.dll": {}
+          "lib/net46/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {
@@ -2479,10 +2589,14 @@
           "mscorlib"
         ],
         "compile": {
-          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Runtime.WindowsRuntime/4.6.0": {
@@ -2519,10 +2633,14 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "compile": {
-          "lib/net461/System.Text.Encoding.CodePages.dll": {}
+          "lib/net461/System.Text.Encoding.CodePages.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Text.Encoding.CodePages.dll": {}
+          "lib/net461/System.Text.Encoding.CodePages.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.ValueTuple/4.5.0": {
@@ -2534,7 +2652,9 @@
           "ref/net47/System.ValueTuple.dll": {}
         },
         "runtime": {
-          "lib/net47/System.ValueTuple.dll": {}
+          "lib/net47/System.ValueTuple.dll": {
+            "related": ".xml"
+          }
         }
       },
       "WindowsAPICodePack-Core/1.1.1": {
@@ -3679,11 +3799,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Desktop\\MS Projects\\NSUNS4_ModManager\\NSUNS4_ModManager.csproj",
+      "projectUniqueName": "E:\\Desktop\\C# Projects\\NSUNS4-ModManager\\NSUNS4_ModManager.csproj",
       "projectName": "NSUNS4_ModManager",
-      "projectPath": "E:\\Desktop\\MS Projects\\NSUNS4_ModManager\\NSUNS4_ModManager.csproj",
+      "projectPath": "E:\\Desktop\\C# Projects\\NSUNS4-ModManager\\NSUNS4_ModManager.csproj",
       "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "E:\\Desktop\\MS Projects\\NSUNS4_ModManager\\obj\\",
+      "outputPath": "E:\\Desktop\\C# Projects\\NSUNS4-ModManager\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "fallbackFolders": [
