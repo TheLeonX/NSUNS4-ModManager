@@ -313,3 +313,4 @@ E:\Desktop\C# Projects\NSUNS4-ModManager\obj\Debug\NSUNS4_ModManager.csproj.Core
 E:\Desktop\C# Projects\NSUNS4-ModManager\obj\Debug\NSUNS4_ModManager.csproj.CopyComplete
 E:\Desktop\C# Projects\NSUNS4-ModManager\obj\Debug\NSUNS4_ModManager.exe
 E:\Desktop\C# Projects\NSUNS4-ModManager\obj\Debug\NSUNS4_ModManager.pdb
+E:\Desktop\C# Projects\NSUNS4-ModManager\bin\Debug\CpkMaker.dll

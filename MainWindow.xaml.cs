@@ -1,5 +1,6 @@
 ﻿using IWshRuntimeLibrary;
 using NSUNS4_ModManager.ToolBoxCode;
+using NSUNS4_ModManager.YaCpkTool;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Common;
@@ -38,11 +39,10 @@ namespace NSUNS4_ModManager {
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
-            if (Directory.Exists(@Directory.GetCurrentDirectory() + "\\temp")) {
-
+            if (Directory.Exists(@Directory.GetCurrentDirectory() + "\\temp")) 
                 Directory.Delete(@Directory.GetCurrentDirectory() + "\\temp", true);
-            }
             //This code checking if config file exist. If it doesnt exist, it will create config file, otherwise it will load it
+
             if (File.Exists(ConfigPath) == false) {
                 CreateConfig();
             } else {
@@ -80,6 +80,7 @@ namespace NSUNS4_ModManager {
         string originalstageInfoPath = Directory.GetCurrentDirectory() + "\\systemFiles\\StageInfo.bin.xfbin";
 
         //This is paths for root folder where will be saved edited files
+        public static string datawin32Path_or = "[null]";
         public static string datawin32Path = "[null]";
         public static string chaPath = "[null]";
         public static string dppPath = "[null]";
@@ -118,8 +119,6 @@ namespace NSUNS4_ModManager {
         public List<string> ModdingAPI_requirement_Paths = new List<string>();
         public List<ModList_class> ModInfoList = new List<ModList_class>();
 
-
-
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
             //This function let you select root folder path and save it in config file
             Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog c = new Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog();
@@ -134,7 +133,6 @@ namespace NSUNS4_ModManager {
                 System.Windows.MessageBox.Show("Config file saved.");
             }
         }
-
         private void MenuItem_Click_1(object sender, RoutedEventArgs e) {
             //This function let you select mod folder path and save it in config file
             Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog c = new Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog();
@@ -145,7 +143,6 @@ namespace NSUNS4_ModManager {
                 SaveConfig();
             }
         }
-
         void CreateConfig() {
             //This function creates new config file
             List<string> cfg = new List<string> {
@@ -156,7 +153,6 @@ namespace NSUNS4_ModManager {
             File.WriteAllLines(ConfigPath, cfg.ToArray());
             System.Windows.MessageBox.Show("Config file created.");
         }
-
         void SaveConfig() {
             //This function saves config file
             List<string> cfg = new List<string> {
@@ -166,7 +162,6 @@ namespace NSUNS4_ModManager {
             };
             File.WriteAllLines(ConfigPath, cfg.ToArray());
         }
-
         public void LoadConfig() {
             //This function loads all paths from config file
             string[] cfg = File.ReadAllLines(ConfigPath);
@@ -176,11 +171,9 @@ namespace NSUNS4_ModManager {
 
             GameCleanItem.IsChecked = CleanGame;
         }
-
         private void Button_Click(object sender, RoutedEventArgs e) {
             RefreshModList();
         }
-
         public void RefreshModList() {
             //This function refreshes mod list
             if (Directory.Exists(GameModsPath)) {
@@ -246,7 +239,6 @@ namespace NSUNS4_ModManager {
                 }
             }
         }
-
         private void ModsList_Selected(object sender, RoutedEventArgs e) {
             //This function refreshes info when you selecting mod. It starting read description, author txts and adding icon
             int x = ModsList.SelectedIndex;
@@ -287,7 +279,6 @@ namespace NSUNS4_ModManager {
 
 
             List<int> SkipCharacode = new List<int>();
-            //SkipCharacode.Add(0xEA);
             List<int> SkipPSP_PresetID = new List<int> {
                 0x14
             };
@@ -362,30 +353,31 @@ namespace NSUNS4_ModManager {
                 }
 
                 //This paths used for saving edited files
-                datawin32Path = GameRootPath + "\\data_win32";
-                chaPath = GameRootPath + "\\data_win32\\spc\\characode.bin.xfbin";
-                dppPath = GameRootPath + "\\data_win32\\spc\\duelPlayerParam.xfbin";
-                pspPath = GameRootPath + "\\data_win32\\spc\\WIN64\\playerSettingParam.bin.xfbin";
-                unlPath = GameRootPath + "\\data_win32\\duel\\WIN64\\unlockCharaTotal.bin.xfbin";
-                cspPath = GameRootPath + "\\data_win32\\ui\\max\\select\\WIN64\\characterSelectParam.xfbin";
-                iconPath = GameRootPath + "\\data_win32\\spc\\WIN64\\player_icon.xfbin";
-                awakeAuraPath = GameRootPath + "\\data_win32\\spc\\WIN64\\awakeAura.xfbin";
-                ougiFinishPath = GameRootPath + "\\data_win32\\rpg\\param\\WIN64\\OugiFinishParam.bin.xfbin";
-                skillCustomizePath = GameRootPath + "\\data_win32\\spc\\WIN64\\skillCustomizeParam.xfbin";
-                spSkillCustomizePath = GameRootPath + "\\data_win32\\spc\\WIN64\\spSkillCustomizeParam.xfbin";
-                afterAttachObjectPath = GameRootPath + "\\data_win32\\spc\\WIN64\\afterAttachObject.xfbin";
-                appearanceAnmPath = GameRootPath + "\\data_win32\\spc\\WIN64\\appearanceAnm.xfbin";
-                stageInfoPath = GameRootPath + "\\data_win32\\stage\\WIN64\\StageInfo.bin.xfbin";
-                battleParamPath = GameRootPath + "\\data_win32\\rpg\\WIN64\\battleParam.xfbin";
-                episodeParamPath = GameRootPath + "\\data_win32\\rpg\\param\\WIN64\\episodeParam.bin.xfbin";
-                episodeMovieParamPath = GameRootPath + "\\data_win32\\rpg\\param\\WIN64\\episodeMovieParam.bin.xfbin";
-                messageInfoPath = GameRootPath + "\\data_win32\\message";
-                cmnparamPath = GameRootPath + "\\data_win32\\sound\\cmnparam.xfbin";
-                effectprmPath = GameRootPath + "\\data_win32\\spc\\effectprm.bin.xfbin";
-                damageeffPath = GameRootPath + "\\data_win32\\spc\\damageeff.bin.xfbin";
-                conditionprmPath = GameRootPath + "\\data_win32\\spc\\conditionprm.bin.xfbin";
-                damageprmPath = GameRootPath + "\\data_win32\\spc\\damageprm.bin.xfbin";
-                spTypeSupportParamPath = GameRootPath + "\\data_win32\\spc\\WIN64\\spTypeSupportParam.xfbin";
+                datawin32Path_or = GameRootPath + "\\data_win32";
+                datawin32Path = GameRootPath + "\\data_win32_modmanager\\data";
+                chaPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\characode.bin.xfbin";
+                dppPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\duelPlayerParam.xfbin";
+                pspPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\WIN64\\playerSettingParam.bin.xfbin";
+                unlPath = GameRootPath + "\\data_win32_modmanager\\data\\duel\\WIN64\\unlockCharaTotal.bin.xfbin";
+                cspPath = GameRootPath + "\\data_win32_modmanager\\data\\ui\\max\\select\\WIN64\\characterSelectParam.xfbin";
+                iconPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\WIN64\\player_icon.xfbin";
+                awakeAuraPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\WIN64\\awakeAura.xfbin";
+                ougiFinishPath = GameRootPath + "\\data_win32_modmanager\\data\\rpg\\param\\WIN64\\OugiFinishParam.bin.xfbin";
+                skillCustomizePath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\WIN64\\skillCustomizeParam.xfbin";
+                spSkillCustomizePath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\WIN64\\spSkillCustomizeParam.xfbin";
+                afterAttachObjectPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\WIN64\\afterAttachObject.xfbin";
+                appearanceAnmPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\WIN64\\appearanceAnm.xfbin";
+                stageInfoPath = GameRootPath + "\\data_win32_modmanager\\data\\stage\\WIN64\\StageInfo.bin.xfbin";
+                battleParamPath = GameRootPath + "\\data_win32_modmanager\\data\\rpg\\WIN64\\battleParam.xfbin";
+                episodeParamPath = GameRootPath + "\\data_win32_modmanager\\data\\rpg\\param\\WIN64\\episodeParam.bin.xfbin";
+                episodeMovieParamPath = GameRootPath + "\\data_win32_modmanager\\data\\rpg\\param\\WIN64\\episodeMovieParam.bin.xfbin";
+                messageInfoPath = GameRootPath + "\\data_win32_modmanager\\data\\message";
+                cmnparamPath = GameRootPath + "\\data_win32_modmanager\\data\\sound\\cmnparam.xfbin";
+                effectprmPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\effectprm.bin.xfbin";
+                damageeffPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\damageeff.bin.xfbin";
+                conditionprmPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\conditionprm.bin.xfbin";
+                damageprmPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\damageprm.bin.xfbin";
+                spTypeSupportParamPath = GameRootPath + "\\data_win32_modmanager\\data\\spc\\WIN64\\spTypeSupportParam.xfbin";
                 nuccMaterialDx11Path = GameRootPath + "\\data\\system\\nuccMaterial_dx11.nsh";
                 for (int c = 0; c < CharacodePaths.Count; c++) {
                     //This function adding characode 
@@ -552,10 +544,11 @@ namespace NSUNS4_ModManager {
                         FileInfo[] gfx_Files = d_gfx.GetFiles("*.gfx", SearchOption.AllDirectories); //This function getting info about all .gfx files in root game folder
 
                         DirectoryInfo d_or = new DirectoryInfo(datawin32Path);  //Information about all files in data_win32 folder in root game folder
+                        DirectoryInfo d_or2 = new DirectoryInfo(datawin32Path_or);  //Information about all files in data_win32 folder in root game folder
                         List<string> cpk_paths = new List<string>(); //list of paths of cpk files in stagemod folder
                         List<string> cpk_names = new List<string>(); //list of names of cpk files in stagemod folder
                         List<string> shader_paths = new List<string>(); //list of paths of shaders in stagemod folder
-                        string dataWinFolder = d_or.Name + "\\"; //data_win32 name
+                        string dataWinFolder = d_or2.Name + "\\"; //data_win32 name
                         int dataWinFolderLength = dataWinFolder.Length; //data_win32 length (just of name)
 
                         string ModStageInfoPath = "";
@@ -807,14 +800,17 @@ namespace NSUNS4_ModManager {
 
 
                                 for (int c = 0; c < cpk_paths.Count; c++) {
-                                    Process p = new Process();
+                                    /*Process p = new Process();
                                     // Redirect the output stream of the child process.
                                     p.StartInfo.UseShellExecute = false;
                                     p.StartInfo.CreateNoWindow = true;
                                     p.StartInfo.FileName = "YACpkTool.exe";
-                                    p.StartInfo.Arguments = ("-X -i \"" + cpk_paths[c] + "\"").ToString();
+                                    p.StartInfo.Arguments = "-X -i \"" + cpk_paths[c] + "\"";
                                     p.Start();
-                                    p.WaitForExit();
+                                    p.WaitForExit();*/
+
+                                    YaCpkTool.YaCpkTool.CPK_extract(@System.IO.Path.GetFullPath(cpk_paths[c]));
+
                                     string file_name = System.IO.Path.GetFileNameWithoutExtension(cpk_paths[c]);
 
                                     CopyFilesRecursively(System.IO.Path.GetDirectoryName(cpk_paths[c]) + "\\" + file_name, GameRootPath + "\\moddingapi\\modmanager_assets");
@@ -1115,10 +1111,11 @@ namespace NSUNS4_ModManager {
                         FileInfo[] gfx_Files = d_gfx.GetFiles("*.gfx", SearchOption.AllDirectories); //This function getting info about all .gfx files in root game folder
 
                         DirectoryInfo d_or = new DirectoryInfo(datawin32Path);  //Information about all files in data_win32 folder in root game folder
+                        DirectoryInfo d_or2 = new DirectoryInfo(datawin32Path_or);  //Information about all files in data_win32 folder in root game folder
                         List<string> cpk_paths = new List<string>(); //list of paths of cpk files in characode folder
                         List<string> cpk_names = new List<string>(); //list of names of cpk files in characode folder
                         List<string> shader_paths = new List<string>(); //list of paths of shaders in characode folder
-                        string dataWinFolder = d_or.Name + "\\"; //data_win32 name
+                        string dataWinFolder = d_or2.Name + "\\"; //data_win32 name
                         int dataWinFolderLength = dataWinFolder.Length; //data_win32 length (just of name)
                         bool originalChaExist = false;
                         string originalPathCharacode = "";
@@ -1433,7 +1430,7 @@ namespace NSUNS4_ModManager {
                             } else {
                                 CharacodeID = OldCharacode; //If character mod replaced someone, it will use old characode
                             }
-                            string root_path = datawin32Path.Replace(d_or.Name, ""); //Old code from toolbox, can be replaced on GameRootPath variable
+                            string root_path = GameRootPath;
                             if (shader_paths.Count > 0) { // This function reading nuccMaterial_dx11.nsh and adding new shaders to it in case, if it exist in mod folder
 
                                 byte[] nuccMaterialFile = File.ReadAllBytes(nuccMaterialDx11Path); // This function reading all bytes from nuccMaterial_dx11 file
@@ -1469,22 +1466,13 @@ namespace NSUNS4_ModManager {
 
                                 for (int c = 0; c < cpk_paths.Count; c++) {
                                     Process p = new Process();
-                                    // Redirect the output stream of the child process.
-                                    p.StartInfo.UseShellExecute = false;
-                                    p.StartInfo.CreateNoWindow = true;
-                                    p.StartInfo.FileName = "YACpkTool.exe";
-                                    p.StartInfo.Arguments = ("-X -i \"" + cpk_paths[c]+"\"").ToString();
-                                    p.Start();
-                                    p.WaitForExit();
+
+                                    YaCpkTool.YaCpkTool.CPK_extract(@System.IO.Path.GetFullPath(cpk_paths[c]));
                                     string file_name = System.IO.Path.GetFileNameWithoutExtension(cpk_paths[c]);
 
                                     CopyFilesRecursively(System.IO.Path.GetDirectoryName(cpk_paths[c])+ "\\" + file_name, GameRootPath + "\\moddingapi\\modmanager_assets");
                                     if (Directory.Exists(System.IO.Path.GetDirectoryName(cpk_paths[c]) +"\\"+ file_name))
                                         Directory.Delete(System.IO.Path.GetDirectoryName(cpk_paths[c]) + "\\" + file_name, true);
-                                    /*if (File.Exists(cpk_paths[c] + ".info")) {
-                                        CopyFiles(root_path + "\\moddingapi\\mods\\" + d.Name, cpk_paths[c] + ".info", root_path + "\\moddingapi\\mods\\" + d.Name + "\\" + cpk_names[c] + ".info");
-
-                                    }*/
                                 }
                                 
                             }
@@ -2737,23 +2725,23 @@ namespace NSUNS4_ModManager {
                 //Saves all edited messageInfo files
                 MessageOriginalFile.SaveFilesAs(datawin32Path + "\\message");
 
-                Process p2 = new Process();
-                // Redirect the output stream of the child process.
-                p2.StartInfo.UseShellExecute = false;
-                p2.StartInfo.CreateNoWindow = true;
-                p2.StartInfo.FileName = "YACpkTool.exe";
-                p2.StartInfo.Arguments = ("-P -i \"" + GameRootPath + "\\moddingapi\\modmanager_assets\"").ToString();
-                //MessageBox.Show(p.StartInfo.Arguments);
-                p2.Start();
-                p2.WaitForExit();
+                YaCpkTool.YaCpkTool.CPK_repack(@System.IO.Path.GetFullPath(GameRootPath + "\\moddingapi\\modmanager_assets"));
+                YaCpkTool.YaCpkTool.CPK_repack(@System.IO.Path.GetFullPath(GameRootPath + "\\data_win32_modmanager"));
+
                 File.WriteAllBytes(GameRootPath + "\\moddingapi\\mods\\base_game\\modmanager_assets.cpk.info", new byte[4] { 0x20, 0, 0, 0 });
+                File.WriteAllBytes(GameRootPath + "\\moddingapi\\mods\\base_game\\data_win32_modmanager.cpk.info", new byte[4] { 0x21, 0, 0, 0 });
 
                 CopyFiles(GameRootPath + "\\moddingapi\\mods\\base_game", GameRootPath + "\\moddingapi\\modmanager_assets.cpk", GameRootPath + "\\moddingapi\\mods\\base_game\\modmanager_assets.cpk");
+                CopyFiles(GameRootPath + "\\moddingapi\\mods\\base_game", GameRootPath + "\\data_win32_modmanager.cpk", GameRootPath + "\\moddingapi\\mods\\base_game\\data_win32_modmanager.cpk");
 
                 if (File.Exists(GameRootPath + "\\moddingapi\\modmanager_assets.cpk"))
                     File.Delete(GameRootPath + "\\moddingapi\\modmanager_assets.cpk");
                 if (Directory.Exists(GameRootPath + "\\moddingapi\\modmanager_assets"))
                     Directory.Delete(GameRootPath + "\\moddingapi\\modmanager_assets", true);
+                if (File.Exists(GameRootPath + "\\data_win32_modmanager.cpk"))
+                    File.Delete(GameRootPath + "\\data_win32_modmanager.cpk");
+                if (Directory.Exists(GameRootPath + "\\data_win32_modmanager"))
+                    Directory.Delete(GameRootPath + "\\data_win32_modmanager", true);
 
                 WinForms.MessageBox.Show("Finished compiling.");
             }
@@ -2763,7 +2751,6 @@ namespace NSUNS4_ModManager {
 
         private void Button_Click_2(object sender, RoutedEventArgs e) {
             CleanGameAssets();
-            WinForms.MessageBox.Show("Game was cleaned");
         }
         public void CleanGameAssets(bool OpenMessage = true) {
             if (Directory.Exists(GameRootPath)) {
@@ -2775,8 +2762,11 @@ namespace NSUNS4_ModManager {
                 }
                 if (msg == WinForms.DialogResult.OK || !OpenMessage) {
                     //Removes data_win32 folder
-                    if (Directory.Exists(GameRootPath + "\\data_win32")) {
+                    /*if (Directory.Exists(GameRootPath + "\\data_win32")) {
                         Directory.Delete(GameRootPath + "\\data_win32", true);
+                    }*/
+                    if (Directory.Exists(GameRootPath + "\\data_win32_modmanager")) {
+                        Directory.Delete(GameRootPath + "\\data_win32_modmanager", true);
                     }
                     for (int c = 0; c < ImportedCharacodesList.Count; c++) {
                         //Removes characode folders from moddingapi\mods folder
@@ -2805,10 +2795,18 @@ namespace NSUNS4_ModManager {
                         File.Delete(GameRootPath + "\\moddingapi\\mods\\base_game\\modmanager_assets.cpk");
                     if (File.Exists(GameRootPath + "\\moddingapi\\mods\\base_game\\modmanager_assets.cpk.info"))
                         File.Delete(GameRootPath + "\\moddingapi\\mods\\base_game\\modmanager_assets.cpk.info");
+                    if (File.Exists(GameRootPath + "\\moddingapi\\mods\\base_game\\data_win32_modmanager.cpk"))
+                        File.Delete(GameRootPath + "\\moddingapi\\mods\\base_game\\data_win32_modmanager.cpk");
+                    if (File.Exists(GameRootPath + "\\moddingapi\\mods\\base_game\\data_win32_modmanager.cpk.info"))
+                        File.Delete(GameRootPath + "\\moddingapi\\mods\\base_game\\data_win32_modmanager.cpk.info");
                     if (File.Exists(GameRootPath + "\\moddingapi\\mods\\\\modmanager_assets.cpk"))
                         File.Delete(GameRootPath + "\\moddingapi\\mods\\modmanager_assets.cpk");
                     if (Directory.Exists(GameRootPath + "\\moddingapi\\mods\\\\modmanager_assets"))
                         Directory.Delete(GameRootPath + "\\moddingapi\\mods\\modmanager_assets");
+                    if (File.Exists(GameRootPath + "\\data_win32_modmanager.cpk"))
+                        File.Delete(GameRootPath + "\\data_win32_modmanager.cpk");
+                    if (File.Exists(GameRootPath + "\\data_win32_modmanager.cpk.info"))
+                        File.Delete(GameRootPath + "\\data_win32_modmanager.cpk.info");
                     string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER";
                     DirectoryInfo d_gfx = new DirectoryInfo(gfx_path);
                     string Modgfx_charselPath = "";
@@ -2849,7 +2847,8 @@ namespace NSUNS4_ModManager {
                         byte[] nuccMat = File.ReadAllBytes(originalnuccMaterialDx11Path);
                         File.WriteAllBytes(GameRootPath + "\\data\\system\\nuccMaterial_dx11.nsh", nuccMat);
                     }
-
+                    if (OpenMessage)
+                        WinForms.MessageBox.Show("Game was cleaned");
                 }
 
             } else {
@@ -2857,22 +2856,7 @@ namespace NSUNS4_ModManager {
             }
         }
         private void Button_Click_3(object sender, RoutedEventArgs e) {
-            //string file_exe = GameRootPath + "\\NSUNS4 — копия.exe";
-            //if (System.IO.File.Exists(file_exe)) {
-            //    object shDesktop = (object)"Desktop";
-            //    WshShell shell = new WshShell();
-            //    string shortcutAddress = Directory.GetCurrentDirectory() + @"\NSUNS4.lnk";
-            //    IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
-            //    shortcut.Description = "New shortcut for a Notepad";
-            //    shortcut.Hotkey = "Ctrl+Shift+N";
-            //    shortcut.TargetPath = file_exe;
-            //    shortcut.Save();
 
-            //    Process.Start("Steam", "-applaunch 349040 -StraightIntoFreemode");
-
-            //}
-            //else
-            //    MessageBox.Show("NSUNS4.exe wasn't found");
         }
 
         private void MenuItem_Click_2(object sender, RoutedEventArgs e) {

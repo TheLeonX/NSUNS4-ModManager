@@ -26,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,6 +36,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -49,6 +51,9 @@
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CpkMaker">
+      <HintPath>.\CpkMaker.dll</HintPath>
+    </Reference>
     <Reference Include="netstandard" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -98,6 +103,7 @@
     <Compile Include="ToolBoxCode\Tool_stageInfoEditor_code.cs" />
     <Compile Include="ToolBoxCode\Tool_UnlockCharaTotalEditor_code.cs" />
     <Compile Include="ToolBoxCode\XfbinParser.cs" />
+    <Compile Include="YaCpkTool\YaCpkTool.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
