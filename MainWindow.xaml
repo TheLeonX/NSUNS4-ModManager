@@ -39,8 +39,8 @@
             </Menu.Background>
             <MenuItem x:Name="MenuHeader" Header="Settings" Foreground="White">
                 <MenuItem Header="Set path to game" Click="MenuItem_Click"/>
+                <MenuItem Header="Set path to mod folder" Click="MenuItem_Click_1"/>
                 <CheckBox x:Name="GameCleanItem" Content="Clean game before compiling" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked"/>
-                <!--<MenuItem Header="Set path to mod folder" Click="MenuItem_Click_1"/>-->
             </MenuItem>
             <MenuItem Header="Modding API" Foreground="White">
                 <MenuItem Header="Install" Click="MenuItem_Click_2"/>
