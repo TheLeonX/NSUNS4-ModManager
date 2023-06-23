@@ -585,7 +585,7 @@ namespace NSUNS4_ModManager {
                         }
                         foreach (FileInfo file in cpk_Files) {
                             if (file.FullName.Contains(d.Name)) {
-                                cpk_paths.Add(file.FullName);
+                                cpk_paths.Add("\\\\?\\" + file.FullName);
                                 cpk_names.Add(file.Name);
                                 break;
                             }
@@ -809,7 +809,7 @@ namespace NSUNS4_ModManager {
                                     p.Start();
                                     p.WaitForExit();*/
 
-                                    YaCpkTool.YaCpkTool.CPK_extract(@System.IO.Path.GetFullPath(cpk_paths[c]));
+                                    YaCpkTool.YaCpkTool.CPK_extract(System.IO.Path.GetFullPath(cpk_paths[c]));
 
                                     string file_name = System.IO.Path.GetFileNameWithoutExtension(cpk_paths[c]);
 
@@ -1327,7 +1327,7 @@ namespace NSUNS4_ModManager {
                         }
                         foreach (FileInfo file in cpk_Files) {
                             if (file.FullName.Contains(d.Name)) {
-                                cpk_paths.Add(file.FullName);
+                                cpk_paths.Add("\\\\?\\" + file.FullName);
                                 cpk_names.Add(file.Name);
                                 break;
                             }
