@@ -78,6 +78,8 @@ namespace NSUNS4_ModManager {
         string originalspTypeSupportParamPath = Directory.GetCurrentDirectory() + "\\systemFiles\\spTypeSupportParam.xfbin";
         string originalnuccMaterialDx11Path = Directory.GetCurrentDirectory() + "\\systemFiles\\nuccMaterial_dx11.nsh";
         string originalstageInfoPath = Directory.GetCurrentDirectory() + "\\systemFiles\\StageInfo.bin.xfbin";
+        string originalPartnerParam = Directory.GetCurrentDirectory() + "\\systemFiles\\partnerSlotParam.xfbin";
+        string originalConditionParam = Directory.GetCurrentDirectory() + "\\systemFiles\\specialCondParam.xfbin";
 
         //This is paths for root folder where will be saved edited files
         public static string datawin32Path_or = "[null]";
@@ -125,7 +127,7 @@ namespace NSUNS4_ModManager {
             c.IsFolderPicker = true;
 
             if (c.ShowDialog() == Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialogResult.Ok) {
-                GameRootPath = c.FileName;
+                GameRootPath = "\\\\?\\" + c.FileName;
                 GameModsPath = GameRootPath + "\\modmanager";
                 Directory.CreateDirectory(GameModsPath);
                 SaveConfig();
@@ -585,7 +587,7 @@ namespace NSUNS4_ModManager {
                         }
                         foreach (FileInfo file in cpk_Files) {
                             if (file.FullName.Contains(d.Name)) {
-                                cpk_paths.Add("\\\\?\\" + file.FullName);
+                                cpk_paths.Add(file.FullName);
                                 cpk_names.Add(file.Name);
                                 break;
                             }
@@ -800,14 +802,6 @@ namespace NSUNS4_ModManager {
 
 
                                 for (int c = 0; c < cpk_paths.Count; c++) {
-                                    /*Process p = new Process();
-                                    // Redirect the output stream of the child process.
-                                    p.StartInfo.UseShellExecute = false;
-                                    p.StartInfo.CreateNoWindow = true;
-                                    p.StartInfo.FileName = "YACpkTool.exe";
-                                    p.StartInfo.Arguments = "-X -i \"" + cpk_paths[c] + "\"";
-                                    p.Start();
-                                    p.WaitForExit();*/
 
                                     YaCpkTool.YaCpkTool.CPK_extract(System.IO.Path.GetFullPath(cpk_paths[c]));
 
@@ -816,10 +810,6 @@ namespace NSUNS4_ModManager {
                                     CopyFilesRecursively(System.IO.Path.GetDirectoryName(cpk_paths[c]) + "\\" + file_name, GameRootPath + "\\moddingapi\\modmanager_assets");
                                     if (Directory.Exists(System.IO.Path.GetDirectoryName(cpk_paths[c]) + "\\" + file_name))
                                         Directory.Delete(System.IO.Path.GetDirectoryName(cpk_paths[c]) + "\\" + file_name, true);
-                                    /*if (File.Exists(cpk_paths[c] + ".info")) {
-                                        CopyFiles(root_path + "\\moddingapi\\mods\\" + d.Name, cpk_paths[c] + ".info", root_path + "\\moddingapi\\mods\\" + d.Name + "\\" + cpk_names[c] + ".info");
-
-                                    }*/
                                 }
 
                             }
@@ -1086,11 +1076,85 @@ namespace NSUNS4_ModManager {
 
                    
                 }
-                
 
+                Tool_DuelPlayerParamEditor_code DppOriginalFile = new Tool_DuelPlayerParamEditor_code();
+                if (File.Exists(dppPath)) //This code open vanilla duelPlayerParam or edited duelPlayerParam (goes in root folder)
+                    DppOriginalFile.OpenFile(dppPath);
+                else {
+                    DppOriginalFile.OpenFile(originalDppPath);
+                }
 
+                Tool_PlayerSettingParamEditor_code PspOriginalFile = new Tool_PlayerSettingParamEditor_code();
+                //This code open mod and vanilla/edited files
+                if (File.Exists(pspPath))
+                    PspOriginalFile.OpenFile(pspPath);
+                else {
+                    PspOriginalFile.OpenFile(originalPspPath);
+                }
 
+                Tool_RosterEditor_code CspOriginalFile = new Tool_RosterEditor_code();
+                if (File.Exists(cspPath))
+                    CspOriginalFile.OpenFile(cspPath);
+                else {
+                    CspOriginalFile.OpenFile(originalCspPath);
+                }
 
+                Tool_SkillCustomizeParamEditor_code skillCustomizeOriginalFile = new Tool_SkillCustomizeParamEditor_code();
+                if (File.Exists(skillCustomizePath))
+                    skillCustomizeOriginalFile.OpenFile(skillCustomizePath);
+                else {
+                    skillCustomizeOriginalFile.OpenFile(originalskillCustomizeParamPath);
+                }
+                Tool_SpSkillCustomizeParamEditor_code spSkillCustomizeOriginalFile = new Tool_SpSkillCustomizeParamEditor_code();
+                if (File.Exists(spSkillCustomizePath))
+                    spSkillCustomizeOriginalFile.OpenFile(spSkillCustomizePath);
+                else {
+                    spSkillCustomizeOriginalFile.OpenFile(originalspSkillCustomizeParamPath);
+                }
+                Tool_spTypeSupportParamEditor_code spTypeSupportParamOriginalFile = new Tool_spTypeSupportParamEditor_code();
+                if (File.Exists(spTypeSupportParamPath))
+                    spTypeSupportParamOriginalFile.OpenFile(spTypeSupportParamPath);
+                else {
+                    spTypeSupportParamOriginalFile.OpenFile(originalspTypeSupportParamPath);
+                }
+
+                Tool_AwakeAuraEditor awakeAuraOriginalFile = new Tool_AwakeAuraEditor();
+                if (File.Exists(awakeAuraPath))
+                    awakeAuraOriginalFile.OpenFile(awakeAuraPath);
+                else {
+                    awakeAuraOriginalFile.OpenFile(originalawakeAuraPath);
+                }
+
+                Tool_appearenceAnmEditor_code AppearanceOriginalFile = new Tool_appearenceAnmEditor_code();
+                if (File.Exists(appearanceAnmPath))
+                    AppearanceOriginalFile.OpenFile(appearanceAnmPath);
+                else {
+                    AppearanceOriginalFile.OpenFile(originalappearanceAnmPath);
+                }
+                Tool_afterAttachObject_code afterAttachObjectOriginalFile = new Tool_afterAttachObject_code();
+                if (File.Exists(afterAttachObjectPath))
+                    afterAttachObjectOriginalFile.OpenFile(afterAttachObjectPath);
+                else {
+                    afterAttachObjectOriginalFile.OpenFile(originalafterAttachObjectPath);
+                }
+                Tool_cmnparamEditor_code cmnparamOriginalFile = new Tool_cmnparamEditor_code();
+                if (File.Exists(cmnparamPath))
+                    cmnparamOriginalFile.OpenFile(cmnparamPath);
+                else {
+                    cmnparamOriginalFile.OpenFile(originalcmnparamPath);
+                }
+                Tool_damageprmEditor_code damageprmOriginalFile = new Tool_damageprmEditor_code();
+                if (File.Exists(damageprmPath))
+                    damageprmOriginalFile.OpenFile(damageprmPath);
+                else {
+                    damageprmOriginalFile.OpenFile(originaldamageprmPath);
+                }
+                Tool_nus3bankEditor_code BtlcmnOriginalFile = new Tool_nus3bankEditor_code();
+                if (File.Exists(datawin32Path + "\\sound\\PC\\btlcmn.xfbin"))
+                    BtlcmnOriginalFile.OpenFile(datawin32Path + "\\sound\\PC\\btlcmn.xfbin");
+                else {
+                    BtlcmnOriginalFile.OpenFile(originalBtlcmnPath);
+                }
 
                 string Modgfx_charsel_iconsPath = "";
                 bool gfx_charsel_iconsExist = false;
@@ -1327,7 +1391,7 @@ namespace NSUNS4_ModManager {
                         }
                         foreach (FileInfo file in cpk_Files) {
                             if (file.FullName.Contains(d.Name)) {
-                                cpk_paths.Add("\\\\?\\" + file.FullName);
+                                cpk_paths.Add(file.FullName);
                                 cpk_names.Add(file.Name);
                                 break;
                             }
@@ -1399,6 +1463,9 @@ namespace NSUNS4_ModManager {
                                 }
                             }
                         }
+
+
+
                         //This condition checking if characode.txt exist, so it detector for characode from mod
                         if (originalChaExist) {
                             int OldCharacode = Convert.ToInt32(File.ReadAllText(originalPathCharacode)); //This is old characode ID
@@ -1447,17 +1514,32 @@ namespace NSUNS4_ModManager {
                                 File.WriteAllBytes(nuccMaterialDx11Path, nuccMaterialFile);
                             }
                             if (specialCondParamExist) { //If specialCondParam exist in character mod folder, it will read it and change old characode on new characode and will add it to root game folder
-                                CopyFiles(root_path + "\\moddingapi\\mods\\" + d.Name, ModspecialCondParamPath, root_path + "\\moddingapi\\mods\\" + d.Name + "\\specialCondParam.xfbin");
-                                byte[] specialCondParamFile = File.ReadAllBytes(root_path + "\\moddingapi\\mods\\" + d.Name + "\\specialCondParam.xfbin");
-                                specialCondParamFile = MainFunctions.b_ReplaceBytes(specialCondParamFile, BitConverter.GetBytes(CharacodeID), 0x17);
-                                File.WriteAllBytes(root_path + "\\moddingapi\\mods\\" + d.Name + "\\specialCondParam.xfbin", specialCondParamFile);
+                                //CopyFiles(root_path + "\\moddingapi\\mods\\" + d.Name, ModspecialCondParamPath, root_path + "\\moddingapi\\mods\\" + d.Name + "\\specialCondParam.xfbin");
+                                byte[] ModSpecialCondParamFile = File.ReadAllBytes(ModspecialCondParamPath);
+                                byte[] OriginalSpecialCondParamFile = new byte[0];
+                                if (File.Exists(root_path + "\\moddingapi\\mods\\base_game\\specialCondParam.xfbin")) {
+                                    OriginalSpecialCondParamFile = File.ReadAllBytes(root_path + "\\moddingapi\\mods\\base_game\\specialCondParam.xfbin");
+                                }
+
+                                ModSpecialCondParamFile = MainFunctions.b_ReplaceBytes(ModSpecialCondParamFile, BitConverter.GetBytes(CharacodeID), 0x17);
+                                OriginalSpecialCondParamFile = MainFunctions.b_AddBytes(OriginalSpecialCondParamFile, ModSpecialCondParamFile);
+                                File.WriteAllBytes(root_path + "\\moddingapi\\mods\\base_game\\specialCondParam.xfbin", OriginalSpecialCondParamFile);
 
                             }
                             if (partnerSlotParamExist) { //If partnerSlotParamExist exist in character mod folder, it will read it and change old characode on new characode and will add it to root game folder
-                                CopyFiles(root_path + "\\moddingapi\\mods\\" + d.Name, ModpartnerSlotParamPath, root_path + "\\moddingapi\\mods\\" + d.Name + "\\partnerSlotParam.xfbin");
-                                byte[] partnerSlotParamFile = File.ReadAllBytes(root_path + "\\moddingapi\\mods\\" + d.Name + "\\partnerSlotParam.xfbin");
-                                partnerSlotParamFile = MainFunctions.b_ReplaceBytes(partnerSlotParamFile, BitConverter.GetBytes(CharacodeID), 0x17);
-                                File.WriteAllBytes(root_path + "\\moddingapi\\mods\\" + d.Name + "\\partnerSlotParam.xfbin", partnerSlotParamFile);
+                                //CopyFiles(root_path + "\\moddingapi\\mods\\" + d.Name, ModpartnerSlotParamPath, root_path + "\\moddingapi\\mods\\" + d.Name + "\\partnerSlotParam.xfbin");
+
+
+
+                                byte[] ModPartnerSlotParamFile = File.ReadAllBytes(ModpartnerSlotParamPath);
+                                ModPartnerSlotParamFile = MainFunctions.b_ReplaceBytes(ModPartnerSlotParamFile, BitConverter.GetBytes(CharacodeID), 0x17);
+
+                                byte[] OriginalPartnerSlotParamFile = new byte[0];
+                                if (File.Exists(root_path + "\\moddingapi\\mods\\base_game\\specialCondParam.xfbin")) {
+                                    OriginalPartnerSlotParamFile = File.ReadAllBytes(root_path + "\\moddingapi\\mods\\base_game\\partnerSlotParam.xfbin");
+                                }
+                                OriginalPartnerSlotParamFile = MainFunctions.b_AddBytes(OriginalPartnerSlotParamFile, ModPartnerSlotParamFile);
+                                File.WriteAllBytes(root_path + "\\moddingapi\\mods\\base_game\\partnerSlotParam.xfbin", OriginalPartnerSlotParamFile);
                             }
                             if (cpk_paths.Count > 0) {//If character mod contains cpk archives, it will copy paste them in root game folder (requires to have characode in name of cpk)
                                 if (!Directory.Exists(GameRootPath + "\\moddingapi\\modmanager_assets"))
@@ -1465,7 +1547,6 @@ namespace NSUNS4_ModManager {
                                 
 
                                 for (int c = 0; c < cpk_paths.Count; c++) {
-                                    Process p = new Process();
 
                                     YaCpkTool.YaCpkTool.CPK_extract(@System.IO.Path.GetFullPath(cpk_paths[c]));
                                     string file_name = System.IO.Path.GetFileNameWithoutExtension(cpk_paths[c]);
@@ -1476,7 +1557,7 @@ namespace NSUNS4_ModManager {
                                 }
                                 
                             }
-                            if (specialCondParamExist || partnerSlotParamExist) { //If anything was added in moddingAPI folder, it will add info.txt file for loading cpk files or conditions for character
+                            /*if (specialCondParamExist || partnerSlotParamExist) { //If anything was added in moddingAPI folder, it will add info.txt file for loading cpk files or conditions for character
 
 
                                 File.WriteAllText(root_path + "\\moddingapi\\mods\\" + d.Name + "\\clean.txt", ""); 
@@ -1486,7 +1567,7 @@ namespace NSUNS4_ModManager {
                                 mm_WriterParameter.Write(characterName[i] + " - " + d.Name +"|" + characterDescription[i] + "|" + characterAuthor[i]);
                                 mm_WriterParameter.Flush();
                                 mm_WriterParameter.Close();
-                            }
+                            }*/
                             //This code prevents from copy pasting system files
                             foreach (FileInfo file in Files) {
                                 if (!file.Name.Contains("characode")
@@ -1521,13 +1602,8 @@ namespace NSUNS4_ModManager {
                             if (dppExist) {
                                 //This code merges duelPlayerParam files
                                 Tool_DuelPlayerParamEditor_code DppModFile = new Tool_DuelPlayerParamEditor_code();
-                                Tool_DuelPlayerParamEditor_code DppOriginalFile = new Tool_DuelPlayerParamEditor_code();
                                 DppModFile.OpenFile(ModdppPath); //This code open modded duelPlayerParam (goes in mod folder)
-                                if (File.Exists(dppPath)) //This code open vanilla duelPlayerParam or edited duelPlayerParam (goes in root folder)
-                                    DppOriginalFile.OpenFile(dppPath);
-                                else {
-                                    DppOriginalFile.OpenFile(originalDppPath);
-                                }
+                                
                                 if (ReplaceCharacterList[i]) { //This function changes exist entry in duelPlayerParam
                                     for (int c = 0; c < DppOriginalFile.EntryCount; c++) {
                                         if (DppOriginalFile.BinName[c].Contains(d.Name)) { //This function finding entry in duelPlayerParam, 0 index reading only 1st section in modded duelPlayerParam
@@ -1578,24 +1654,13 @@ namespace NSUNS4_ModManager {
                                     DppOriginalFile.AwaSettingList.Add(DppModFile.AwaSettingList[0]);
                                     DppOriginalFile.EntryCount++;
                                 }
-                                //Creating directory in root folder, so we could save edited duelPlayerParam
-                                if (!Directory.Exists(datawin32Path + "\\spc")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\spc");
-                                }
-                                //Saving all edits in root folder
-                                DppOriginalFile.SaveFileAs(datawin32Path + "\\spc\\duelPlayerParam.xfbin");
+                                
                             }
                             if (pspExist) {
                                 //This code merges playerSettingParam files
                                 Tool_PlayerSettingParamEditor_code PspModFile = new Tool_PlayerSettingParamEditor_code();
-                                Tool_PlayerSettingParamEditor_code PspOriginalFile = new Tool_PlayerSettingParamEditor_code();
-                                //This code open mod and vanilla/edited files
                                 PspModFile.OpenFile(ModpspPath);
-                                if (File.Exists(pspPath))
-                                    PspOriginalFile.OpenFile(pspPath);
-                                else {
-                                    PspOriginalFile.OpenFile(originalPspPath);
-                                }
+                                
                                 if (ReplaceCharacterList[i]) {
                                     for (int y = 0; y < PspModFile.EntryCount; y++) {
                                         bool found = false;
@@ -1707,23 +1772,13 @@ namespace NSUNS4_ModManager {
                                         UnlockCharaTotalOriginalFile.SaveFileAs(datawin32Path + "\\duel\\WIN64\\unlockCharaTotal.bin.xfbin");
                                     }
                                 }
-                                //This code creates directory in root folder
-                                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
-                                }
-                                //This code saves edited file
-                                PspOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\playerSettingParam.bin.xfbin");
+                                
                             }
                             if (cspExist) {
                                 //This code merges characterSelectParam files
                                 Tool_RosterEditor_code CspModFile = new Tool_RosterEditor_code();
-                                Tool_RosterEditor_code CspOriginalFile = new Tool_RosterEditor_code();
                                 CspModFile.OpenFile(ModcspPath);
-                                if (File.Exists(cspPath))
-                                    CspOriginalFile.OpenFile(cspPath);
-                                else {
-                                    CspOriginalFile.OpenFile(originalCspPath);
-                                }
+                                
                                 //Max page and max position values. Was used for adding characters on new slots
                                 int maxPage = CspOriginalFile.SearchMaxPositionAndPageIndex()[0];
                                 int maxSlot = CspOriginalFile.SearchMaxPositionAndPageIndex()[1];
@@ -1743,21 +1798,6 @@ namespace NSUNS4_ModManager {
                                                 CspOriginalFile.GibberishBytes[c] = CspModFile.GibberishBytes[v];
                                                 found = true;
                                             }
-                                            //This code required for adding costumes mods, but code isnt made yet for it
-                                            //else if (CspOriginalFile.CharacterList[c] != CspModFile.CharacterList[v]
-                                            //    && CspOriginalFile.PageList[c] == CspModFile.PageList[v]
-                                            //    && CspOriginalFile.PositionList[c] == CspModFile.PositionList[v]
-                                            //    && CspOriginalFile.CostumeList[c] == CspModFile.CostumeList[v]) {
-                                            //    CspOriginalFile.CharacterList.Add(CspModFile.CharacterList[v]);
-                                            //    CspOriginalFile.PageList.Add(CspModFile.PageList[v]);
-                                            //    CspOriginalFile.PositionList.Add(CspModFile.PositionList[v]);
-                                            //    CspOriginalFile.CostumeList.Add(CspOriginalFile.SearchMaxCostumeInPageAndSlotIndex(CspModFile.PageList[v], CspModFile.PositionList[v]));
-                                            //    CspOriginalFile.ChaList.Add(CspModFile.ChaList[v]);
-                                            //    CspOriginalFile.AccessoryList.Add(CspModFile.AccessoryList[v]);
-                                            //    CspOriginalFile.NewIdList.Add(CspModFile.NewIdList[v]);
-                                            //    CspOriginalFile.GibberishBytes.Add(CspModFile.GibberishBytes[v]);
-                                            //    CspOriginalFile.EntryCount++;
-                                            //}
 
                                         }
                                         if (!found) {
@@ -1787,12 +1827,7 @@ namespace NSUNS4_ModManager {
                                         CspOriginalFile.EntryCount++;
                                     }
                                 }
-                                //Creates directory for characterSelectParam
-                                if (!Directory.Exists(datawin32Path + "\\ui\\max\\select\\WIN64")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\ui\\max\\select\\WIN64");
-                                }
-                                //Saved edited characterSelectParam
-                                CspOriginalFile.SaveFileAs(datawin32Path + "\\ui\\max\\select\\WIN64\\characterSelectParam.xfbin");
+                                
                                 //Changes max page value in charsel.gfx file
                                 if (gfx_charselExist) {
                                     byte[] charsel = File.ReadAllBytes(Modgfx_charselPath);
@@ -1804,13 +1839,8 @@ namespace NSUNS4_ModManager {
                             if (skillCustomizeExist) {
                                 //This function merges skillCustomizeParamEditor files
                                 Tool_SkillCustomizeParamEditor_code skillCustomizeModFile = new Tool_SkillCustomizeParamEditor_code();
-                                Tool_SkillCustomizeParamEditor_code skillCustomizeOriginalFile = new Tool_SkillCustomizeParamEditor_code();
                                 skillCustomizeModFile.OpenFile(ModskillCustomizePath);
-                                if (File.Exists(skillCustomizePath))
-                                    skillCustomizeOriginalFile.OpenFile(skillCustomizePath);
-                                else {
-                                    skillCustomizeOriginalFile.OpenFile(originalskillCustomizeParamPath);
-                                }
+                                
                                 if (ReplaceCharacterList[i]) { //If mod replaces character, it will change exist entry
                                     for (int c = 0; c < skillCustomizeOriginalFile.EntryCount; c++) {
                                         if (MainFunctions.b_byteArrayToInt(skillCustomizeOriginalFile.CharacodeList[c]) == MainFunctions.b_byteArrayToInt(skillCustomizeModFile.CharacodeList[0])) {
@@ -1934,23 +1964,13 @@ namespace NSUNS4_ModManager {
                                     skillCustomizeOriginalFile.SkillAwaair_Priority_List.Add(skillCustomizeModFile.SkillAwaair_Priority_List[0]);
                                     skillCustomizeOriginalFile.EntryCount++;
                                 }
-                                //Creates directory
-                                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
-                                }
-                                //Saves edited skillCustomizeParam file
-                                skillCustomizeOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\skillCustomizeParam.xfbin");
+                                
                             }
                             if (spskillCustomizeExist) {
                                 //This function merges spSkillCustomizeParam files
                                 Tool_SpSkillCustomizeParamEditor_code spSkillCustomizeModFile = new Tool_SpSkillCustomizeParamEditor_code();
-                                Tool_SpSkillCustomizeParamEditor_code spSkillCustomizeOriginalFile = new Tool_SpSkillCustomizeParamEditor_code();
                                 spSkillCustomizeModFile.OpenFile(ModspskillCustomizePath);
-                                if (File.Exists(spSkillCustomizePath))
-                                    spSkillCustomizeOriginalFile.OpenFile(spSkillCustomizePath);
-                                else {
-                                    spSkillCustomizeOriginalFile.OpenFile(originalspSkillCustomizeParamPath);
-                                }
+                                
                                 if (ReplaceCharacterList[i]) { //If mod replaces character, it will change exist entry
                                     for (int c = 0; c < spSkillCustomizeOriginalFile.EntryCount; c++) {
                                         if (MainFunctions.b_byteArrayToInt(spSkillCustomizeOriginalFile.CharacodeList[c]) == MainFunctions.b_byteArrayToInt(spSkillCustomizeModFile.CharacodeList[0])) {
@@ -1994,23 +2014,13 @@ namespace NSUNS4_ModManager {
                                     spSkillCustomizeOriginalFile.WeirdValuesList.Add(spSkillCustomizeModFile.WeirdValuesList[0]);
                                     spSkillCustomizeOriginalFile.EntryCount++;
                                 }
-                                //Creates directory
-                                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
-                                }
-                                //Saves edited spSkillCustomizeParam
-                                spSkillCustomizeOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\spSkillCustomizeParam.xfbin");
+                                
                             }
                             if (spTypeSupportParamExist) {
                                 //This function merges spTypeSupportParam files
                                 Tool_spTypeSupportParamEditor_code spTypeSupportParamModFile = new Tool_spTypeSupportParamEditor_code();
-                                Tool_spTypeSupportParamEditor_code spTypeSupportParamOriginalFile = new Tool_spTypeSupportParamEditor_code();
                                 spTypeSupportParamModFile.OpenFile(ModspTypeSupportParamPath);
-                                if (File.Exists(spTypeSupportParamPath))
-                                    spTypeSupportParamOriginalFile.OpenFile(spTypeSupportParamPath);
-                                else {
-                                    spTypeSupportParamOriginalFile.OpenFile(originalspTypeSupportParamPath);
-                                }
+                                
                                 if (ReplaceCharacterList[i]) { //If mod replaces character, it will change exist entry
                                     for (int c = 0; c < spTypeSupportParamOriginalFile.EntryCount; c++) {
                                         if (spTypeSupportParamOriginalFile.Characode_List[c] == spTypeSupportParamModFile.Characode_List[0]) {
@@ -2105,23 +2115,13 @@ namespace NSUNS4_ModManager {
                                     spTypeSupportParamOriginalFile.DownSkill_EnableInAir_List.Add(spTypeSupportParamModFile.DownSkill_EnableInAir_List[0]);
                                     spTypeSupportParamOriginalFile.EntryCount++;
                                 }
-                                //Creates directory
-                                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
-                                }
-                                //Saves edited spTypeSupportParam file
-                                spTypeSupportParamOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\spTypeSupportParam.xfbin");
+                                
                             }
                             if (awakeAuraExist) {
                                 //This function merges awakeAura files
                                 Tool_AwakeAuraEditor awakeAuraModFile = new Tool_AwakeAuraEditor();
-                                Tool_AwakeAuraEditor awakeAuraOriginalFile = new Tool_AwakeAuraEditor();
                                 awakeAuraModFile.OpenFile(ModawakeAuraPath);
-                                if (File.Exists(awakeAuraPath))
-                                    awakeAuraOriginalFile.OpenFile(awakeAuraPath);
-                                else {
-                                    awakeAuraOriginalFile.OpenFile(originalawakeAuraPath);
-                                }
+                                
                                 for (int c = 0; c < awakeAuraOriginalFile.EntryCount; c++) {//This function removes entry from vanilla/edited file which contain mod characode
                                     if (awakeAuraOriginalFile.CharacodeList[c] == d.Name) {
                                         awakeAuraOriginalFile.CharacodeList.RemoveAt(c);
@@ -2156,12 +2156,7 @@ namespace NSUNS4_ModManager {
                                     }
 
                                 }
-                                //Creates directory
-                                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
-                                }
-                                //saves edited awakeAura file
-                                awakeAuraOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\awakeAura.xfbin");
+                                
                             }
                             if (iconExist) {
                                 //This function merges player_icon files
@@ -2214,13 +2209,8 @@ namespace NSUNS4_ModManager {
                             if (appearanceAnmExist) {
                                 //This function merges appearanceAnm files
                                 Tool_appearenceAnmEditor_code AppearanceModFile = new Tool_appearenceAnmEditor_code();
-                                Tool_appearenceAnmEditor_code AppearanceOriginalFile = new Tool_appearenceAnmEditor_code();
                                 AppearanceModFile.OpenFile(ModappearanceAnmPath);
-                                if (File.Exists(appearanceAnmPath))
-                                    AppearanceOriginalFile.OpenFile(appearanceAnmPath);
-                                else {
-                                    AppearanceOriginalFile.OpenFile(originalappearanceAnmPath);
-                                }
+                                
                                 for (int c = 0; c < AppearanceOriginalFile.EntryCount; c++) {//This code removes all entries with mod characode from vanilla/edited file
                                     if (MainFunctions.b_byteArrayToInt(AppearanceOriginalFile.CharacodeList[c]) == CharacodeID) {
                                         AppearanceOriginalFile.CharacodeList.RemoveAt(c);
@@ -2261,23 +2251,13 @@ namespace NSUNS4_ModManager {
                                     }
 
                                 }
-                                //Creates directory
-                                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
-                                }
-                                //Saves edited appearanceAnm file
-                                AppearanceOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\appearanceAnm.xfbin");
+                                
                             }
                             if (afterAttachObjectExist) {
                                 //This function merges afterAttachObject files
                                 Tool_afterAttachObject_code afterAttachObjectModFile = new Tool_afterAttachObject_code();
-                                Tool_afterAttachObject_code afterAttachObjectOriginalFile = new Tool_afterAttachObject_code();
                                 afterAttachObjectModFile.OpenFile(ModafterAttachObjectPath);
-                                if (File.Exists(afterAttachObjectPath))
-                                    afterAttachObjectOriginalFile.OpenFile(afterAttachObjectPath);
-                                else {
-                                    afterAttachObjectOriginalFile.OpenFile(originalafterAttachObjectPath);
-                                }
+                                
                                 for (int c = 0; c < afterAttachObjectOriginalFile.EntryCount; c++) { //This code removes all entries with mod characode from vanilla/edited file
                                     if (afterAttachObjectOriginalFile.characode1List[c] == d.Name) {
                                         afterAttachObjectOriginalFile.characode1List.RemoveAt(c);
@@ -2326,23 +2306,13 @@ namespace NSUNS4_ModManager {
                                     }
 
                                 }
-                                //Creates directory
-                                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
-                                }
-                                //Saves edited afterAttachObject file
-                                afterAttachObjectOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\afterAttachObject.xfbin");
+                                
                             }
                             if (cmnparamExist) {
                                 //This function merges cmnparam files
                                 Tool_cmnparamEditor_code cmnparamModFile = new Tool_cmnparamEditor_code();
-                                Tool_cmnparamEditor_code cmnparamOriginalFile = new Tool_cmnparamEditor_code();
                                 cmnparamModFile.OpenFile(ModcmnparamPath);
-                                if (File.Exists(cmnparamPath))
-                                    cmnparamOriginalFile.OpenFile(cmnparamPath);
-                                else {
-                                    cmnparamOriginalFile.OpenFile(originalcmnparamPath);
-                                }
+                                
                                 if (ReplaceCharacterList[i]) {
                                     //If mod replaces character, it editing exist entry
                                     bool found = false;
@@ -2409,12 +2379,7 @@ namespace NSUNS4_ModManager {
                                     cmnparamOriginalFile.Player_PartnerAwaCharacode_List.Add(cmnparamModFile.Player_PartnerAwaCharacode_List[0]);
                                     cmnparamOriginalFile.EntryCount_Player++;
                                 }
-                                //Creates directory
-                                if (!Directory.Exists(datawin32Path + "\\sound")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\sound");
-                                }
-                                //Saves edited cmnparam file
-                                cmnparamOriginalFile.SaveFileAs(datawin32Path + "\\sound\\cmnparam.xfbin");
+                                
                             }
                             if (prmExist && damageeffExist) {
                                 //This function merges damageEff and effectprm files, and fixing prm files with new damageEff ids
@@ -2532,13 +2497,8 @@ namespace NSUNS4_ModManager {
                             if (damageprmExist) {
                                 //This function merges damageprm files
                                 Tool_damageprmEditor_code damageprmModFile = new Tool_damageprmEditor_code();
-                                Tool_damageprmEditor_code damageprmOriginalFile = new Tool_damageprmEditor_code();
                                 damageprmModFile.OpenFile(ModdamageprmPath);
-                                if (File.Exists(damageprmPath))
-                                    damageprmOriginalFile.OpenFile(damageprmPath);
-                                else {
-                                    damageprmOriginalFile.OpenFile(originaldamageprmPath);
-                                }
+                                
                                 for (int c = 0; c < damageprmModFile.EntryCount; c++) {
                                     //This code adding new entries to vanilla/edited file if it doesn't contain section from mod file
                                     if (!damageprmOriginalFile.DamagePrm_NameID_List.Contains(damageprmModFile.DamagePrm_NameID_List[c])) {
@@ -2551,12 +2511,7 @@ namespace NSUNS4_ModManager {
                                         }
                                     }
                                 }
-                                //Creates directory
-                                if (!Directory.Exists(datawin32Path + "\\spc")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\spc");
-                                }
-                                //Saves edited damagePrm file
-                                damageprmOriginalFile.SaveFileAs(datawin32Path + "\\spc\\damageprm.bin.xfbin");
+                                
                             }
                             if (messageExistList.Contains(true)) {
                                 //This function merges all messageInfo files on all languages
@@ -2585,13 +2540,8 @@ namespace NSUNS4_ModManager {
                             if (btlcmnExist) {
                                 //This function merges btlcmn files
                                 Tool_nus3bankEditor_code BtlcmnModFile = new Tool_nus3bankEditor_code();
-                                Tool_nus3bankEditor_code BtlcmnOriginalFile = new Tool_nus3bankEditor_code();
                                 BtlcmnModFile.OpenFile(ModbtlcmnPath);
-                                if (File.Exists(datawin32Path + "\\sound\\PC\\btlcmn.xfbin"))
-                                    BtlcmnOriginalFile.OpenFile(datawin32Path + "\\sound\\PC\\btlcmn.xfbin");
-                                else {
-                                    BtlcmnOriginalFile.OpenFile(originalBtlcmnPath);
-                                }
+                                
                                 for (int z = 0; z < BtlcmnModFile.TONE_SoundName_List.Count; z++) {
                                     //If sound doesn't exist in vanilla/edited btlcmn file, it will add entries at the end of file
                                     if (!BtlcmnOriginalFile.TONE_SoundName_List.Contains(BtlcmnModFile.TONE_SoundName_List[z])) {
@@ -2620,31 +2570,7 @@ namespace NSUNS4_ModManager {
                                     }
 
                                 }
-                                //Creates directory
-                                if (!Directory.Exists(datawin32Path + "\\sound\\PC\\")) {
-                                    Directory.CreateDirectory(datawin32Path + "\\sound\\PC\\");
-                                }
-                                //Saves edited btlcmn file
-                                BtlcmnOriginalFile.SaveFileAs(datawin32Path + "\\sound\\PC\\btlcmn.xfbin");
-
-                                //This function was used for creating new separam file
-                                byte[] separamBytes = File.ReadAllBytes(originalseparamPath); //opens vanilla separam file
-                                byte[] fileStart = new byte[0];
-                                fileStart = MainFunctions.b_AddBytes(fileStart, separamBytes, 0, 0, 0xE2A); //Saves header of vanilla separam file
-                                fileStart = MainFunctions.b_AddBytes(fileStart, BitConverter.GetBytes((BtlcmnOriginalFile.TONE_SoundName_List.Count * 0x20 + 6)), 1); //Saves new size for separam
-                                fileStart = MainFunctions.b_AddBytes(fileStart, new byte[8] { 0x00, 0x00, 0x00, 0x01, 0x00, 0x79, 0x00, 0x00 });
-                                fileStart = MainFunctions.b_AddBytes(fileStart, BitConverter.GetBytes((BtlcmnOriginalFile.TONE_SoundName_List.Count * 0x20 + 2)), 1); //Saves new size for separam
-                                fileStart = MainFunctions.b_AddBytes(fileStart, BitConverter.GetBytes(BtlcmnOriginalFile.TONE_SoundName_List.Count), 0, 0, 2); //Saves new count of entries for separam
-                                for (int z = 0; z < BtlcmnOriginalFile.TONE_SoundName_List.Count; z++) { //This function adding entries to separam file
-                                    byte[] section = new byte[0x20];
-                                    string name = BtlcmnOriginalFile.TONE_SoundName_List[z];
-                                    if (name.Length > 31)
-                                        name = name.Substring(0, 31);
-                                    section = MainFunctions.b_ReplaceBytes(section, Encoding.ASCII.GetBytes(name), 0);
-                                    fileStart = MainFunctions.b_AddBytes(fileStart, section);
-                                }
-                                fileStart = MainFunctions.b_AddBytes(fileStart, separamBytes, 0, 0x815C, 0x815C + 0x5DB2); //Saves footer of vanilla separam file
-                                File.WriteAllBytes(datawin32Path + "\\sound\\separam.xfbin", fileStart); //Saves edited separam file
+                                
                             }
                             
 
@@ -2676,6 +2602,107 @@ namespace NSUNS4_ModManager {
 
                     }
                 }
+
+                //Creating directory in root folder, so we could save edited duelPlayerParam
+                if (!Directory.Exists(datawin32Path + "\\spc")) {
+                    Directory.CreateDirectory(datawin32Path + "\\spc");
+                }
+                //Saving all edits in root folder
+                DppOriginalFile.SaveFileAs(datawin32Path + "\\spc\\duelPlayerParam.xfbin");
+
+                //This code creates directory in root folder
+                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
+                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
+                }
+                //This code saves edited file
+                PspOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\playerSettingParam.bin.xfbin");
+                //Creates directory for characterSelectParam
+                if (!Directory.Exists(datawin32Path + "\\ui\\max\\select\\WIN64")) {
+                    Directory.CreateDirectory(datawin32Path + "\\ui\\max\\select\\WIN64");
+                }
+                //Saved edited characterSelectParam
+                CspOriginalFile.SaveFileAs(datawin32Path + "\\ui\\max\\select\\WIN64\\characterSelectParam.xfbin");
+
+                //Creates directory
+                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
+                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
+                }
+                //Saves edited skillCustomizeParam file
+                skillCustomizeOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\skillCustomizeParam.xfbin");
+                //Creates directory
+                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
+                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
+                }
+                //Saves edited spSkillCustomizeParam
+                spSkillCustomizeOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\spSkillCustomizeParam.xfbin");
+
+                //Creates directory
+                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
+                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
+                }
+                //Saves edited spTypeSupportParam file
+                spTypeSupportParamOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\spTypeSupportParam.xfbin");
+                //Creates directory
+                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
+                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
+                }
+                //saves edited awakeAura file
+                awakeAuraOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\awakeAura.xfbin");
+
+                //Creates directory
+                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
+                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
+                }
+                //Saves edited appearanceAnm file
+                AppearanceOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\appearanceAnm.xfbin");
+
+                //Creates directory
+                if (!Directory.Exists(datawin32Path + "\\spc\\WIN64")) {
+                    Directory.CreateDirectory(datawin32Path + "\\spc\\WIN64");
+                }
+                //Saves edited afterAttachObject file
+                afterAttachObjectOriginalFile.SaveFileAs(datawin32Path + "\\spc\\WIN64\\afterAttachObject.xfbin");
+                //Creates directory
+                if (!Directory.Exists(datawin32Path + "\\sound")) {
+                    Directory.CreateDirectory(datawin32Path + "\\sound");
+                }
+                //Saves edited cmnparam file
+                cmnparamOriginalFile.SaveFileAs(datawin32Path + "\\sound\\cmnparam.xfbin");
+
+                //Creates directory
+                if (!Directory.Exists(datawin32Path + "\\spc")) {
+                    Directory.CreateDirectory(datawin32Path + "\\spc");
+                }
+                //Saves edited damagePrm file
+                damageprmOriginalFile.SaveFileAs(datawin32Path + "\\spc\\damageprm.bin.xfbin");
+
+                //Creates directory
+                if (!Directory.Exists(datawin32Path + "\\sound\\PC\\")) {
+                    Directory.CreateDirectory(datawin32Path + "\\sound\\PC\\");
+                }
+                //Saves edited btlcmn file
+                BtlcmnOriginalFile.SaveFileAs(datawin32Path + "\\sound\\PC\\btlcmn.xfbin");
+
+                //This function was used for creating new separam file
+                byte[] separamBytes = File.ReadAllBytes(originalseparamPath); //opens vanilla separam file
+                byte[] fileStart = new byte[0];
+                fileStart = MainFunctions.b_AddBytes(fileStart, separamBytes, 0, 0, 0xE2A); //Saves header of vanilla separam file
+                fileStart = MainFunctions.b_AddBytes(fileStart, BitConverter.GetBytes((BtlcmnOriginalFile.TONE_SoundName_List.Count * 0x20 + 6)), 1); //Saves new size for separam
+                fileStart = MainFunctions.b_AddBytes(fileStart, new byte[8] { 0x00, 0x00, 0x00, 0x01, 0x00, 0x79, 0x00, 0x00 });
+                fileStart = MainFunctions.b_AddBytes(fileStart, BitConverter.GetBytes((BtlcmnOriginalFile.TONE_SoundName_List.Count * 0x20 + 2)), 1); //Saves new size for separam
+                fileStart = MainFunctions.b_AddBytes(fileStart, BitConverter.GetBytes(BtlcmnOriginalFile.TONE_SoundName_List.Count), 0, 0, 2); //Saves new count of entries for separam
+                for (int z = 0; z < BtlcmnOriginalFile.TONE_SoundName_List.Count; z++) { //This function adding entries to separam file
+                    byte[] section = new byte[0x20];
+                    string name = BtlcmnOriginalFile.TONE_SoundName_List[z];
+                    if (name.Length > 31)
+                        name = name.Substring(0, 31);
+                    section = MainFunctions.b_ReplaceBytes(section, Encoding.ASCII.GetBytes(name), 0);
+                    fileStart = MainFunctions.b_AddBytes(fileStart, section);
+                }
+                fileStart = MainFunctions.b_AddBytes(fileStart, separamBytes, 0, 0x815C, 0x815C + 0x5DB2); //Saves footer of vanilla separam file
+                File.WriteAllBytes(datawin32Path + "\\sound\\separam.xfbin", fileStart); //Saves edited separam file
+
+
                 if (gfx_charsel_iconsExist) {
                     byte[] charicon_s_filebytes = File.ReadAllBytes(Directory.GetCurrentDirectory()+"\\systemFiles\\charicon_s.gfx");
                     byte[] charicon_s_header = MainFunctions.b_ReadByteArray(charicon_s_filebytes, 0, 0xAB);
@@ -2807,6 +2834,16 @@ namespace NSUNS4_ModManager {
                         File.Delete(GameRootPath + "\\data_win32_modmanager.cpk");
                     if (File.Exists(GameRootPath + "\\data_win32_modmanager.cpk.info"))
                         File.Delete(GameRootPath + "\\data_win32_modmanager.cpk.info");
+                    if (File.Exists(GameRootPath + "\\moddingapi\\mods\\base_game\\partnerSlotParam.xfbin")) {
+                        byte[] file = File.ReadAllBytes(originalPartnerParam);
+                        File.WriteAllBytes(GameRootPath + "\\moddingapi\\mods\\base_game\\partnerSlotParam.xfbin", file);
+                    }
+                    if (File.Exists(GameRootPath + "\\moddingapi\\mods\\base_game\\specialCondParam.xfbin")) {
+                        byte[] file = File.ReadAllBytes(originalConditionParam);
+                        File.WriteAllBytes(GameRootPath + "\\moddingapi\\mods\\base_game\\specialCondParam.xfbin", file);
+                    }
+
+
                     string gfx_path = GameRootPath + "\\data\\ui\\flash\\OTHER";
                     DirectoryInfo d_gfx = new DirectoryInfo(gfx_path);
                     string Modgfx_charselPath = "";
