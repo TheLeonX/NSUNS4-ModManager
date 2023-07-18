@@ -1743,8 +1743,10 @@ namespace NSUNS4_ModManager {
                                 }
                             } else {
                                 Tool_privateCamera_code.privateCamera entry = new Tool_privateCamera_code.privateCamera();
-                                privateCameraFile.privateCameraParam.Add(entry);
-                                privateCameraFile.EntryCount++;
+                                if (!ReplaceCharacterList[i]) {
+                                    privateCameraFile.privateCameraParam.Add(entry);
+                                    privateCameraFile.EntryCount++;
+                                }
                             }
 
                             if (cspExist) {
