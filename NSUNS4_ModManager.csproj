@@ -78,6 +78,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ModManager\OriginalPath.cs" />
     <Compile Include="ToolBoxCode\MainFunctions.cs" />
     <Compile Include="ToolBoxCode\Program.cs" />
     <Compile Include="ToolBoxCode\Tool_afterAttachObject_code.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="ToolBoxCode\Tool_MovesetCoder_code.cs" />
     <Compile Include="ToolBoxCode\Tool_nus3bankEditor_code.cs" />
     <Compile Include="ToolBoxCode\Tool_PlayerSettingParamEditor_code.cs" />
+    <Compile Include="ToolBoxCode\Tool_privateCamera_code.cs" />
     <Compile Include="ToolBoxCode\Tool_RosterEditor_code.cs" />
     <Compile Include="ToolBoxCode\Tool_SkillCustomizeParamEditor_code.cs" />
     <Compile Include="ToolBoxCode\Tool_SpcloadEditor_code.cs" />
