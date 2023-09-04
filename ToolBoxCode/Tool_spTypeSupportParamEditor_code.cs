@@ -13,33 +13,42 @@ namespace NSUNS4_ModManager.ToolBoxCode {
         public byte[] fileBytes = new byte[0];
         public int EntryCount = 0;
 
-        public List<int> Characode_List = new List<int>();
-        public List<int> Type_List = new List<int>();
-        public List<int> Mode_List = new List<int>();
-        public List<string> LeftSkillName_List = new List<string>();
-        public List<string> RightSkillName_List = new List<string>();
-        public List<string> UpSkillName_List = new List<string>();
-        public List<string> DownSkillName_List = new List<string>();
-        public List<int> LeftSkill_unk1_List = new List<int>();
-        public List<int> LeftSkill_unk2_List = new List<int>();
-        public List<int> LeftSkill_unk3_List = new List<int>();
-        public List<bool> LeftSkill_EnableInAir_List = new List<bool>();
-        public List<bool> LeftSkill_Unknown_List = new List<bool>();
-        public List<int> RightSkill_unk1_List = new List<int>();
-        public List<int> RightSkill_unk2_List = new List<int>();
-        public List<int> RightSkill_unk3_List = new List<int>();
-        public List<bool> RightSkill_EnableInAir_List = new List<bool>();
-        public List<bool> RightSkill_Unknown_List = new List<bool>();
-        public List<int> UpSkill_unk1_List = new List<int>();
-        public List<int> UpSkill_unk2_List = new List<int>();
-        public List<int> UpSkill_unk3_List = new List<int>();
-        public List<bool> UpSkill_EnableInAir_List = new List<bool>();
-        public List<bool> UpSkill_Unknown_List = new List<bool>();
-        public List<int> DownSkill_unk1_List = new List<int>();
-        public List<int> DownSkill_unk2_List = new List<int>();
-        public List<int> DownSkill_unk3_List = new List<int>();
-        public List<bool> DownSkill_EnableInAir_List = new List<bool>();
-        public List<bool> DownSkill_Unknown_List = new List<bool>();
+        public class spTypeSupportParamEntry {
+            public int characode;
+            public int type;
+            public int mode;
+            public string leftSkillName;
+            public string rightSkillName;
+            public string upSkillName;
+            public string downSkillName;
+            public int leftSkill_unk1;
+            public int leftSkill_unk2;
+            public int leftSkill_unk3;
+            public bool leftSkill_EnableInAir;
+            public bool leftSkill_EnableInGround;
+            public bool leftSkill_unk4;
+            public int rightSkill_unk1;
+            public int rightSkill_unk2;
+            public int rightSkill_unk3;
+            public bool rightSkill_EnableInAir;
+            public bool rightSkill_EnableInGround;
+            public bool rightSkill_unk4;
+            public int upSkill_unk1;
+            public int upSkill_unk2;
+            public int upSkill_unk3;
+            public bool upSkill_EnableInAir;
+            public bool upSkill_EnableInGround;
+            public bool upSkill_unk4;
+            public int downSkill_unk1;
+            public int downSkill_unk2;
+            public int downSkill_unk3;
+            public bool downSkill_EnableInAir;
+            public bool downSkill_EnableInGround;
+            public bool downSkill_unk4;
+        }
+
+        public List<spTypeSupportParamEntry> spTypeSupportParam = new List<spTypeSupportParamEntry>();
+
         public void OpenFile(string basepath = "") {
             OpenFileDialog o = new OpenFileDialog();
             {
@@ -61,72 +70,52 @@ namespace NSUNS4_ModManager.ToolBoxCode {
             EntryCount = MainFunctions.b_ReadInt(fileBytes, 304);
 
             for (int x2 = 0; x2 < EntryCount; x2++) {
+                spTypeSupportParamEntry entry = new spTypeSupportParamEntry();
                 long _ptr = 316 + 0xB0 * x2;
-                int Characode = MainFunctions.b_ReadInt(fileBytes, (int)_ptr);
-                int Mode = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x04);
-                int Type = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x08);
+                entry.characode = MainFunctions.b_ReadInt(fileBytes, (int)_ptr);
+                entry.mode = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x04);
+                entry.type = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x08);
 
                 long _ptrUpSkillName = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x10);
-                string UpSkillName = MainFunctions.b_ReadString(fileBytes, (int)_ptr + 0x10 + (int)_ptrUpSkillName);
-                bool UpSkillUnknownValue = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x18));
-                bool UpSkillEnableInAir = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x1C));
-                int UpSkill_unk1 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x24);
-                int UpSkill_unk2 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x28);
-                int UpSkill_unk3 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x2C);
+                entry.upSkillName = MainFunctions.b_ReadString(fileBytes, (int)_ptr + 0x10 + (int)_ptrUpSkillName);
+                entry.upSkill_EnableInGround = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x18));
+                entry.upSkill_EnableInAir = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x1C));
+                entry.upSkill_unk4 = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x20));
+                entry.upSkill_unk1 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x24);
+                entry.upSkill_unk2 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x28);
+                entry.upSkill_unk3 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x2C);
 
                 long _ptrDownSkillName = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x38);
-                string DownSkillName = MainFunctions.b_ReadString(fileBytes, (int)_ptr + 0x38 + (int)_ptrDownSkillName);
-                bool DownSkillUnknownValue = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x40));
-                bool DownSkillEnableInAir = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x44));
-                int DownSkill_unk1 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x4C);
-                int DownSkill_unk2 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x50);
-                int DownSkill_unk3 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x54);
+                entry.downSkillName = MainFunctions.b_ReadString(fileBytes, (int)_ptr + 0x38 + (int)_ptrDownSkillName);
+                entry.downSkill_EnableInGround = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x40));
+                entry.downSkill_EnableInAir = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x44));
+                entry.downSkill_unk4 = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x48));
+                entry.downSkill_unk1 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x4C);
+                entry.downSkill_unk2 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x50);
+                entry.downSkill_unk3 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x54);
 
                 long _ptrLeftSkillName = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x60);
-                string LeftSkillName = MainFunctions.b_ReadString(fileBytes, (int)_ptr + 0x60 + (int)_ptrLeftSkillName);
-                bool LeftSkillUnknownValue = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x68));
-                bool LeftSkillEnableInAir = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x6C));
-                int LeftSkill_unk1 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x74);
-                int LeftSkill_unk2 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x78);
-                int LeftSkill_unk3 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x7C);
+                entry.leftSkillName = MainFunctions.b_ReadString(fileBytes, (int)_ptr + 0x60 + (int)_ptrLeftSkillName);
+                entry.leftSkill_EnableInGround = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x68));
+                entry.leftSkill_EnableInAir = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x6C));
+                entry.leftSkill_unk4 = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x70));
+                entry.leftSkill_unk1 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x74);
+                entry.leftSkill_unk2 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x78);
+                entry.leftSkill_unk3 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x7C);
 
                 long _ptrRightSkillName = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x88);
-                string RightSkillName = MainFunctions.b_ReadString(fileBytes, (int)_ptr + 0x88 + (int)_ptrRightSkillName);
-                bool RightSkillUnknownValue = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x90));
-                bool RightSkillEnableInAir = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x94));
-                int RightSkill_unk1 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x9C);
-                int RightSkill_unk2 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0xA0);
-                int RightSkill_unk3 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0xA4);
+                entry.rightSkillName = MainFunctions.b_ReadString(fileBytes, (int)_ptr + 0x88 + (int)_ptrRightSkillName);
+                entry.rightSkill_EnableInGround = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x90));
+                entry.rightSkill_EnableInAir = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x94));
+                entry.rightSkill_unk4 = Convert.ToBoolean(MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x98));
+                entry.rightSkill_unk1 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0x9C);
+                entry.rightSkill_unk2 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0xA0);
+                entry.rightSkill_unk3 = MainFunctions.b_ReadInt(fileBytes, (int)_ptr + 0xA4);
 
 
 
-                Characode_List.Add(Characode);
-                Type_List.Add(Type);
-                Mode_List.Add(Mode);
-                LeftSkillName_List.Add(LeftSkillName);
-                RightSkillName_List.Add(RightSkillName);
-                UpSkillName_List.Add(UpSkillName);
-                DownSkillName_List.Add(DownSkillName);
-                LeftSkill_unk1_List.Add(LeftSkill_unk1);
-                LeftSkill_unk2_List.Add(LeftSkill_unk2);
-                LeftSkill_unk3_List.Add(LeftSkill_unk3);
-                LeftSkill_EnableInAir_List.Add(LeftSkillEnableInAir);
-                LeftSkill_Unknown_List.Add(LeftSkillUnknownValue);
-                RightSkill_unk1_List.Add(RightSkill_unk1);
-                RightSkill_unk2_List.Add(RightSkill_unk2);
-                RightSkill_unk3_List.Add(RightSkill_unk3);
-                RightSkill_EnableInAir_List.Add(RightSkillEnableInAir);
-                RightSkill_Unknown_List.Add(RightSkillUnknownValue);
-                UpSkill_unk1_List.Add(UpSkill_unk1);
-                UpSkill_unk2_List.Add(UpSkill_unk2);
-                UpSkill_unk3_List.Add(UpSkill_unk3);
-                UpSkill_EnableInAir_List.Add(UpSkillEnableInAir);
-                UpSkill_Unknown_List.Add(UpSkillUnknownValue);
-                DownSkill_unk1_List.Add(DownSkill_unk1);
-                DownSkill_unk2_List.Add(DownSkill_unk2);
-                DownSkill_unk3_List.Add(DownSkill_unk3);
-                DownSkill_EnableInAir_List.Add(DownSkillEnableInAir);
-                DownSkill_Unknown_List.Add(DownSkillUnknownValue);
+                spTypeSupportParam.Add(entry);
+
 
             }
         }
@@ -135,33 +124,7 @@ namespace NSUNS4_ModManager.ToolBoxCode {
             FilePath = "";
             fileBytes = new byte[0];
             EntryCount = 0;
-            Characode_List = new List<int>();
-            Type_List = new List<int>();
-            Mode_List = new List<int>();
-            LeftSkillName_List = new List<string>();
-            RightSkillName_List = new List<string>();
-            UpSkillName_List = new List<string>();
-            DownSkillName_List = new List<string>();
-            LeftSkill_unk1_List = new List<int>();
-            LeftSkill_unk2_List = new List<int>();
-            LeftSkill_unk3_List = new List<int>();
-            LeftSkill_EnableInAir_List = new List<bool>();
-            LeftSkill_Unknown_List = new List<bool>();
-            RightSkill_unk1_List = new List<int>();
-            RightSkill_unk2_List = new List<int>();
-            RightSkill_unk3_List = new List<int>();
-            RightSkill_EnableInAir_List = new List<bool>();
-            RightSkill_Unknown_List = new List<bool>();
-            UpSkill_unk1_List = new List<int>();
-            UpSkill_unk2_List = new List<int>();
-            UpSkill_unk3_List = new List<int>();
-            UpSkill_EnableInAir_List = new List<bool>();
-            UpSkill_Unknown_List = new List<bool>();
-            DownSkill_unk1_List = new List<int>();
-            DownSkill_unk2_List = new List<int>();
-            DownSkill_unk3_List = new List<int>();
-            DownSkill_EnableInAir_List = new List<bool>();
-            DownSkill_Unknown_List = new List<bool>();
+            spTypeSupportParam.Clear();
         }
         public void CloseFile() {
             ClearFile();
@@ -211,23 +174,23 @@ namespace NSUNS4_ModManager.ToolBoxCode {
 
             for (int x2 = 0; x2 < EntryCount; x2++) {
                 UpSkillNamePointer.Add(file.Length);
-                if (UpSkillName_List[x2] != "") {
-                    file = MainFunctions.b_AddBytes(file, Encoding.ASCII.GetBytes(UpSkillName_List[x2]));
+                if (spTypeSupportParam[x2].upSkillName != "") {
+                    file = MainFunctions.b_AddBytes(file, Encoding.ASCII.GetBytes(spTypeSupportParam[x2].upSkillName));
                     file = MainFunctions.b_AddBytes(file, new byte[1]);
                 }
                 DownSkillNamePointer.Add(file.Length);
-                if (DownSkillName_List[x2] != "") {
-                    file = MainFunctions.b_AddBytes(file, Encoding.ASCII.GetBytes(DownSkillName_List[x2]));
+                if (spTypeSupportParam[x2].downSkillName != "") {
+                    file = MainFunctions.b_AddBytes(file, Encoding.ASCII.GetBytes(spTypeSupportParam[x2].downSkillName));
                     file = MainFunctions.b_AddBytes(file, new byte[1]);
                 }
                 LeftSkillNamePointer.Add(file.Length);
-                if (LeftSkillName_List[x2] != "") {
-                    file = MainFunctions.b_AddBytes(file, Encoding.ASCII.GetBytes(LeftSkillName_List[x2]));
+                if (spTypeSupportParam[x2].leftSkillName != "") {
+                    file = MainFunctions.b_AddBytes(file, Encoding.ASCII.GetBytes(spTypeSupportParam[x2].leftSkillName));
                     file = MainFunctions.b_AddBytes(file, new byte[1]);
                 }
                 RightSkillNamePointer.Add(file.Length);
-                if (RightSkillName_List[x2] != "") {
-                    file = MainFunctions.b_AddBytes(file, Encoding.ASCII.GetBytes(RightSkillName_List[x2]));
+                if (spTypeSupportParam[x2].rightSkillName != "") {
+                    file = MainFunctions.b_AddBytes(file, Encoding.ASCII.GetBytes(spTypeSupportParam[x2].rightSkillName));
                     file = MainFunctions.b_AddBytes(file, new byte[1]);
                 }
 
@@ -235,47 +198,51 @@ namespace NSUNS4_ModManager.ToolBoxCode {
 
                 int newPointer3 = UpSkillNamePointer[x2] - 316 - 0xB0 * x2 - 0x10;
                 byte[] ptrBytes3 = BitConverter.GetBytes(newPointer3);
-                if (UpSkillName_List[x2] != "") {
+                if (spTypeSupportParam[x2].upSkillName != "") {
                     file = MainFunctions.b_ReplaceBytes(file, ptrBytes3, 316 + 0xB0 * x2 + 0x10);
                 }
                 newPointer3 = DownSkillNamePointer[x2] - 316 - 0xB0 * x2 - 0x38;
                 ptrBytes3 = BitConverter.GetBytes(newPointer3);
-                if (DownSkillName_List[x2] != "") {
+                if (spTypeSupportParam[x2].downSkillName != "") {
                     file = MainFunctions.b_ReplaceBytes(file, ptrBytes3, 316 + 0xB0 * x2 + 0x38);
                 }
                 newPointer3 = LeftSkillNamePointer[x2] - 316 - 0xB0 * x2 - 0x60;
                 ptrBytes3 = BitConverter.GetBytes(newPointer3);
-                if (LeftSkillName_List[x2] != "") {
+                if (spTypeSupportParam[x2].leftSkillName != "") {
                     file = MainFunctions.b_ReplaceBytes(file, ptrBytes3, 316 + 0xB0 * x2 + 0x60);
                 }
                 newPointer3 = RightSkillNamePointer[x2] - 316 - 0xB0 * x2 - 0x88;
                 ptrBytes3 = BitConverter.GetBytes(newPointer3);
-                if (RightSkillName_List[x2] != "") {
+                if (spTypeSupportParam[x2].rightSkillName != "") {
                     file = MainFunctions.b_ReplaceBytes(file, ptrBytes3, 316 + 0xB0 * x2 + 0x88);
                 }
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(Characode_List[x2]), 316 + 0xB0 * x2 + 0x00);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(Mode_List[x2]), 316 + 0xB0 * x2 + 0x04);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(Type_List[x2]), 316 + 0xB0 * x2 + 0x08);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(UpSkill_Unknown_List[x2]), 316 + 0xB0 * x2 + 0x18);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(UpSkill_EnableInAir_List[x2]), 316 + 0xB0 * x2 + 0x1C);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(UpSkill_unk1_List[x2]), 316 + 0xB0 * x2 + 0x24);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(UpSkill_unk2_List[x2]), 316 + 0xB0 * x2 + 0x28);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(UpSkill_unk3_List[x2]), 316 + 0xB0 * x2 + 0x2C);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(DownSkill_Unknown_List[x2]), 316 + 0xB0 * x2 + 0x40);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(DownSkill_EnableInAir_List[x2]), 316 + 0xB0 * x2 + 0x44);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(DownSkill_unk1_List[x2]), 316 + 0xB0 * x2 + 0x4C);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(DownSkill_unk2_List[x2]), 316 + 0xB0 * x2 + 0x50);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(DownSkill_unk3_List[x2]), 316 + 0xB0 * x2 + 0x54);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(LeftSkill_Unknown_List[x2]), 316 + 0xB0 * x2 + 0x68);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(LeftSkill_EnableInAir_List[x2]), 316 + 0xB0 * x2 + 0x6C);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(LeftSkill_unk1_List[x2]), 316 + 0xB0 * x2 + 0x74);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(LeftSkill_unk2_List[x2]), 316 + 0xB0 * x2 + 0x78);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(LeftSkill_unk3_List[x2]), 316 + 0xB0 * x2 + 0x7C);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(RightSkill_Unknown_List[x2]), 316 + 0xB0 * x2 + 0x90);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(RightSkill_EnableInAir_List[x2]), 316 + 0xB0 * x2 + 0x94);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(RightSkill_unk1_List[x2]), 316 + 0xB0 * x2 + 0x9C);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(RightSkill_unk2_List[x2]), 316 + 0xB0 * x2 + 0xA0);
-                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(RightSkill_unk3_List[x2]), 316 + 0xB0 * x2 + 0xA4);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].characode), 316 + 0xB0 * x2 + 0x00);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].mode), 316 + 0xB0 * x2 + 0x04);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].type), 316 + 0xB0 * x2 + 0x08);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].upSkill_EnableInGround), 316 + 0xB0 * x2 + 0x18);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].upSkill_EnableInAir), 316 + 0xB0 * x2 + 0x1C);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].upSkill_unk4), 316 + 0xB0 * x2 + 0x20);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].upSkill_unk1), 316 + 0xB0 * x2 + 0x24);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].upSkill_unk2), 316 + 0xB0 * x2 + 0x28);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].upSkill_unk3), 316 + 0xB0 * x2 + 0x2C);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].downSkill_EnableInGround), 316 + 0xB0 * x2 + 0x40);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].downSkill_EnableInAir), 316 + 0xB0 * x2 + 0x44);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].downSkill_unk4), 316 + 0xB0 * x2 + 0x48);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].downSkill_unk1), 316 + 0xB0 * x2 + 0x4C);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].downSkill_unk2), 316 + 0xB0 * x2 + 0x50);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].downSkill_unk3), 316 + 0xB0 * x2 + 0x54);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].leftSkill_EnableInGround), 316 + 0xB0 * x2 + 0x68);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].leftSkill_EnableInAir), 316 + 0xB0 * x2 + 0x6C);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].leftSkill_unk4), 316 + 0xB0 * x2 + 0x70);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].leftSkill_unk1), 316 + 0xB0 * x2 + 0x74);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].leftSkill_unk2), 316 + 0xB0 * x2 + 0x78);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].leftSkill_unk3), 316 + 0xB0 * x2 + 0x7C);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].rightSkill_EnableInGround), 316 + 0xB0 * x2 + 0x90);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].rightSkill_EnableInAir), 316 + 0xB0 * x2 + 0x94);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].rightSkill_unk4), 316 + 0xB0 * x2 + 0x98);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].rightSkill_unk1), 316 + 0xB0 * x2 + 0x9C);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].rightSkill_unk2), 316 + 0xB0 * x2 + 0xA0);
+                file = MainFunctions.b_ReplaceBytes(file, BitConverter.GetBytes(spTypeSupportParam[x2].rightSkill_unk3), 316 + 0xB0 * x2 + 0xA4);
 
             }
             int FileSize = file.Length - 300;
